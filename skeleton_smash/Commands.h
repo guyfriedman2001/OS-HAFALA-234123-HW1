@@ -9,6 +9,8 @@
 
 class Command {
     // TODO: Add your data members
+    // maximum_stack_of_current_jobs_ids
+    // binary search tree of running jobs
 public:
     Command(const char *cmd_line);
 
