@@ -114,4 +114,16 @@ void SmallShell::executeCommand(const char *cmd_line) {
     // Command* cmd = CreateCommand(cmd_line);
     // cmd->execute();
     // Please note that you must fork smash process for some commands (e.g., external commands....)
+
+    // TODO: command pre - proccesing
+    bool backGroundCommand = _isBackgroundComamnd(cmd_line);
+    char *non_const_cmd = cmd_line; // TODO: find out how tf to duplicate a char*, only do it for trimming and to get rid of this fkin const
+    if (backGroundCommand){
+      _removeBackgroundSign(cmd_line);
+    }
+    _trim(non_const_cmd); // FIXME: same here
+    // TODO: command pre - proccesing
+
+
+
 }
