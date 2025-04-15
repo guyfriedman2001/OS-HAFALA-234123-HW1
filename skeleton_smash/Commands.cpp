@@ -137,30 +137,30 @@ SmallShell::~SmallShell() {
 }
 
 Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
-  inline char* comand = args[0];
-  if (STRINGS_EQUAL(comand, "chprompt")) {
+  inline char* command = args[0];
+  if (STRINGS_EQUAL(command, "chprompt")) {
     return new ChangePromptCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "showpid")) {
+  } else if (STRINGS_EQUAL(command, "showpid")) {
       return new ShowPidCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "pwd")) {
+  } else if (STRINGS_EQUAL(command, "pwd")) {
       return new GetCurrDirCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "cd")) {
+  } else if (STRINGS_EQUAL(command, "cd")) {
       return new ChangeDirCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "jobs")) {
+  } else if (STRINGS_EQUAL(command, "jobs")) {
       return new JobsCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "fg")) {
+  } else if (STRINGS_EQUAL(command, "fg")) {
       return new ForegroundCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "quit")) {
+  } else if (STRINGS_EQUAL(command, "quit")) {
       return new QuitCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "kill")) {
+  } else if (STRINGS_EQUAL(command, "kill")) {
       return new KillCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "alias")) {
+  } else if (STRINGS_EQUAL(command, "alias")) {
       return new AliasCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "unalias")) {
+  } else if (STRINGS_EQUAL(command, "unalias")) {
       return new UnAliasCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "unsetenv")) {
+  } else if (STRINGS_EQUAL(command, "unsetenv")) {
       return new UnSetEnvCommand(args, shell);
-  } else if (STRINGS_EQUAL(comand, "watchproc")) {
+  } else if (STRINGS_EQUAL(command, "watchproc")) {
       return new WatchProcCommand(args, shell);
   } else { // unknown command
       return nullptr;
