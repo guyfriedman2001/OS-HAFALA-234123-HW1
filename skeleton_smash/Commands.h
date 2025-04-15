@@ -62,6 +62,7 @@ template <typename DerivedClass>
 class CommandFactory{
 public:
     CommandFactory() = delete;
+    virtual ~CommandFactory() = default;
 
      /**
      * @brief Creates a new Command instance using a subclass-defined factory method.
@@ -72,8 +73,6 @@ public:
     inline static DerivedClass* makeCommand(char **args){
         return (DerivedClass) factoryHelper(args);
     }
-
-    virtual ~CommandFactory() = default;
 
 protected:
 
@@ -138,6 +137,32 @@ protected:
     inline virtual Command* factoryHelper(char **args) override;
 };
 
+/**
+ * @brief A factory for creating Command instances based on parsed arguments.
+ *
+ * This factory constructs command objects for commands that are not part of the
+ * shell's built-in functionality, returning different command types based on 
+ * the provided arguments.
+ *
+ * Notes:
+ *   - Returns nullptr in case of failure (or when the supplied command is not recognized).
+ *   - This should be used for any command that can be identified and created dynamically.
+ *   - Input `args` must be a null-terminated array produced by `_parseCommandLine`.
+ */
+class SpecialCommandFactory : public CommandFactory<Command> {
+    public:
+        SpecialCommandFactory() = delete;
+        virtual ~SpecialCommandFactory() = default;
+    
+    protected:
+        /**
+         * @brief Creates a Command instance using the provided arguments.
+         *
+         * @param args A null-terminated array of C-style strings.
+         * @return A pointer to a new Command object, or nullptr if no valid command is found.
+         */
+        inline virtual Command* factoryHelper(char **args) override;
+};    
 
 class RedirectionCommand : public Command {
     // TODO: Add your data members
