@@ -41,6 +41,103 @@ public:
     void execute() override;
 };
 
+/**
+ * @brief A generic abstract factory class for creating Command objects from parsed arguments.
+ *
+ * This templated class defines a static interface for instantiating specific command types
+ * from a pre-parsed list of C-style string arguments (as produced by _parseCommandLine).
+ *
+ * @tparam DerivedClass The specific subclass of Command to be created (e.g., BuiltInCommand or ExternalCommand).
+ *
+ * Usage:
+ *   - Clients should call `makeCommand(char** args)` to create a Command instance.
+ *   - Subclasses must implement the `factoryHelper` function, which handles the actual construction logic.
+ *
+ * Notes:
+ *   - The constructor is deleted to enforce static usage.
+ *   - The arguments must be null-terminated and pre-parsed (e.g., by `_parseCommandLine`).
+ *   - The caller is responsible for managing the memory of the returned Command object.
+ */
+template <typename DerivedClass>
+class CommandFactory{
+public:
+    CommandFactory() = delete;
+
+     /**
+     * @brief Creates a new Command instance using a subclass-defined factory method.
+     *
+     * @param args A null-terminated array of C-style strings representing the command and its arguments.
+     * @return A pointer to the created DerivedClass command object.
+     */
+    inline static DerivedClass* makeCommand(char **args){
+        return (DerivedClass) factoryHelper(args);
+    }
+
+    virtual ~CommandFactory() = default;
+
+protected:
+
+    /**
+     * @brief Subclass-specific method for constructing a Command from parsed arguments.
+     *
+     * Must be overridden in subclasses to perform command-specific instantiation logic.
+     *
+     * @param args A null-terminated array of C-style strings.
+     * @return A pointer to a newly constructed Command object.
+     */
+    inline virtual Command* factoryHelper(char **args) = 0;
+};
+
+/**
+ * @brief A concrete factory for creating BuiltInCommand instances from parsed arguments.
+ *
+ * Implements the factory logic for interpreting built-in shell commands (e.g., "cd", "exit").
+ *
+ * Notes:
+ *   - Returns nullptr in case of failure (or when the supplied command is not from a BuiltInCommand type)
+ *   - It expects the input `args` to be a null-terminated array as parsed by `_parseCommandLine`.
+ */
+class BuiltInCommandFactory : public CommandFactory<BuiltInCommand> {
+public:
+    BuiltInCommandFactory() = delete;
+    virtual ~BuiltInCommandFactory() = default;
+protected:
+
+    /**
+     * @brief Creates a BuiltInCommand instance using the provided arguments.
+     *
+     * @param args A null-terminated array of C-style strings.
+     * @return A pointer to a new BuiltInCommand object.
+     */
+    inline virtual Command* factoryHelper(char **args) override;
+};
+
+/**
+ * @brief A concrete factory for creating ExternalCommand instances from parsed arguments.
+ *
+ * This factory constructs command objects for external system commands that are not part
+ * of the shell's built-in functionality.
+ *
+ * Notes:
+ *   - Returns nullptr in case of failure (or when the supplied command is not from an ExternalCommand type)
+ *   - It should be used for any command that must be executed via a system call (e.g., using `exec`).
+ *   - Input `args` must be a null-terminated array produced by `_parseCommandLine`.
+ */
+class ExternalCommandFactory : public CommandFactory<ExternalCommand> {
+public:
+    ExternalCommandFactory() = delete;
+    virtual ~ExternalCommandFactory() = default;
+protected:
+
+    /**
+     * @brief Creates an ExternalCommand instance using the provided arguments.
+     *
+     * @param args A null-terminated array of C-style strings.
+     * @return A pointer to a new ExternalCommand object.
+     */
+    inline virtual Command* factoryHelper(char **args) override;
+};
+
 
 class RedirectionCommand : public Command {
     // TODO: Add your data members

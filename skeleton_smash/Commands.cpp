@@ -36,6 +36,37 @@ string _trim(const std::string &s) {
     return _rtrim(_ltrim(s));
 }
 
+/**
+ * Parses a command-line string into individual whitespace-separated arguments
+ * and stores them as C-style strings in the provided `args` array.
+ *
+ * @param cmd_line A null-terminated string representing the full command line to be parsed.
+ * @param args An array of `char*` pointers where each parsed argument will be stored.
+ *             The array must be pre-allocated with enough space for all expected arguments.
+ *
+ * @return The number of arguments parsed (i.e., how many entries in `args` are filled).
+ *
+ * The function performs the following steps:
+ * - Trims leading and trailing whitespace from `cmd_line`.
+ * - Splits the string into tokens using whitespace as the delimiter.
+ * - For each token:
+ *   - Allocates memory for a null-terminated C-style string.
+ *   - Copies the token into the newly allocated memory.
+ *   - Stores the pointer in the `args` array.
+ * - The array is terminated with a `NULL` pointer after the last argument.
+ *
+ * Example:
+ *   const char* input = "ls -la /home/user";
+ *   char* args[10];
+ *   int count = _parseCommandLine(input, args);
+ *   // args = {"ls", "-la", "/home/user", NULL}
+ *   // count = 3
+ *
+ * Notes:
+ * - The caller is responsible for freeing the memory allocated for each entry in `args`.
+ * - The function assumes that `args` has enough space to hold all tokens and the terminating `NULL`.
+ */
+
 int _parseCommandLine(const char *cmd_line, char **args) {
     FUNC_ENTRY()
     int i = 0;
@@ -82,6 +113,45 @@ SmallShell::SmallShell() {
 
 SmallShell::~SmallShell() {
 // TODO: add your implementation
+}
+
+Command* BuiltInCommandFactory::factoryHelper(char **args) {
+  // your implementation here
+  inline char* comand = args[0];
+  if (strcmp(comand, "chprompt") == 0) {
+    // handle chprompt
+  } else if (strcmp(comand, "showpid") == 0) {
+      // handle showpid
+  } else if (strcmp(comand, "pwd") == 0) {
+      // handle pwd
+  } else if (strcmp(comand, "cd") == 0) {
+      // handle cd
+  } else if (strcmp(comand, "jobs") == 0) {
+      // handle jobs
+  } else if (strcmp(comand, "fg") == 0) {
+      // handle fg
+  } else if (strcmp(comand, "quit") == 0) {
+      // handle quit
+  } else if (strcmp(comand, "kill") == 0) {
+      // handle kill
+  } else if (strcmp(comand, "alias") == 0) {
+      // handle alias
+  } else if (strcmp(comand, "unalias") == 0) {
+      // handle unalias
+  } else if (strcmp(comand, "unsetenv") == 0) {
+      // handle unsetenv
+  } else if (strcmp(comand, "watchproc") == 0) {
+      // handle watchproc
+  } else {
+      // unknown command
+      return nullptr;
+  }
+}
+
+Command* ExternalCommandFactory::factoryHelper(char **args) {
+  // your implementation here
+  inline char* comand = args[0];
+
 }
 
 /**
