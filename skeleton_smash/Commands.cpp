@@ -66,7 +66,6 @@ string _trim(const std::string &s) {
  * - The caller is responsible for freeing the memory allocated for each entry in `args`.
  * - The function assumes that `args` has enough space to hold all tokens and the terminating `NULL`.
  */
-
 int _parseCommandLine(const char *cmd_line, char **args) {
     FUNC_ENTRY()
     int i = 0;
@@ -80,6 +79,26 @@ int _parseCommandLine(const char *cmd_line, char **args) {
     return i;
 
     FUNC_EXIT()
+}
+
+/**
+ * @brief free memory malloc'ed by _parseCommandLine
+ * 
+ * @arg args Arguments parsed by _parseCommandLine.
+ * @arg args_num Number of arguments returned by _parseCommandLine.
+ * 
+ * @note Call this function after processing `args` to prevent memory leaks.
+ * 
+ * @note The function sets each element of `args` to `NULL` after freeing it, to avoid 
+ *       potential dangling pointer issues.
+ */
+inline void commandDestructor(char **args, int args_num){
+  for (int i = 0; i < args_num; ++i) {
+    if (args[i] != NULL) {
+        free(args[i]);  // Free the memory allocated for each argument
+        args[i] = NULL;  // Optional: Set the element to NULL to avoid dangling pointers
+    }
+  }
 }
 
 bool _isBackgroundComamnd(const char *cmd_line) {
@@ -154,28 +173,50 @@ Command* ExternalCommandFactory::factoryHelper(char **args) {
 
 }
 
+Command* SpecialCommandFactory::factoryHelper(char **args) {
+  // your implementation here
+  inline char* comand = args[0];
+
+}
+
 /**
 * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
 */
 Command *SmallShell::CreateCommand(const char *cmd_line) {
     // For example:
-  /*
-  string cmd_s = _trim(string(cmd_line));
-  string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
+    /*
+    string cmd_s = _trim(string(cmd_line));
+    string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
 
-  if (firstWord.compare("pwd") == 0) {
-    return new GetCurrDirCommand(cmd_line);
+    if (firstWord.compare("pwd") == 0) {
+      return new GetCurrDirCommand(cmd_line);
+    }
+    else if (firstWord.compare("showpid") == 0) {
+      return new ShowPidCommand(cmd_line);
+    }
+    else if ...
+    .....
+    else {
+      return new ExternalCommand(cmd_line);
+    }
+    */
+
+  Command* returnCommand = nullptr;
+  char* args[COMMAND_MAX_ARGS];
+  int num_args = _parseCommandLine(cmd_line,args);
+
+  returnCommand = BuiltInCommandFactory::makeCommand(args);
+
+  if (returnCommand == nullptr){
+    returnCommand = ExternalCommandFactory::makeCommand(args);
   }
-  else if (firstWord.compare("showpid") == 0) {
-    return new ShowPidCommand(cmd_line);
+
+  if (returnCommand == nullptr){
+    returnCommand = SpecialCommandFactory::makeCommand(args);
   }
-  else if ...
-  .....
-  else {
-    return new ExternalCommand(cmd_line);
-  }
-  */
-    return nullptr;
+  
+  commandDestructor(args,num_args);
+  return returnCommand;
 }
 
 void SmallShell::executeCommand(const char *cmd_line) {
@@ -185,15 +226,16 @@ void SmallShell::executeCommand(const char *cmd_line) {
     // cmd->execute();
     // Please note that you must fork smash process for some commands (e.g., external commands....)
 
+    /**
     // TODO: command pre - proccesing
     bool backGroundCommand = _isBackgroundComamnd(cmd_line);
     char *non_const_cmd = cmd_line; // TODO: find out how tf to duplicate a char*, only do it for trimming and to get rid of this fkin const
     if (backGroundCommand){
       _removeBackgroundSign(cmd_line);
     }
-    _trim(non_const_cmd); // FIXME: same here
+    _trim(non_const_cmd); // TODO: same here
     // TODO: command pre - proccesing
-
+    */
 
 
 }
