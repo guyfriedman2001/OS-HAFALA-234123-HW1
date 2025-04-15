@@ -430,7 +430,19 @@ class ChangePromptCommand : public BuiltInCommand {
     }
     
     void execute() override;
-    };
+};
+
+class CommandNotFound : public BuiltInCommand {
+public:
+    CommandNotFound(const char *cmd_line);
+    
+    CommandNotFound(char **args, SmallShell& shell);
+    
+    virtual ~CommandNotFound() {
+    }
+    
+    void execute() override;
+};
 
 class SmallShell {
 private:

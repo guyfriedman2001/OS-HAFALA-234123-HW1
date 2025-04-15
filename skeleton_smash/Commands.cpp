@@ -169,14 +169,18 @@ Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
 
 Command* ExternalCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   // your implementation here
-  inline char* comand = args[0];
+  inline char* command = args[0];
 
 }
 
 Command* SpecialCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   // your implementation here
-  inline char* comand = args[0];
+  inline char* command = args[0];
 
+}
+
+Command* Error404CommandNotFound::factoryHelper(char **args, SmallShell& shell) {
+  return new CommandNotFound(args, shell);
 }
 
 /**
@@ -241,5 +245,9 @@ void SmallShell::executeCommand(const char *cmd_line) {
     // TODO: command pre - proccesing
     */
 
+
+}
+
+void SmallShell::executeCommand(Command *command){
 
 }
