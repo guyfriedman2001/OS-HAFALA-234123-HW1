@@ -164,6 +164,33 @@ class SpecialCommandFactory : public CommandFactory<Command> {
         inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
 };    
 
+/**
+ * @brief A factory for creating Command instances based on parsed arguments.
+ *
+ * This factory constructs command objects for commands that are not part of the
+ * shell's built-in functionality, returning different command types based on 
+ * the provided arguments.
+ *
+ * Notes:
+ *   - Returns nullptr in case of failure (or when the supplied command is not recognized).
+ *   - This should be used for any command that can be identified and created dynamically.
+ *   - Input `args` must be a null-terminated array produced by `_parseCommandLine`.
+ */
+class Error404CommandNotFound : public CommandFactory<Command> {
+    public:
+    Error404CommandNotFound() = delete;
+        virtual ~Error404CommandNotFound() = default;
+    
+    protected:
+        /**
+         * @brief Creates a Command instance using the provided arguments.
+         *
+         * @param args A null-terminated array of C-style strings.
+         * @return A pointer to a new Command object, or nullptr if no valid command is found.
+         */
+        inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
+};   
+
 class RedirectionCommand : public Command {
     // TODO: Add your data members
 public:

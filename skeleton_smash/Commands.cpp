@@ -213,10 +213,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
     returnCommand = ExternalCommandFactory::makeCommand(args, this);
   }
 
-  if (returnCommand == nullptr){
+  if (returnCommand == nullptr){ // TODO: might need a bit more logic to decide if a command is just external or special.
     returnCommand = SpecialCommandFactory::makeCommand(args, this);
   }
   
+  if (returnCommand == nullptr){
+    returnCommand = Error404CommandNotFound::makeCommand(args, this);
+  }
+
   commandDestructor(args,num_args);
   return returnCommand;
 }
