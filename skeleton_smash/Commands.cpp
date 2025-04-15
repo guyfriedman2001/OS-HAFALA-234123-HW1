@@ -7,6 +7,8 @@
 #include <iomanip>
 #include "Commands.h"
 
+#define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
+
 using namespace std;
 
 const std::string WHITESPACE = " \n\r\t\f\v";
@@ -137,29 +139,29 @@ SmallShell::~SmallShell() {
 Command* BuiltInCommandFactory::factoryHelper(char **args) {
   // your implementation here
   inline char* comand = args[0];
-  if (strcmp(comand, "chprompt") == 0) {
+  if (STRINGS_EQUAL(comand, "chprompt")) {
     // handle chprompt
-  } else if (strcmp(comand, "showpid") == 0) {
+  } else if (STRINGS_EQUAL(comand, "showpid")) {
       // handle showpid
-  } else if (strcmp(comand, "pwd") == 0) {
+  } else if (STRINGS_EQUAL(comand, "pwd")) {
       // handle pwd
-  } else if (strcmp(comand, "cd") == 0) {
+  } else if (STRINGS_EQUAL(comand, "cd")) {
       // handle cd
-  } else if (strcmp(comand, "jobs") == 0) {
+  } else if (STRINGS_EQUAL(comand, "jobs")) {
       // handle jobs
-  } else if (strcmp(comand, "fg") == 0) {
+  } else if (STRINGS_EQUAL(comand, "fg")) {
       // handle fg
-  } else if (strcmp(comand, "quit") == 0) {
+  } else if (STRINGS_EQUAL(comand, "quit")) {
       // handle quit
-  } else if (strcmp(comand, "kill") == 0) {
+  } else if (STRINGS_EQUAL(comand, "kill")) {
       // handle kill
-  } else if (strcmp(comand, "alias") == 0) {
+  } else if (STRINGS_EQUAL(comand, "alias")) {
       // handle alias
-  } else if (strcmp(comand, "unalias") == 0) {
+  } else if (STRINGS_EQUAL(comand, "unalias")) {
       // handle unalias
-  } else if (strcmp(comand, "unsetenv") == 0) {
+  } else if (STRINGS_EQUAL(comand, "unsetenv")) {
       // handle unsetenv
-  } else if (strcmp(comand, "watchproc") == 0) {
+  } else if (STRINGS_EQUAL(comand, "watchproc")) {
       // handle watchproc
   } else {
       // unknown command
