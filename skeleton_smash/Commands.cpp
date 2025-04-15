@@ -136,7 +136,7 @@ SmallShell::~SmallShell() {
 // TODO: add your implementation
 }
 
-Command* BuiltInCommandFactory::factoryHelper(char **args) {
+Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   // your implementation here
   inline char* comand = args[0];
   if (STRINGS_EQUAL(comand, "chprompt")) {
@@ -169,13 +169,13 @@ Command* BuiltInCommandFactory::factoryHelper(char **args) {
   }
 }
 
-Command* ExternalCommandFactory::factoryHelper(char **args) {
+Command* ExternalCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   // your implementation here
   inline char* comand = args[0];
 
 }
 
-Command* SpecialCommandFactory::factoryHelper(char **args) {
+Command* SpecialCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   // your implementation here
   inline char* comand = args[0];
 
@@ -207,14 +207,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
   char* args[COMMAND_MAX_ARGS];
   int num_args = _parseCommandLine(cmd_line,args);
 
-  returnCommand = BuiltInCommandFactory::makeCommand(args);
+  returnCommand = BuiltInCommandFactory::makeCommand(args, this);
 
   if (returnCommand == nullptr){
-    returnCommand = ExternalCommandFactory::makeCommand(args);
+    returnCommand = ExternalCommandFactory::makeCommand(args, this);
   }
 
   if (returnCommand == nullptr){
-    returnCommand = SpecialCommandFactory::makeCommand(args);
+    returnCommand = SpecialCommandFactory::makeCommand(args, this);
   }
   
   commandDestructor(args,num_args);

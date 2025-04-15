@@ -70,8 +70,8 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline static DerivedClass* makeCommand(char **args){
-        return (DerivedClass) factoryHelper(args);
+    inline static DerivedClass* makeCommand(char **args, SmallShell& shell){
+        return (DerivedClass) factoryHelper(args, shell);
     }
 
 protected:
@@ -84,7 +84,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    inline virtual Command* factoryHelper(char **args) = 0;
+    inline virtual Command* factoryHelper(char **args, SmallShell& shell) = 0;
 };
 
 /**
@@ -108,7 +108,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new BuiltInCommand object.
      */
-    inline virtual Command* factoryHelper(char **args) override;
+    inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
 };
 
 /**
@@ -134,7 +134,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    inline virtual Command* factoryHelper(char **args) override;
+    inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
 };
 
 /**
@@ -161,7 +161,7 @@ class SpecialCommandFactory : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(char **args) override;
+        inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
 };    
 
 class RedirectionCommand : public Command {
