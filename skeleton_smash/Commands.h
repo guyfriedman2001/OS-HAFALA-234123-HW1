@@ -14,6 +14,8 @@ class Command {
 public:
     Command(const char *cmd_line);
 
+    Command(char **args, SmallShell& shell);
+
     virtual ~Command();
 
     virtual void execute() = 0;
@@ -26,6 +28,8 @@ public:
 class BuiltInCommand : public Command {
 public:
     BuiltInCommand(const char *cmd_line);
+
+    BuiltInCommand(char **args, SmallShell& shell);
 
     virtual ~BuiltInCommand() {
     }
@@ -245,8 +249,11 @@ public:
 };
 
 class ChangeDirCommand : public BuiltInCommand {
-    // TODO: Add your data members public:
+    // TODO: Add your data members 
+public:
     ChangeDirCommand(const char *cmd_line, char **plastPwd);
+
+    ChangeDirCommand(char **args, SmallShell& shell);
 
     virtual ~ChangeDirCommand() {
     }
@@ -258,6 +265,8 @@ class GetCurrDirCommand : public BuiltInCommand {
 public:
     GetCurrDirCommand(const char *cmd_line);
 
+    GetCurrDirCommand(char **args, SmallShell& shell);
+
     virtual ~GetCurrDirCommand() {
     }
 
@@ -268,6 +277,8 @@ class ShowPidCommand : public BuiltInCommand {
 public:
     ShowPidCommand(const char *cmd_line);
 
+    ShowPidCommand(char **args, SmallShell& shell);
+
     virtual ~ShowPidCommand() {
     }
 
@@ -277,8 +288,11 @@ public:
 class JobsList;
 
 class QuitCommand : public BuiltInCommand {
-    // TODO: Add your data members public:
+    // TODO: Add your data members 
+public:
     QuitCommand(const char *cmd_line, JobsList *jobs);
+
+    QuitCommand(char **args, SmallShell& shell);
 
     virtual ~QuitCommand() {
     }
@@ -323,6 +337,8 @@ class JobsCommand : public BuiltInCommand {
 public:
     JobsCommand(const char *cmd_line, JobsList *jobs);
 
+    JobsCommand(char **args, SmallShell& shell);
+
     virtual ~JobsCommand() {
     }
 
@@ -333,6 +349,8 @@ class KillCommand : public BuiltInCommand {
     // TODO: Add your data members
 public:
     KillCommand(const char *cmd_line, JobsList *jobs);
+
+    KillCommand(char **args, SmallShell& shell);
 
     virtual ~KillCommand() {
     }
@@ -345,6 +363,8 @@ class ForegroundCommand : public BuiltInCommand {
 public:
     ForegroundCommand(const char *cmd_line, JobsList *jobs);
 
+    ForegroundCommand(char **args, SmallShell& shell);
+
     virtual ~ForegroundCommand() {
     }
 
@@ -355,6 +375,8 @@ class AliasCommand : public BuiltInCommand {
 public:
     AliasCommand(const char *cmd_line);
 
+    AliasCommand(char **args, SmallShell& shell);
+
     virtual ~AliasCommand() {
     }
 
@@ -364,6 +386,8 @@ public:
 class UnAliasCommand : public BuiltInCommand {
 public:
     UnAliasCommand(const char *cmd_line);
+    
+    UnAliasCommand(char **args, SmallShell& shell);
 
     virtual ~UnAliasCommand() {
     }
@@ -375,6 +399,8 @@ class UnSetEnvCommand : public BuiltInCommand {
 public:
     UnSetEnvCommand(const char *cmd_line);
 
+    UnSetEnvCommand(char **args, SmallShell& shell);
+
     virtual ~UnSetEnvCommand() {
     }
 
@@ -385,11 +411,26 @@ class WatchProcCommand : public BuiltInCommand {
 public:
     WatchProcCommand(const char *cmd_line);
 
+    WatchProcCommand(char **args, SmallShell& shell);
+
     virtual ~WatchProcCommand() {
     }
 
     void execute() override;
 };
+
+class ChangePromptCommand : public BuiltInCommand {
+    public:
+
+    ChangePromptCommand(const char *cmd_line);
+
+    ChangePromptCommand(char **args, SmallShell& shell);
+    
+    virtual ~ChangePromptCommand() {
+    }
+    
+    void execute() override;
+    };
 
 class SmallShell {
 private:
@@ -411,6 +452,8 @@ public:
     ~SmallShell();
 
     void executeCommand(const char *cmd_line);
+
+    void executeCommand(Command *command);
 
     // TODO: add extra methods as needed
 };

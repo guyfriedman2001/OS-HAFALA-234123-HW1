@@ -137,34 +137,32 @@ SmallShell::~SmallShell() {
 }
 
 Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
-  // your implementation here
   inline char* comand = args[0];
   if (STRINGS_EQUAL(comand, "chprompt")) {
-    // handle chprompt
+    return new ChangePromptCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "showpid")) {
-      // handle showpid
+      return new ShowPidCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "pwd")) {
-      // handle pwd
+      return new GetCurrDirCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "cd")) {
-      // handle cd
+      return new ChangeDirCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "jobs")) {
-      // handle jobs
+      return new JobsCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "fg")) {
-      // handle fg
+      return new ForegroundCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "quit")) {
-      // handle quit
+      return new QuitCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "kill")) {
-      // handle kill
+      return new KillCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "alias")) {
-      // handle alias
+      return new AliasCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "unalias")) {
-      // handle unalias
+      return new UnAliasCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "unsetenv")) {
-      // handle unsetenv
+      return new UnSetEnvCommand(args, shell);
   } else if (STRINGS_EQUAL(comand, "watchproc")) {
-      // handle watchproc
-  } else {
-      // unknown command
+      return new WatchProcCommand(args, shell);
+  } else { // unknown command
       return nullptr;
   }
 }
