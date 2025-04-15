@@ -71,7 +71,7 @@ public:
      * @return A pointer to the created DerivedClass command object.
      */
     inline static DerivedClass* makeCommand(char **args, SmallShell& shell){
-        return (DerivedClass) factoryHelper(args, shell);
+        return dynamic_cast<DerivedClass*>(factoryHelper(args, shell));
     }
 
 protected:
