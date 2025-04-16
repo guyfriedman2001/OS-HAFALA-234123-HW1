@@ -468,7 +468,7 @@ void QuitCommand::execute() {
   {
     SHELL_INSTANCE.getJobsList().removeFinishedJobs();
     printf("smash: sending SIGKILL signal to %d jobs: \n",SHELL_INSTANCE.getJobsList().numberOfJobs());
-    SHELL_INSTANCE.getJobsList().printJobsList();
+    SHELL_INSTANCE.getJobsList().killAllJobs();
   }
   exit();
 }
@@ -486,7 +486,6 @@ KillCommand::KillCommand(char **args, int num_args, const char* cmd_line) {
   {
     perror("smash error: kill: job-id <job-id> does not exist");
   }
-  sendSignalToJobById(pidToSendTo,signalToSend); //TODO need to handle signal errors inside
 }
 
 bool killCommand::areArgumentsValid(char **args){
@@ -494,7 +493,7 @@ bool killCommand::areArgumentsValid(char **args){
 }
 
 void KillCommand::execute() {
-  // TODO:
+    sendSignalToJobById(pidToSendTo,signalToSend); 
 }
 
 AliasCommand::AliasCommand(char **args) {

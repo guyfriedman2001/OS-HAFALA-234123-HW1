@@ -295,6 +295,10 @@ public:
     
     int get_max_current_jobID();
 
+    int numberOfJobs();
+
+    void sendSignalToJobById(int pidToSendTo, int signalToSend); //TODO need to handle signal errors inside - comes later in the HW
+
     // TODO: Add extra methods or modify exisitng ones as needed
 };
 
