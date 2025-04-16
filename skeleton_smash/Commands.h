@@ -327,6 +327,8 @@ public:
 };
 
 class ShowPidCommand : public BuiltInCommand {
+    private:
+        int smashPID;
     public:
         ShowPidCommand(const char *cmd_line);
     
@@ -513,6 +515,8 @@ public:
     inline static std::string getDefaultPrompt();
 
     inline static void changePrompt(std::string nextPrompt);
+
+    inline int getPID();
 
     // TODO: add extra methods as needed
 };
