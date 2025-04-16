@@ -371,7 +371,7 @@ ShowPidCommand::ShowPidCommand(char **args) :
   smashPID(SHELL_INSTANCE.getPID()){}
 
 void ShowPidCommand::execute() {
-    printf("smash pid is %d\n", this->smashPID);
+    printf("smash pid is %d", this->smashPID);
 }
 
 GetCurrDirCommand::GetCurrDirCommand(char **args) {
