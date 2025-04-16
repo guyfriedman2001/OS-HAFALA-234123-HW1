@@ -88,7 +88,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    inline virtual Command* factoryHelper(char **args, SmallShell& shell) = 0;
+    inline virtual Command* factoryHelper(char **args) = 0;
 };
 
 /**
@@ -112,7 +112,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new BuiltInCommand object.
      */
-    inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
+    inline virtual Command* factoryHelper(char **args) override;
 };
 
 /**
@@ -138,7 +138,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
+    inline virtual Command* factoryHelper(char **args) override;
 };
 
 /**
@@ -165,7 +165,7 @@ class SpecialCommandFactory : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
+        inline virtual Command* factoryHelper(char **args) override;
 };    
 
 /**
@@ -192,7 +192,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(char **args, SmallShell& shell) override;
+        inline virtual Command* factoryHelper(char **args) override;
 };   
 
 class RedirectionCommand : public Command {
@@ -447,6 +447,8 @@ public:
 class SmallShell {
 private:
     // TODO: Add your data members
+    std::string currentPrompt = "smash";
+    std::string promptEndChar = ">";
     SmallShell();
 
 public:
@@ -466,6 +468,8 @@ public:
     void executeCommand(const char *cmd_line);
 
     void executeCommand(Command *command);
+
+    inline std::string getDefaultPrompt();
 
     // TODO: add extra methods as needed
 };

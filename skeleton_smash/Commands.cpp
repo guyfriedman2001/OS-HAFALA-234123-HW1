@@ -136,8 +136,9 @@ SmallShell::~SmallShell() {
 // TODO: add your implementation
 }
 
-Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
+Command* BuiltInCommandFactory::factoryHelper(char **args) {
   inline char* command = args[0];
+  inline SmallShell& shell = SmallShell::getInstance();
   if (STRINGS_EQUAL(command, "chprompt")) {
     return new ChangePromptCommand(args, shell);
   } else if (STRINGS_EQUAL(command, "showpid")) {
@@ -167,19 +168,22 @@ Command* BuiltInCommandFactory::factoryHelper(char **args, SmallShell& shell) {
   }
 }
 
-Command* ExternalCommandFactory::factoryHelper(char **args, SmallShell& shell) {
+Command* ExternalCommandFactory::factoryHelper(char **args) {
   // your implementation here
   inline char* command = args[0];
+  inline SmallShell& shell = SmallShell::getInstance();
 
 }
 
-Command* SpecialCommandFactory::factoryHelper(char **args, SmallShell& shell) {
+Command* SpecialCommandFactory::factoryHelper(char **args) {
   // your implementation here
   inline char* command = args[0];
+  inline SmallShell& shell = SmallShell::getInstance();
 
 }
 
-Command* Error404CommandNotFound::factoryHelper(char **args, SmallShell& shell) {
+Command* Error404CommandNotFound::factoryHelper(char **args) {
+  inline SmallShell& shell = SmallShell::getInstance();
   return new CommandNotFound(args, shell);
 }
 
@@ -251,3 +255,8 @@ void SmallShell::executeCommand(const char *cmd_line) {
 void SmallShell::executeCommand(Command *command){
 
 }
+
+std::string SmallShell::getDefaultPrompt(){
+  return "smash";
+}
+
