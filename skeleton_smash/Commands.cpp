@@ -147,7 +147,7 @@ void _removeBackgroundSign(char *cmd_line) {
 
 Command* BuiltInCommandFactory::factoryHelper(char **args, int num_args, const char* cmd_line) {
   char* command = args[0];
-  if (STRINGS_EQUAL(command, "chprompt")) {
+    if (STRINGS_EQUAL(command, "chprompt")) {
     return new ChangePromptCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "showpid")) {
       return new ShowPidCommand(args,num_args,cmd_line);
@@ -246,13 +246,13 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
   char* args[COMMAND_MAX_ARGS];
   int num_args = _parseCommandLine(cmd_line,args);
 
-  if (num_args == 0){
+if (num_args == 0){
     return nullptr; //TODO: maybe make 'empty command'
   }
 
   if (returnCommand == nullptr){
-    returnCommand = BuiltInCommandFactory::makeCommand(args);
-  }
+  returnCommand = BuiltInCommandFactory::makeCommand(args);
+}
 
   if (returnCommand == nullptr){
     returnCommand = ExternalCommandFactory::makeCommand(args);
@@ -460,15 +460,37 @@ void ForegroundCommand::execute() {
 }
 
 QuitCommand::QuitCommand(char **args) {
-  // TODO:
+  killSpecified(args[1] != NULL && strcmp(args[1], "kill") == 0) ? true : false;
 }
 
 void QuitCommand::execute() {
-  // TODO:
+  if (killSpecified)
+  {
+    SHELL_INSTANCE.getJobsList().removeFinishedJobs();
+    printf("smash: sending SIGKILL signal to %d jobs: \n",SHELL_INSTANCE.getJobsList().numberOfJobs());
+    SHELL_INSTANCE.getJobsList().printJobsList();
+  }
+  exit();
 }
 
-KillCommand::KillCommand(char **args) {
-  // TODO:
+KillCommand::KillCommand(char **args, int num_args, const char* cmd_line) {
+  if (!areArgumentsValid(args) || num_args > 3)
+  {
+    perror("smash error: invalid arguments")
+  }
+
+  signalToSend = atoi(args[1]);
+  pidToSendTo = atoi(args[2]);
+
+  if (pidToSendTo == 0) 
+  {
+    perror("smash error: kill: job-id <job-id> does not exist");
+  }
+  sendSignalToJobById(pidToSendTo,signalToSend); //TODO need to handle signal errors inside
+}
+
+bool killCommand::areArgumentsValid(char **args){
+  //TODO: need to check if the format is correct: num of arguments, are numbers, there is '-' before the first argument
 }
 
 void KillCommand::execute() {
