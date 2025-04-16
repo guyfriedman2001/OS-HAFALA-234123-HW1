@@ -9,6 +9,19 @@
 #define COMMAND_MAX_ARGS (20)
 #define MAX_DIR_LENGTH (COMMAND_MAX_LENGTH)
 
+
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: AbstractCommands code area V ##########################
+
 class Command {
     // TODO: Add your data members
     // maximum_stack_of_current_jobs_ids
@@ -51,6 +64,19 @@ public:
 
     void execute() override;
 };
+
+// ########################## NOTE: AbstractCommands code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: CommandFactory code area V ##########################
 
 /**
  * @brief A generic abstract factory class for creating Command objects from parsed arguments.
@@ -202,6 +228,19 @@ class Error404CommandNotFound : public CommandFactory<Command> {
         inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) override;
 };   
 
+// ########################## NOTE: CommandFactory code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: SpecialCommands code area V ##########################
+
 class RedirectionCommand : public Command {
     // TODO: Add your data members
 public:
@@ -255,7 +294,18 @@ public:
     void execute() override;
 };
 
+// ########################## NOTE: SpecialCommands code area ^ ##########################
 
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: JobHandling code area V ##########################
 
 class JobsList {
 public:
@@ -301,6 +351,19 @@ public:
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
+
+// ########################## NOTE: JobHandling code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: BuiltInCommand code area V ##########################
 
 class CommandNotFound : public BuiltInCommand {
 public:
@@ -474,6 +537,19 @@ public:
     void execute() override;
 };
 
+// ########################## NOTE: BuiltInCommand code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: SmallShell code area V ##########################
+
 class SmallShell {
 private:
     // TODO: Add your data members
@@ -524,6 +600,16 @@ public:
 
     
 };
+
+// ########################## NOTE: SmallShell code area ^ ##########################
+
+
+
+
+
+
+
+
 
 
 #endif //SMASH_COMMAND_H_
