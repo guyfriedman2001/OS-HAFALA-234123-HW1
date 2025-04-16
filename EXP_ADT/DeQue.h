@@ -9,12 +9,13 @@
 #define EMPTY (0)
 
 //todo remove for mivnei
+/*
 #include <fstream>
 #include <iostream>
 using std::cout;
 using std::ostream;
 using std::endl;
-
+*/
 //todo remove for mivnei
 
 

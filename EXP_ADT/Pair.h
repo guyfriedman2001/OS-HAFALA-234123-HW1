@@ -5,7 +5,10 @@
 #ifndef PAIR_H
 #define PAIR_H
 
+bool can_use_fstream = false;
+#if can_use_fstream
 #include <fstream>
+#endif
 
 constexpr int DEFAULT_KEY = 0;
 
@@ -53,6 +56,7 @@ public:
         return rhs == lhs;
     }
 
+    #if can_use_fstream
     // Declare the friend function
     friend std::ostream& operator<<(std::ostream& os, const Pair& pair) {
         os << "Key: " << pair.key;
@@ -65,6 +69,7 @@ public:
         os << "." << std::endl;
         return os;
     }
+    #endif
 
 
 };

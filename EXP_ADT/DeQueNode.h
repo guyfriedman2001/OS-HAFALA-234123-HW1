@@ -8,15 +8,14 @@
 
 #include <cassert>
 
-
-//todo remove for mivnei
+bool can_use_fstream = false;
+#if can_use_fstream
 #include <fstream>
 #include <iostream>
 using std::cout;
 using std::ostream;
 using std::endl;
-
-//todo remove for mivnei
+#endif
 
 
 
@@ -179,9 +178,8 @@ public:
         return this->next->find(toFind);
     }
 
-    //int getKey() {return this->key;}
 
-    //todo remove for mivnei
+    #if can_use_fstream
 
     void printHelper(ostream& os,int node_number = 0) const {
         char node_seperator_start = '[';
@@ -214,8 +212,7 @@ public:
         deque.printHelper(os);
         return os;
     }
-
-    //todo remove for mivnei
+    #endif
 
 
 };

@@ -1,9 +1,9 @@
 #pragma once
 #include <cassert>
 #define NULL_ID (-1)
-#include  <iostream>
+//#include  <iostream>
 #define EMPTY_TREE_HEIGHT -1
-using std::cout;
+//using std::cout;
 
 template <typename Value>
 class AVLNode {
