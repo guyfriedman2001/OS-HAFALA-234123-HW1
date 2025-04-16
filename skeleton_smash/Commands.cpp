@@ -8,6 +8,7 @@
 #include "Commands.h"
 
 #define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
+#define COPY_CHAR_ARR(A,B) (while(*A++ = *B++)) //inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
 // Global alias for the singleton instance
 SmallShell& SHELL_INSTANCE = SmallShell::getInstance();
@@ -146,7 +147,6 @@ void _removeBackgroundSign(char *cmd_line) {
 
 Command* BuiltInCommandFactory::factoryHelper(char **args) {
   char* command = args[0];
-  //SmallShell& shell = SmallShell::getInstance();
   if (STRINGS_EQUAL(command, "chprompt")) {
     return new ChangePromptCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "showpid")) {
@@ -177,22 +177,19 @@ Command* BuiltInCommandFactory::factoryHelper(char **args) {
 }
 
 Command* ExternalCommandFactory::factoryHelper(char **args) {
-  // your implementation here
-  inline char* command = args[0];
-  inline SmallShell& shell = SmallShell::getInstance();
+  // TODO: your implementation here
+  char* command = args[0];
 
 }
 
 Command* SpecialCommandFactory::factoryHelper(char **args) {
-  // your implementation here
-  inline char* command = args[0];
-  inline SmallShell& shell = SmallShell::getInstance();
+  // TODO: your implementation here
+  char* command = args[0];
 
 }
 
 Command* Error404CommandNotFound::factoryHelper(char **args) {
-  inline SmallShell& shell = SmallShell::getInstance();
-  return new CommandNotFound(args, shell);
+  return new CommandNotFound(args);
 }
 
 // ########################## NOTE: CommandFactory code area ^ ##########################
@@ -326,6 +323,14 @@ bool SmallShell::changeShellDirectory(const char* next_dir){ //return true on su
   } else {
     return true;
   }
+}
+
+std::string SmallShell::getPrompt(){
+  return this->currentPrompt;
+}
+
+std::string SmallShell::getEndStr(){
+  return this->promptEndChar;
 }
 
 
