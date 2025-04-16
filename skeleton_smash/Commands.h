@@ -300,9 +300,9 @@ public:
 
 class CommandNotFound : public BuiltInCommand {
 public:
-    CommandNotFound(char **args, int num_args, const char* cmd_line);
-
     CommandNotFound(char **args);
+
+    CommandNotFound(char **args, int num_args, const char* cmd_line);
     
     virtual ~CommandNotFound() = default;
     
@@ -327,7 +327,9 @@ class ShowPidCommand : public BuiltInCommand {
         int smashPID;
     public:
         ShowPidCommand(char **args);
-    
+
+        ShowPidCommand(char **args, int num_args, const char* cmd_line);  
+
         virtual ~ShowPidCommand() = default;
     
         void execute() override;
@@ -338,7 +340,9 @@ private:
     char current_path[MAX_DIR_LENGTH];
 public:
     GetCurrDirCommand(char **args);
-        
+
+    GetCurrDirCommand(char **args, int num_args, const char* cmd_line);
+
     virtual ~GetCurrDirCommand() = default;
         
     void execute() override;
@@ -355,6 +359,8 @@ private:
 public:
     ChangeDirCommand(char **args);
 
+    ChangeDirCommand(char **args, int num_args, const char* cmd_line);
+
     virtual ~ChangeDirCommand() = default;
 
     void execute() override;
@@ -363,11 +369,9 @@ public:
 class JobsCommand : public BuiltInCommand {  // AKA "jobs"
     // TODO: Add your data members
 public:
-    JobsCommand(const char *cmd_line, JobsList *jobs);
-
-    JobsCommand(char **args, SmallShell& shell);
-
     JobsCommand(char **args);
+
+    JobsCommand(char **args, int num_args, const char* cmd_line);
 
     virtual ~JobsCommand() {
     }
