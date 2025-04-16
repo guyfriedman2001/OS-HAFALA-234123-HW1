@@ -500,6 +500,10 @@ public:
     inline void updateOldPath();
 
     inline bool changeShellDirectory(const char* next_dir);
+
+    inline std::string getPrompt();
+
+    inline std::string getEndStr();
     
 
     
