@@ -386,11 +386,9 @@ public:
 class ForegroundCommand : public BuiltInCommand { // AKA "fg"
     // TODO: Add your data members
 public:
-    ForegroundCommand(const char *cmd_line, JobsList *jobs);
-
-    ForegroundCommand(char **args, SmallShell& shell);
-
     ForegroundCommand(char **args);
+
+    ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
     virtual ~ForegroundCommand() {
     }
@@ -400,12 +398,12 @@ public:
 
 class QuitCommand : public BuiltInCommand { // AKA "quit"
     // TODO: Add your data members 
+    bool killSpecified;
 public:
-    QuitCommand(const char *cmd_line, JobsList *jobs);
-
-    QuitCommand(char **args, SmallShell& shell);
-
     QuitCommand(char **args);
+
+    QuitCommand(char **args, int num_args, const char* cmd_line);
+
 
     virtual ~QuitCommand() {
     }
@@ -415,12 +413,12 @@ public:
 
 class KillCommand : public BuiltInCommand { // AKA "kill"
     // TODO: Add your data members
+    int signalToSend;
+    int pidToSendTo;
 public:
-    KillCommand(const char *cmd_line, JobsList *jobs);
-
-    KillCommand(char **args, SmallShell& shell);
-
     KillCommand(char **args);
+
+    KillCommand(char **args, int num_args, const char* cmd_line);
 
     virtual ~KillCommand() {
     }
@@ -430,12 +428,10 @@ public:
 
 class AliasCommand : public BuiltInCommand { // AKA "alias"
 public:
-    AliasCommand(const char *cmd_line);
-    
-    AliasCommand(char **args, SmallShell& shell);
-
     AliasCommand(char **args);
-    
+
+    AliasCommand(char **args, int num_args, const char* cmd_line);
+
     virtual ~AliasCommand() {
     }
     
@@ -444,12 +440,10 @@ public:
     
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
 public:
-    UnAliasCommand(const char *cmd_line);
-        
-    UnAliasCommand(char **args, SmallShell& shell);
-
     UnAliasCommand(char **args);
-    
+
+    UnAliasCommand(char **args, int num_args, const char* cmd_line);
+
     virtual ~UnAliasCommand() {
     }
     
@@ -458,11 +452,9 @@ public:
 
 class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
     public:
-        UnSetEnvCommand(const char *cmd_line);
-    
-        UnSetEnvCommand(char **args, SmallShell& shell);
-
         UnSetEnvCommand(char **args);
+
+        UnSetEnvCommand(char **args, int num_args, const char* cmd_line);
     
         virtual ~UnSetEnvCommand() {
         }
@@ -472,11 +464,9 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
 
 class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
 public:
-    WatchProcCommand(const char *cmd_line);
-    
-    WatchProcCommand(char **args, SmallShell& shell);
-
     WatchProcCommand(char **args);
+
+    WatchProcCommand(char **args, int num_args, const char* cmd_line);
     
     virtual ~WatchProcCommand() {
     }
@@ -528,6 +518,8 @@ public:
     inline std::string getPrompt();
 
     inline std::string getEndStr();
+
+    inline JobsList& getJobsList();
     
 
     

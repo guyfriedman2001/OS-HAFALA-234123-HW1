@@ -460,7 +460,7 @@ void ForegroundCommand::execute() {
 }
 
 QuitCommand::QuitCommand(char **args) {
-  killSpecified(args[1] != NULL && strcmp(args[1], "kill") == 0) ? true : false;
+  killSpecified = (args[1] != NULL && strcmp(args[1], "kill") == 0);
 }
 
 void QuitCommand::execute() {
@@ -470,13 +470,13 @@ void QuitCommand::execute() {
     printf("smash: sending SIGKILL signal to %d jobs: \n",SHELL_INSTANCE.getJobsList().numberOfJobs());
     SHELL_INSTANCE.getJobsList().killAllJobs();
   }
-  exit();
+  exit(0);
 }
 
 KillCommand::KillCommand(char **args, int num_args, const char* cmd_line) {
-  if (!areArgumentsValid(args) || num_args > 3)
+  if (num_args > 3)
   {
-    perror("smash error: invalid arguments")
+    perror("smash error: invalid arguments");
   }
 
   signalToSend = atoi(args[1]);
@@ -488,12 +488,9 @@ KillCommand::KillCommand(char **args, int num_args, const char* cmd_line) {
   }
 }
 
-bool killCommand::areArgumentsValid(char **args){
-  //TODO: need to check if the format is correct: num of arguments, are numbers, there is '-' before the first argument
-}
 
 void KillCommand::execute() {
-    sendSignalToJobById(pidToSendTo,signalToSend); 
+    SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo,signalToSend); 
 }
 
 AliasCommand::AliasCommand(char **args) {
