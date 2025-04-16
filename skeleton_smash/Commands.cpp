@@ -189,7 +189,7 @@ Command* SpecialCommandFactory::factoryHelper(char **args, int num_args, const c
 }
 
 Command* Error404CommandNotFound::factoryHelper(char **args, int num_args, const char* cmd_line) {
-  return new CommandNotFound(args);
+  return new CommandNotFound(args,num_args,cmd_line);
 }
 
 // ########################## NOTE: CommandFactory code area ^ ##########################
