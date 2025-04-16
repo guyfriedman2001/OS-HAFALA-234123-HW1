@@ -300,6 +300,10 @@ void SmallShell::changePrompt(std::string nextPrompt) {
   SHELL_INSTANCE.currentPrompt = nextPrompt;
 }
 
+int SmallShell::getPID(){
+  //TODO: get shell pid;
+}
+
 
 // ########################## NOTE: SmallShell code area ^ ##########################
 
@@ -329,15 +333,14 @@ ChangePromptCommand::ChangePromptCommand(char **args) :
   nextPrompt((args[1] == NULL) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
 
 void ChangePromptCommand::execute() {
-  // TODO:
+  SHELL_INSTANCE.changePrompt(this->nextPrompt);
 }
 
-ShowPidCommand::ShowPidCommand(char **args) {
-  // TODO:
-}
+ShowPidCommand::ShowPidCommand(char **args) : 
+  smashPID(SHELL_INSTANCE.getPID()){}
 
 void ShowPidCommand::execute() {
-  // TODO:
+    printf("smash pid is %d\n", this->smashPID);
 }
 
 GetCurrDirCommand::GetCurrDirCommand(char **args) {
