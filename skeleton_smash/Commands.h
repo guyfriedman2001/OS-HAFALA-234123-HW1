@@ -12,11 +12,13 @@ class Command {
     // maximum_stack_of_current_jobs_ids
     // binary search tree of running jobs
 public:
+    Command() = default;
+
     Command(const char *cmd_line);
 
     Command(char **args, SmallShell& shell);
 
-    virtual ~Command();
+    virtual ~Command() = default;
 
     virtual void execute() = 0;
 
@@ -27,17 +29,20 @@ public:
 
 class BuiltInCommand : public Command {
 public:
+    BuiltInCommand() = default;
+    
     BuiltInCommand(const char *cmd_line);
 
     BuiltInCommand(char **args, SmallShell& shell);
 
-    virtual ~BuiltInCommand() {
-    }
+    virtual ~BuiltInCommand() = default;
 };
 
 class ExternalCommand : public Command {
 public:
     ExternalCommand(const char *cmd_line);
+
+    ExternalCommand(char** args);
 
     virtual ~ExternalCommand() {
     }
@@ -74,8 +79,8 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline static DerivedClass* makeCommand(char **args, SmallShell& shell){
-        return dynamic_cast<DerivedClass*>(factoryHelper(args, shell));
+    inline static DerivedClass* makeCommand(char **args){//, SmallShell& shell){
+        return dynamic_cast<DerivedClass*>(factoryHelper(args));//, shell));
     }
 
 protected:
@@ -295,6 +300,8 @@ public:
     CommandNotFound(const char *cmd_line);
     
     CommandNotFound(char **args, SmallShell& shell);
+
+    CommandNotFound(char **args);
     
     virtual ~CommandNotFound() {
     }
@@ -303,11 +310,15 @@ public:
 };
 
 class ChangePromptCommand : public BuiltInCommand {
-    public:
+private:
+    std::string nextPrompt;
+public:
 
     ChangePromptCommand(const char *cmd_line);
 
     ChangePromptCommand(char **args, SmallShell& shell);
+
+    ChangePromptCommand(char **args);
     
     virtual ~ChangePromptCommand() {
     }
@@ -320,6 +331,8 @@ class ShowPidCommand : public BuiltInCommand {
         ShowPidCommand(const char *cmd_line);
     
         ShowPidCommand(char **args, SmallShell& shell);
+
+        ShowPidCommand(char **args);
     
         virtual ~ShowPidCommand() {
         }
@@ -332,6 +345,8 @@ public:
     GetCurrDirCommand(const char *cmd_line);
         
     GetCurrDirCommand(char **args, SmallShell& shell);
+
+    GetCurrDirCommand(char **args);
         
     virtual ~GetCurrDirCommand() {
     }
@@ -346,6 +361,8 @@ public:
 
     ChangeDirCommand(char **args, SmallShell& shell);
 
+    ChangeDirCommand(char **args);
+
     virtual ~ChangeDirCommand() {
     }
 
@@ -358,6 +375,8 @@ public:
     JobsCommand(const char *cmd_line, JobsList *jobs);
 
     JobsCommand(char **args, SmallShell& shell);
+
+    JobsCommand(char **args);
 
     virtual ~JobsCommand() {
     }
@@ -372,6 +391,8 @@ public:
 
     ForegroundCommand(char **args, SmallShell& shell);
 
+    ForegroundCommand(char **args);
+
     virtual ~ForegroundCommand() {
     }
 
@@ -384,6 +405,8 @@ public:
     QuitCommand(const char *cmd_line, JobsList *jobs);
 
     QuitCommand(char **args, SmallShell& shell);
+
+    QuitCommand(char **args);
 
     virtual ~QuitCommand() {
     }
@@ -398,6 +421,8 @@ public:
 
     KillCommand(char **args, SmallShell& shell);
 
+    KillCommand(char **args);
+
     virtual ~KillCommand() {
     }
 
@@ -409,6 +434,8 @@ public:
     AliasCommand(const char *cmd_line);
     
     AliasCommand(char **args, SmallShell& shell);
+
+    AliasCommand(char **args);
     
     virtual ~AliasCommand() {
     }
@@ -421,6 +448,8 @@ public:
     UnAliasCommand(const char *cmd_line);
         
     UnAliasCommand(char **args, SmallShell& shell);
+
+    UnAliasCommand(char **args);
     
     virtual ~UnAliasCommand() {
     }
@@ -433,6 +462,8 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
         UnSetEnvCommand(const char *cmd_line);
     
         UnSetEnvCommand(char **args, SmallShell& shell);
+
+        UnSetEnvCommand(char **args);
     
         virtual ~UnSetEnvCommand() {
         }
@@ -445,6 +476,8 @@ public:
     WatchProcCommand(const char *cmd_line);
     
     WatchProcCommand(char **args, SmallShell& shell);
+
+    WatchProcCommand(char **args);
     
     virtual ~WatchProcCommand() {
     }
@@ -455,8 +488,8 @@ public:
 class SmallShell {
 private:
     // TODO: Add your data members
-    std::string currentPrompt = "smash";
-    std::string promptEndChar = ">";
+    std::string currentPrompt;
+    std::string promptEndChar;
     SmallShell();
 
 public:
@@ -477,9 +510,12 @@ public:
 
     void executeCommand(Command *command);
 
-    inline std::string getDefaultPrompt();
+    inline static std::string getDefaultPrompt();
+
+    inline static void changePrompt(std::string nextPrompt);
 
     // TODO: add extra methods as needed
 };
+
 
 #endif //SMASH_COMMAND_H_

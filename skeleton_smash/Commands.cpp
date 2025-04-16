@@ -9,6 +9,9 @@
 
 #define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
 
+// Global alias for the singleton instance
+SmallShell& SHELL_INSTANCE = SmallShell::getInstance();
+
 using namespace std;
 
 const std::string WHITESPACE = " \n\r\t\f\v";
@@ -128,41 +131,46 @@ void _removeBackgroundSign(char *cmd_line) {
 
 // TODO: Add your implementation for classes in Commands.h 
 
-SmallShell::SmallShell() {
-// TODO: add your implementation
-}
 
-SmallShell::~SmallShell() {
-// TODO: add your implementation
-}
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: CommandFactory code area V ##########################
 
 Command* BuiltInCommandFactory::factoryHelper(char **args) {
-  inline char* command = args[0];
-  inline SmallShell& shell = SmallShell::getInstance();
+  char* command = args[0];
+  //SmallShell& shell = SmallShell::getInstance();
   if (STRINGS_EQUAL(command, "chprompt")) {
-    return new ChangePromptCommand(args, shell);
+    return new ChangePromptCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "showpid")) {
-      return new ShowPidCommand(args, shell);
+      return new ShowPidCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "pwd")) {
-      return new GetCurrDirCommand(args, shell);
+      return new GetCurrDirCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "cd")) {
-      return new ChangeDirCommand(args, shell);
+      return new ChangeDirCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "jobs")) {
-      return new JobsCommand(args, shell);
+      return new JobsCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "fg")) {
-      return new ForegroundCommand(args, shell);
+      return new ForegroundCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "quit")) {
-      return new QuitCommand(args, shell);
+      return new QuitCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "kill")) {
-      return new KillCommand(args, shell);
+      return new KillCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "alias")) {
-      return new AliasCommand(args, shell);
+      return new AliasCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "unalias")) {
-      return new UnAliasCommand(args, shell);
+      return new UnAliasCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "unsetenv")) {
-      return new UnSetEnvCommand(args, shell);
+      return new UnSetEnvCommand(args);//, shell);
   } else if (STRINGS_EQUAL(command, "watchproc")) {
-      return new WatchProcCommand(args, shell);
+      return new WatchProcCommand(args);//, shell);
   } else { // unknown command
       return nullptr;
   }
@@ -185,6 +193,34 @@ Command* SpecialCommandFactory::factoryHelper(char **args) {
 Command* Error404CommandNotFound::factoryHelper(char **args) {
   inline SmallShell& shell = SmallShell::getInstance();
   return new CommandNotFound(args, shell);
+}
+
+// ########################## NOTE: CommandFactory code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: SmallShell code area V ##########################
+
+SmallShell::SmallShell()
+    : currentPrompt("smash"), promptEndChar(">") {
+}
+  
+SmallShell::~SmallShell() {
+  // TODO: add your implementation
 }
 
 /**
@@ -213,18 +249,18 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
   char* args[COMMAND_MAX_ARGS];
   int num_args = _parseCommandLine(cmd_line,args);
 
-  returnCommand = BuiltInCommandFactory::makeCommand(args, this);
+  returnCommand = BuiltInCommandFactory::makeCommand(args);
 
   if (returnCommand == nullptr){
-    returnCommand = ExternalCommandFactory::makeCommand(args, this);
+    returnCommand = ExternalCommandFactory::makeCommand(args);
   }
 
   if (returnCommand == nullptr){ // TODO: might need a bit more logic to decide if a command is just external or special.
-    returnCommand = SpecialCommandFactory::makeCommand(args, this);
+    returnCommand = SpecialCommandFactory::makeCommand(args);
   }
-  
+
   if (returnCommand == nullptr){
-    returnCommand = Error404CommandNotFound::makeCommand(args, this);
+    returnCommand = Error404CommandNotFound::makeCommand(args);
   }
 
   commandDestructor(args,num_args);
@@ -259,4 +295,130 @@ void SmallShell::executeCommand(Command *command){
 std::string SmallShell::getDefaultPrompt(){
   return "smash";
 }
+
+void SmallShell::changePrompt(std::string nextPrompt) {
+  SHELL_INSTANCE.currentPrompt = nextPrompt;
+}
+
+
+// ########################## NOTE: SmallShell code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: BuiltInCommand code area V ##########################
+
+
+CommandNotFound::CommandNotFound(char **args) {
+  // TODO:
+}
+
+void CommandNotFound::execute() {
+  // TODO:
+}
+
+ChangePromptCommand::ChangePromptCommand(char **args) : 
+  nextPrompt((args[1] == NULL) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
+
+void ChangePromptCommand::execute() {
+  // TODO:
+}
+
+ShowPidCommand::ShowPidCommand(char **args) {
+  // TODO:
+}
+
+void ShowPidCommand::execute() {
+  // TODO:
+}
+
+GetCurrDirCommand::GetCurrDirCommand(char **args) {
+  // TODO:
+}
+
+void GetCurrDirCommand::execute() {
+  // TODO:
+}
+
+ChangeDirCommand::ChangeDirCommand(char **args) {
+  // TODO:
+}
+
+void ChangeDirCommand::execute() {
+  // TODO:
+}
+
+JobsCommand::JobsCommand(char **args) {
+  // TODO:
+}
+
+void JobsCommand::execute() {
+  // TODO:
+}
+
+ForegroundCommand::ForegroundCommand(char **args) {
+  // TODO:
+}
+
+void ForegroundCommand::execute() {
+  // TODO:
+}
+
+QuitCommand::QuitCommand(char **args) {
+  // TODO:
+}
+
+void QuitCommand::execute() {
+  // TODO:
+}
+
+KillCommand::KillCommand(char **args) {
+  // TODO:
+}
+
+void KillCommand::execute() {
+  // TODO:
+}
+
+AliasCommand::AliasCommand(char **args) {
+  // TODO:
+}
+
+void AliasCommand::execute() {
+  // TODO:
+}
+
+UnAliasCommand::UnAliasCommand(char **args) {
+  // TODO:
+}
+
+void UnAliasCommand::execute() {
+  // TODO:
+}
+
+UnSetEnvCommand::UnSetEnvCommand(char **args) {
+  // TODO:
+}
+
+void UnSetEnvCommand::execute() {
+  // TODO:
+}
+
+WatchProcCommand::WatchProcCommand(char **args) {
+  // TODO:
+}
+
+void WatchProcCommand::execute() {
+  // TODO:
+}
+
+// ########################## NOTE: BuiltInCommand code area ^ ##########################
 
