@@ -8,15 +8,14 @@
 #include "DeQueNode.h"
 #define EMPTY (0)
 
-//todo remove for mivnei
-/*
+bool can_use_fstream = false;
+#if can_use_fstream
 #include <fstream>
 #include <iostream>
 using std::cout;
 using std::ostream;
 using std::endl;
-*/
-//todo remove for mivnei
+#endif
 
 
 template <typename T>
@@ -68,7 +67,7 @@ public:
         return (node == nullptr)?nullptr:node->getData();
     }
 
-    T* remove(T& item) { //fixme יש פה השוואת כתובות במקום השוואת ערכים
+    T* remove(T& item) {
         DeQueNode<T>* temp = this->head->remove(item);
         if (temp == nullptr) {
             return nullptr;
@@ -91,7 +90,7 @@ public:
 
 
 
-    //todo remove for mivnei
+    #if can_use_fstream
 
     // Overloaded ostream operator
     friend ostream& operator<<(ostream& os, const DeQue<T>& deque) {
@@ -101,7 +100,7 @@ public:
         return os;
     }
 
-    //todo remove for mivnei
+    #endif
 
 
 };

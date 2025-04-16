@@ -3,6 +3,7 @@
 #define SMASH_COMMAND_H_
 
 #include <vector>
+#include <map>
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -261,6 +262,8 @@ public:
     class JobEntry {
         // TODO: Add your data members
     };
+    
+    std::map<int, JobEntry> jobs;
 
     // TODO: Add your data members
 public:
@@ -468,6 +471,7 @@ private:
     std::string promptEndChar;
     char oldPWD[MAX_DIR_LENGTH];
     SmallShell();
+    JobsList jobs;
 
 public:
     Command *CreateCommand(const char *cmd_line);
