@@ -251,19 +251,19 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
   }
 
   if (returnCommand == nullptr){
-    returnCommand = BuiltInCommandFactory::makeCommand(args);
+    returnCommand = BuiltInCommandFactory::makeCommand(args,num_args,cmd_line);
   }
 
   if (returnCommand == nullptr){
-    returnCommand = ExternalCommandFactory::makeCommand(args);
+    returnCommand = ExternalCommandFactory::makeCommand(args,num_args,cmd_line);
   }
 
   if (returnCommand == nullptr){ // TODO: might need a bit more logic to decide if a command is just external or special.
-    returnCommand = SpecialCommandFactory::makeCommand(args);
+    returnCommand = SpecialCommandFactory::makeCommand(args,num_args,cmd_line);
   }
 
   if (returnCommand == nullptr){
-    returnCommand = Error404CommandNotFound::makeCommand(args);
+    returnCommand = Error404CommandNotFound::makeCommand(args,num_args,cmd_line);
   }
 
   commandDestructor(args,num_args);

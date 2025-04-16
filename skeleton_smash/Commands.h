@@ -81,8 +81,8 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline static DerivedClass* makeCommand(char **args){//, SmallShell& shell){
-        return dynamic_cast<DerivedClass*>(factoryHelper(args));//, shell));
+    inline static DerivedClass* makeCommand(char **args, int num_args, const char* cmd_line){//, SmallShell& shell){
+        return dynamic_cast<DerivedClass*>(factoryHelper(args,num_args,cmd_line));//, shell));
     }
 
 protected:
