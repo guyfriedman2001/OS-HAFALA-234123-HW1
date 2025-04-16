@@ -6,6 +6,7 @@
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
+#define MAX_DIR_LENGTH (COMMAND_MAX_LENGTH)
 
 class Command {
     // TODO: Add your data members
@@ -303,8 +304,7 @@ public:
 
     CommandNotFound(char **args);
     
-    virtual ~CommandNotFound() {
-    }
+    virtual ~CommandNotFound() = default;
     
     void execute() override;
 };
@@ -320,8 +320,7 @@ public:
 
     ChangePromptCommand(char **args);
     
-    virtual ~ChangePromptCommand() {
-    }
+    virtual ~ChangePromptCommand() = default;
     
     void execute() override;
 };
@@ -336,13 +335,14 @@ class ShowPidCommand : public BuiltInCommand {
 
         ShowPidCommand(char **args);
     
-        virtual ~ShowPidCommand() {
-        }
+        virtual ~ShowPidCommand() = default;
     
         void execute() override;
 };
 
 class GetCurrDirCommand : public BuiltInCommand { // AKA "pwd" / "cwd"
+private:
+    char current_path[MAX_DIR_LENGTH];
 public:
     GetCurrDirCommand(const char *cmd_line);
         
@@ -350,14 +350,19 @@ public:
 
     GetCurrDirCommand(char **args);
         
-    virtual ~GetCurrDirCommand() {
-    }
+    virtual ~GetCurrDirCommand() = default;
         
     void execute() override;
 };
 
 class ChangeDirCommand : public BuiltInCommand { // AKA "cd"
-    // TODO: Add your data members 
+private:
+    const inline static char* TOO_MANY_ARGS = "smash error: cd: too many arguments";
+    const inline static char* OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
+    bool DoNothing = false;
+    bool TooManyArgs = false;
+    bool OldPWDNotSet = false;
+    char next_path[MAX_DIR_LENGTH];
 public:
     ChangeDirCommand(const char *cmd_line, char **plastPwd);
 
@@ -365,8 +370,7 @@ public:
 
     ChangeDirCommand(char **args);
 
-    virtual ~ChangeDirCommand() {
-    }
+    virtual ~ChangeDirCommand() = default;
 
     void execute() override;
 };
@@ -492,6 +496,7 @@ private:
     // TODO: Add your data members
     std::string currentPrompt;
     std::string promptEndChar;
+    char oldPWD[MAX_DIR_LENGTH];
     SmallShell();
 
 public:
@@ -514,9 +519,18 @@ public:
 
     inline static std::string getDefaultPrompt();
 
-    inline static void changePrompt(std::string nextPrompt);
+    inline void changePrompt(std::string nextPrompt);
 
     inline int getPID();
+
+    inline char* loadShellPath(char* buffer_location, size_t buffer_size);
+
+    inline void tryLoadShellPath(char* buffer_location, size_t buffer_size);
+
+    inline void updateOldPath();
+
+    inline bool changeShellDirectory(const char* next_dir);
+    
 
     
 };

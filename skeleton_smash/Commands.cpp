@@ -304,6 +304,32 @@ int SmallShell::getPID(){
   //TODO: get shell pid;
 }
 
+char* SmallShell::loadShellPath(char* buffer_location, size_t buffer_size){
+  return getcwd(buffer_location, buffer_size);
+}
+
+void SmallShell::tryLoadShellPath(char* buffer_location, size_t buffer_size){
+  if (loadShellPath(buffer_location, buffer_size) == nullptr) {
+    perror("smash error: getcwd failed");
+  }
+}
+
+void SmallShell::updateOldPath(){ //store the current path @oldPWD, to be called before path changing;
+  tryLoadShellPath(this->oldPWD, sizeof(this->oldPWD));
+}
+
+bool SmallShell::changeShellDirectory(const char* next_dir){ //return true on succes, false on failure
+  updateOldPath();
+  if (chdir(next_dir) != 0) {
+    //perror("chdir failed");
+    return false;
+  } else {
+    return true;
+  }
+}
+
+
+
 
 // ########################## NOTE: SmallShell code area ^ ##########################
 
@@ -344,19 +370,41 @@ void ShowPidCommand::execute() {
 }
 
 GetCurrDirCommand::GetCurrDirCommand(char **args) {
-  // TODO:
+  SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
 
 void GetCurrDirCommand::execute() {
-  // TODO:
+  printf(this->current_path);
 }
 
 ChangeDirCommand::ChangeDirCommand(char **args) {
-  // TODO:
+  /** TODO: get the arg, if its empty just need to update the do nothing flag,
+            is its just "-" then need to load prev directory from shell to this next dir,
+            if prev path not set then need to see how to notice it and set appropriate flag
+            if its an addition to a relative path, need to see how to do it
+            if its to many arguments, need to set the corresponding flag
+
+            if all flags are to remain 'false' (meaning command is ok), need
+            to store the next path on this->next_path
+  */
 }
 
 void ChangeDirCommand::execute() {
-  // TODO:
+  if (this->DoNothing){ //inapropriate command handling
+    return;
+  } else if (this->TooManyArgs){
+    perror(this->TOO_MANY_ARGS);
+    return;
+  } else if (this->OldPWDNotSet) {
+    perror(this->TOO_MANY_ARGS);
+    return;
+  }
+  bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
+  if (succses){
+    printf(this->next_path);
+  } else {
+    perror("some trouble in 'void ChangeDirCommand::execute()'");
+  }
 }
 
 JobsCommand::JobsCommand(char **args) {

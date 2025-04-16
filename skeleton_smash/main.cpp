@@ -27,9 +27,6 @@ int main(int argc, char *argv[]) {
 
     bool continuus = !true;
     bool run_all_tests = true;
-    //test = 1;
-    //test = 5;
-    //test = 8;
 
     if ((!run_all_tests)&&(test == -1)) {
         printf("select test:\n");
@@ -59,7 +56,7 @@ int main(int argc, char *argv[]) {
 
 
 void test1(){
-    //test to check -
+    //test to check - how to run getcwd
 }
 
 void test2(){
