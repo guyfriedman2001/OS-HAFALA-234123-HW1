@@ -95,7 +95,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    inline virtual Command* factoryHelper(char **args) = 0;
+    inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) = 0;
 };
 
 /**
@@ -119,7 +119,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new BuiltInCommand object.
      */
-    inline virtual Command* factoryHelper(char **args) override;
+    inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) override;
 };
 
 /**
@@ -145,7 +145,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    inline virtual Command* factoryHelper(char **args) override;
+    inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) override;
 };
 
 /**
@@ -172,7 +172,7 @@ class SpecialCommandFactory : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(char **args) override;
+        inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) override;
 };    
 
 /**
@@ -199,7 +199,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(char **args) override;
+        inline virtual Command* factoryHelper(char **args, int num_args, const char* cmd_line) override;
 };   
 
 class RedirectionCommand : public Command {
@@ -260,10 +260,16 @@ public:
 class JobsList {
 public:
     class JobEntry {
-        // TODO: Add your data members
+    private:
+        Command* command;
+        char* cmd_line;
+        int jobID;
+    public:
+        void printYourself();
     };
-    
-    std::map<int, JobEntry> jobs;
+    typedef std::map<int, JobEntry> Jobs;
+
+    Jobs jobs;
 
     // TODO: Add your data members
 public:
@@ -286,12 +292,16 @@ public:
     JobEntry *getLastJob(int *lastJobId);
 
     JobEntry *getLastStoppedJob(int *jobId);
+    
+    int get_max_current_jobID();
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
 
 class CommandNotFound : public BuiltInCommand {
 public:
+    CommandNotFound(char **args, int num_args, const char* cmd_line);
+
     CommandNotFound(char **args);
     
     virtual ~CommandNotFound() = default;
@@ -304,6 +314,8 @@ private:
     std::string nextPrompt;
 public:
     ChangePromptCommand(char **args);
+
+    ChangePromptCommand(char **args, int num_args, const char* cmd_line);
     
     virtual ~ChangePromptCommand() = default;
     

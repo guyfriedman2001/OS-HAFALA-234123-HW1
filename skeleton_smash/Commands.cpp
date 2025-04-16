@@ -145,50 +145,50 @@ void _removeBackgroundSign(char *cmd_line) {
 
 // ########################## NOTE: CommandFactory code area V ##########################
 
-Command* BuiltInCommandFactory::factoryHelper(char **args) {
+Command* BuiltInCommandFactory::factoryHelper(char **args, int num_args, const char* cmd_line) {
   char* command = args[0];
   if (STRINGS_EQUAL(command, "chprompt")) {
-    return new ChangePromptCommand(args);//, shell);
+    return new ChangePromptCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "showpid")) {
-      return new ShowPidCommand(args);//, shell);
+      return new ShowPidCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "pwd")) {
-      return new GetCurrDirCommand(args);//, shell);
+      return new GetCurrDirCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "cd")) {
-      return new ChangeDirCommand(args);//, shell);
+      return new ChangeDirCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "jobs")) {
-      return new JobsCommand(args);//, shell);
+      return new JobsCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "fg")) {
-      return new ForegroundCommand(args);//, shell);
+      return new ForegroundCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "quit")) {
-      return new QuitCommand(args);//, shell);
+      return new QuitCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "kill")) {
-      return new KillCommand(args);//, shell);
+      return new KillCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "alias")) {
-      return new AliasCommand(args);//, shell);
+      return new AliasCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "unalias")) {
-      return new UnAliasCommand(args);//, shell);
+      return new UnAliasCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "unsetenv")) {
-      return new UnSetEnvCommand(args);//, shell);
+      return new UnSetEnvCommand(args,num_args,cmd_line);
   } else if (STRINGS_EQUAL(command, "watchproc")) {
-      return new WatchProcCommand(args);//, shell);
+      return new WatchProcCommand(args,num_args,cmd_line);
   } else { // unknown command
       return nullptr;
   }
 }
 
-Command* ExternalCommandFactory::factoryHelper(char **args) {
+Command* ExternalCommandFactory::factoryHelper(char **args, int num_args, const char* cmd_line) {
   // TODO: your implementation here
   char* command = args[0];
 
 }
 
-Command* SpecialCommandFactory::factoryHelper(char **args) {
+Command* SpecialCommandFactory::factoryHelper(char **args, int num_args, const char* cmd_line) {
   // TODO: your implementation here
   char* command = args[0];
 
 }
 
-Command* Error404CommandNotFound::factoryHelper(char **args) {
+Command* Error404CommandNotFound::factoryHelper(char **args, int num_args, const char* cmd_line) {
   return new CommandNotFound(args);
 }
 
@@ -246,7 +246,13 @@ Command *SmallShell::CreateCommand(const char *cmd_line) {
   char* args[COMMAND_MAX_ARGS];
   int num_args = _parseCommandLine(cmd_line,args);
 
-  returnCommand = BuiltInCommandFactory::makeCommand(args);
+  if (num_args == 0){
+    return nullptr; //TODO: maybe make 'empty command'
+  }
+
+  if (returnCommand == nullptr){
+    returnCommand = BuiltInCommandFactory::makeCommand(args);
+  }
 
   if (returnCommand == nullptr){
     returnCommand = ExternalCommandFactory::makeCommand(args);
@@ -356,12 +362,21 @@ CommandNotFound::CommandNotFound(char **args) {
   // TODO:
 }
 
+CommandNotFound::CommandNotFound(char **args, int num_args, const char* cmd_line) {
+  // TODO: Optionally use args, num_args, or cmd_line if needed
+  // Example: store cmd_line to display the unknown command later
+}
+
 void CommandNotFound::execute() {
   // TODO:
 }
 
 ChangePromptCommand::ChangePromptCommand(char **args) : 
   nextPrompt((args[1] == NULL) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
+
+ChangePromptCommand::ChangePromptCommand(char **args, int num_args, const char* cmd_line) :
+  ChangePromptCommand(args) {}
+
 
 void ChangePromptCommand::execute() {
   SHELL_INSTANCE.changePrompt(this->nextPrompt);
@@ -370,6 +385,10 @@ void ChangePromptCommand::execute() {
 ShowPidCommand::ShowPidCommand(char **args) : 
   smashPID(SHELL_INSTANCE.getPID()){}
 
+ShowPidCommand::ShowPidCommand(char **args, int num_args, const char* cmd_line)
+  : ShowPidCommand(args) {}
+
+
 void ShowPidCommand::execute() {
     printf("smash pid is %d", this->smashPID);
 }
@@ -377,6 +396,10 @@ void ShowPidCommand::execute() {
 GetCurrDirCommand::GetCurrDirCommand(char **args) {
   SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
+
+GetCurrDirCommand::GetCurrDirCommand(char **args, int num_args, const char* cmd_line)
+    : GetCurrDirCommand(args) {}
+
 
 void GetCurrDirCommand::execute() {
   printf(this->current_path);
@@ -393,6 +416,9 @@ ChangeDirCommand::ChangeDirCommand(char **args) {
             to store the next path on this->next_path
   */
 }
+
+ChangeDirCommand::ChangeDirCommand(char **args, int num_args, const char* cmd_line)
+    : ChangeDirCommand(args) {}
 
 void ChangeDirCommand::execute() {
   if (this->DoNothing){ //inapropriate command handling
@@ -414,6 +440,11 @@ void ChangeDirCommand::execute() {
 
 JobsCommand::JobsCommand(char **args) {
   // TODO:
+}
+
+JobsCommand::JobsCommand(char **args, int num_args, const char* cmd_line)
+    : JobsCommand(args) {
+      //TODO: finish dis
 }
 
 void JobsCommand::execute() {
@@ -478,3 +509,83 @@ void WatchProcCommand::execute() {
 
 // ########################## NOTE: BuiltInCommand code area ^ ##########################
 
+
+
+
+
+
+
+
+
+// ########################## NOTE: JobList code area V ##########################
+
+void JobsList::JobEntry::printYourself(){
+  //TODO:
+}
+
+
+JobsList::JobsList() {
+    // TODO:
+}
+
+JobsList::~JobsList() {
+    // TODO:
+}
+
+void JobsList::addJob(Command *cmd, bool isStopped) {
+  Jobs& jbs = this->jobs;
+  int max_curr_job_id = this->get_max_current_jobID();
+  int next_id = ++max_curr_job_id;
+  //FIXME: add call to a proper JobEntry constructor;
+  JobEntry toInsert;
+  jbs.insert(std::make_pair(next_id, toInsert));
+}
+
+void JobsList::printJobsList() {
+  for (auto& pair : jobs) {
+      int jobId = pair.first;
+      JobEntry& job = pair.second;
+      job.printYourself();
+  }
+}
+
+
+void JobsList::killAllJobs() {
+    // TODO: kill all jobs
+}
+
+void JobsList::removeFinishedJobs() {
+    // TODO: remove finished jobs
+}
+
+JobsList::JobEntry *JobsList::getJobById(int jobId) {
+    // TODO: get job by id
+    return nullptr;
+}
+
+void JobsList::removeJobById(int jobId) {
+    // TODO: remove job by id
+}
+
+JobsList::JobEntry *JobsList::getLastJob(int *lastJobId) {
+    // TODO: get last job
+    return nullptr;
+}
+
+JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId) {
+    // TODO: get last stopped job
+    return nullptr;
+}
+
+int JobsList::get_max_current_jobID(){
+    Jobs& jbs = this->jobs;
+    if (jbs.empty()){
+      return 0;
+    } else {
+      int max_key = jobs.rbegin()->first;
+      return max_key;
+    }
+}
+
+
+// ########################## NOTE: JobList code area ^ ##########################
