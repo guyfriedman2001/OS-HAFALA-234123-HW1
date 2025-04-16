@@ -256,15 +256,6 @@ public:
 
 
 
-
-
-
-
-class JobsList;
-
-
-
-
 class JobsList {
 public:
     class JobEntry {
@@ -298,10 +289,6 @@ public:
 
 class CommandNotFound : public BuiltInCommand {
 public:
-    CommandNotFound(const char *cmd_line);
-    
-    CommandNotFound(char **args, SmallShell& shell);
-
     CommandNotFound(char **args);
     
     virtual ~CommandNotFound() = default;
@@ -313,11 +300,6 @@ class ChangePromptCommand : public BuiltInCommand {
 private:
     std::string nextPrompt;
 public:
-
-    ChangePromptCommand(const char *cmd_line);
-
-    ChangePromptCommand(char **args, SmallShell& shell);
-
     ChangePromptCommand(char **args);
     
     virtual ~ChangePromptCommand() = default;
@@ -329,10 +311,6 @@ class ShowPidCommand : public BuiltInCommand {
     private:
         int smashPID;
     public:
-        ShowPidCommand(const char *cmd_line);
-    
-        ShowPidCommand(char **args, SmallShell& shell);
-
         ShowPidCommand(char **args);
     
         virtual ~ShowPidCommand() = default;
@@ -344,10 +322,6 @@ class GetCurrDirCommand : public BuiltInCommand { // AKA "pwd" / "cwd"
 private:
     char current_path[MAX_DIR_LENGTH];
 public:
-    GetCurrDirCommand(const char *cmd_line);
-        
-    GetCurrDirCommand(char **args, SmallShell& shell);
-
     GetCurrDirCommand(char **args);
         
     virtual ~GetCurrDirCommand() = default;
@@ -364,10 +338,6 @@ private:
     bool OldPWDNotSet = false;
     char next_path[MAX_DIR_LENGTH];
 public:
-    ChangeDirCommand(const char *cmd_line, char **plastPwd);
-
-    ChangeDirCommand(char **args, SmallShell& shell);
-
     ChangeDirCommand(char **args);
 
     virtual ~ChangeDirCommand() = default;

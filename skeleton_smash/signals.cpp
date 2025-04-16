@@ -95,7 +95,7 @@ void ctrlCHandler(int sig_num) {
         break;
     //case SIGPWR:
         //code
-        break;
+        //break;
     case SIGSYS:
         //code
         break;
