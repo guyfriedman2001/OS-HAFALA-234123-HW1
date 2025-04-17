@@ -321,7 +321,7 @@ void SmallShell::executeCommand(const char *cmd_line) {
 }
 
 void SmallShell::executeCommand(Command *command){
-
+  command->execute();
 }
 
 std::string SmallShell::getDefaultPrompt(){
@@ -480,8 +480,10 @@ void JobsCommand::execute() {
   // TODO:
 }
 
-ForegroundCommand::ForegroundCommand(char **args) {
-  // TODO:
+//ForegroundCommand::ForegroundCommand(char **args) {}
+
+ForegroundCommand::ForegroundCommand(char **args, int num_args, const char* cmd_line){
+      //TODO: finish dis
 }
 
 void ForegroundCommand::execute() {
@@ -565,6 +567,15 @@ void WatchProcCommand::execute() {
 
 
 // ########################## NOTE: JobList code area V ##########################
+
+const char* ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
+
+const char* ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
+
+const char* ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
+
+const char* ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+
 
 void JobsList::JobEntry::printYourself(){
   //TODO:

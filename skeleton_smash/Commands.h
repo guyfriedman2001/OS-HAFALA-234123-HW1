@@ -453,9 +453,22 @@ public:
 };
 
 class ForegroundCommand : public BuiltInCommand { // AKA "fg"
-    // TODO: Add your data members
+private:
+    static const char* INVALID_SYNTAX_MESSAGE;
+    static const char* JOB_DOESNT_EXIST_MESSAGE_1;
+    static const char* JOB_DOESNT_EXIST_MESSAGE_2;
+    static const char* NO_JOBS_MESSAGE;
+
+    bool invalid_syntax;
+    bool job_doesnt_exist;
+    bool jobs_empty;
+
+    int jobID;
+
+    JobsList::JobEntry* job;
+    
 public:
-    ForegroundCommand(char **args);
+    //ForegroundCommand(char **args);
 
     ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
