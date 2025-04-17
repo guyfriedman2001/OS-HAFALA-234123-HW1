@@ -634,5 +634,19 @@ int JobsList::get_max_current_jobID(){
     }
 }
 
+int JobsList::JobEntry::getPID(){
+  return this->command->getPID();
+}
+
+
+int JobsList::getPID(int jobID) {
+  auto it = this->jobs.find(jobID);  // search for the key
+  if (it != jobs.end()) {  // found the key
+      return it->second.getPID();
+  } else {  // did not find the key
+      return -1; //job with jobID does not exist currently
+  }
+}
+
 
 // ########################## NOTE: JobList code area ^ ##########################
