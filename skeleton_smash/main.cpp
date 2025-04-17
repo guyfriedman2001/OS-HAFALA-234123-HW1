@@ -8,6 +8,8 @@
 #include <stdio.h>
 
 #define TOTAL_NUMBER_OF_TESTS (10)
+#define DEBUG_VAR(x) std::cout << "[DEBUG] " << #x << " (type: " << typeid(x).name() << ") = " << x << std::endl;
+
 
 void test_activator(int test);
 void test1();
