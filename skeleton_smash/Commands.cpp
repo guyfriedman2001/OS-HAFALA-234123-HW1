@@ -143,6 +143,35 @@ void _removeBackgroundSign(char *cmd_line) {
 
 
 
+
+
+
+
+
+// ########################## NOTE: AbstractCommand code area V ##########################
+
+int Command::getPID(){
+  //TODO: get pid of the procces running this command
+}
+
+// ########################## NOTE: AbstractCommand code area V ##########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ########################## NOTE: CommandFactory code area V ##########################
 
 Command* BuiltInCommandFactory::factoryHelper(char **args, int num_args, const char* cmd_line) {

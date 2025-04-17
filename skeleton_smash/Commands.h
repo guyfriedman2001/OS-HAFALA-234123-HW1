@@ -37,6 +37,8 @@ public:
 
     virtual void execute() = 0;
 
+    inline int getPID();
+
     //virtual void prepare();
     //virtual void cleanup();
     // TODO: Add your extra methods if needed
