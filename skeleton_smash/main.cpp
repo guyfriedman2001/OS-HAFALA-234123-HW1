@@ -8,8 +8,43 @@
 #include <stdio.h>
 
 #define TOTAL_NUMBER_OF_TESTS (10)
-#define DEBUG_VAR(x) std::cout << "[DEBUG] " << #x << " (type: " << typeid(x).name() << ") = " << x << std::endl;
 
+// Define debug_mode at compile time, you can modify this to enable/disable debugging
+#define debug_mode true
+
+// Use the preprocessor to conditionally define DEBUG based on debug_mode
+#if debug_mode
+    #define DEBUG  // Enable debug features
+#else
+    #undef DEBUG  // Disable debug features
+#endif
+
+// Debug macro for printing variable information
+#ifdef DEBUG
+    #include <iostream>
+    #include <typeinfo>
+    #define DEBUG_VAR(x) std::cout << "\033[1;33m[DEBUG]\033[0m " << #x << " (type: " << typeid(x).name() << ") = " << x << std::endl;
+#else
+    #define DEBUG_VAR(x) // Empty: does nothing in non-debug mode
+#endif
+
+// Debug macros for timing execution
+#ifdef DEBUG
+    #include <chrono>
+    #define DEBUG_TIME_START(name) auto start_##name = std::chrono::high_resolution_clock::now();
+    #define DEBUG_TIME_END(name) { \
+        auto end_##name = std::chrono::high_resolution_clock::now(); \
+        auto duration_##name = std::chrono::duration_cast<std::chrono::milliseconds>(end_##name - start_##name).count(); \
+        std::cout << "[DEBUG] Time for " << #name << ": " << duration_##name << "ms" << std::endl; \
+    }
+#else
+    #define DEBUG_TIME_START(name) 
+    #define DEBUG_TIME_END(name) 
+#endif
+
+#if 0
+#define DEBUG_VAR(x) std::cout << "[DEBUG] " << #x << " (type: " << typeid(x).name() << ") = " << x << std::endl;
+#endif
 
 void test_activator(int test);
 void test1();
