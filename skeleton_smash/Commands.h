@@ -4,6 +4,8 @@
 
 #include <vector>
 #include <map>
+#include <unordered_map>
+#include <string>
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -509,6 +511,10 @@ public:
 };
 
 class AliasCommand : public BuiltInCommand { // AKA "alias"
+
+    bool aliasList;
+    char* actualCommand;
+    std::string aliasName;
 public:
     AliasCommand(char **args);
 
@@ -518,6 +524,8 @@ public:
     }
     
     void execute() override;
+    std::string extractAlias(const char* cmd_line);
+    char* extractActualCommand(const char* cmd_line);
 };
     
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
@@ -577,6 +585,7 @@ private:
     char oldPWD[MAX_DIR_LENGTH];
     SmallShell();
     JobsList jobs;
+    AliasManager aliases;
 
 public:
     Command *CreateCommand(const char *cmd_line);
@@ -615,6 +624,7 @@ public:
     inline std::string getEndStr();
 
     inline JobsList& getJobsList();
+    inline AliasManager& getAliases();
     
 
     
@@ -624,6 +634,22 @@ public:
 
 
 
+
+
+// ########################## NOTE: AliasHandling code area V ##########################
+
+class AliasManager {
+    std::unordered_map<std::string, const char *> aliases;
+
+    public:
+
+    void addAlias(const std::string& newAliasName, const char * cmd_line);
+    bool isReserved(const std::string& newAliasName) const;
+    bool isSyntaxValid(const std::string& newAliasName) const;
+    void printAll() const;
+}
+
+// ########################## NOTE: AliasHandling code area ^ ##########################
 
 
 

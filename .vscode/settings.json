@@ -37,6 +37,8 @@
         "ratio": "cpp",
         "string_view": "cpp",
         "variant": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "chrono": "cpp",
+        "functional": "cpp"
     }
 }
