@@ -378,9 +378,9 @@ public:
 
 class CommandNotFound : public BuiltInCommand {
 public:
-    CommandNotFound(char **args);
+    explicit CommandNotFound(argv args);
 
-    CommandNotFound(char **args, int num_args, const char* cmd_line); //std::string first_arg,int num_args, std::string cmd_s
+    //CommandNotFound(char **args, int num_args, const char* cmd_line); //std::string first_arg,int num_args, std::string cmd_s
 
     CommandNotFound(argv args, const char* cmd_line);
 
@@ -393,9 +393,9 @@ class ChangePromptCommand : public BuiltInCommand {
 private:
     std::string nextPrompt;
 public:
-    ChangePromptCommand(char **args);
+    explicit ChangePromptCommand(argv args);
 
-    ChangePromptCommand(char **args, int num_args, const char* cmd_line);
+    //ChangePromptCommand(char **args, int num_args, const char* cmd_line);
 
     ChangePromptCommand(argv args, const char* cmd_line);
     
@@ -408,9 +408,9 @@ class ShowPidCommand : public BuiltInCommand {
     private:
         int smashPID;
     public:
-        ShowPidCommand(char **args);
+        explicit ShowPidCommand(argv args);
 
-        ShowPidCommand(char **args, int num_args, const char* cmd_line);
+        //ShowPidCommand(char **args, int num_args, const char* cmd_line);
 
         ShowPidCommand(argv args, const char* cmd_line);
 
@@ -424,9 +424,9 @@ class GetCurrDirCommand : public BuiltInCommand { // AKA "pwd" / "cwd"
 private:
     char current_path[MAX_DIR_LENGTH];
 public:
-    GetCurrDirCommand(char **args);
+    explicit GetCurrDirCommand(argv args);
 
-    GetCurrDirCommand(char **args, int num_args, const char* cmd_line);
+    //GetCurrDirCommand(char **args, int num_args, const char* cmd_line);
 
     GetCurrDirCommand(argv args, const char* cmd_line);
 
@@ -444,9 +444,9 @@ private:
     bool OldPWDNotSet = false;
     char next_path[MAX_DIR_LENGTH];
 public:
-    ChangeDirCommand(char **args);
+    explicit ChangeDirCommand(argv args);
 
-    ChangeDirCommand(char **args, int num_args, const char* cmd_line);
+    //ChangeDirCommand(char **args, int num_args, const char* cmd_line);
 
     ChangeDirCommand(argv args, const char* cmd_line);
 
@@ -458,9 +458,9 @@ public:
 class JobsCommand : public BuiltInCommand {  // AKA "jobs"
     // TODO: Add your data members
 public:
-    JobsCommand(char **args);
+    explicit JobsCommand(argv args);
 
-    JobsCommand(char **args, int num_args, const char* cmd_line);
+    //JobsCommand(char **args, int num_args, const char* cmd_line);
 
     JobsCommand(argv args, const char* cmd_line);
 
@@ -488,7 +488,7 @@ private:
 public:
     //ForegroundCommand(char **args);
 
-    ForegroundCommand(char **args, int num_args, const char* cmd_line);
+    //ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
     ForegroundCommand(argv args, const char* cmd_line);
 
