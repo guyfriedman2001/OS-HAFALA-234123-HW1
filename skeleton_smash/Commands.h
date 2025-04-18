@@ -13,7 +13,7 @@
 
 
 
-
+class SmallShell;
 
 
 
@@ -102,7 +102,7 @@ public:
 template <typename DerivedClass>
 class CommandFactory{
 public:
-    CommandFactory() = delete;
+    CommandFactory() = default;
     virtual ~CommandFactory() = default;
 
      /**
@@ -111,8 +111,8 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline static DerivedClass* makeCommand(char **args, int num_args, const char* cmd_line){//, SmallShell& shell){
-        return dynamic_cast<DerivedClass*>(factoryHelper(args,num_args,cmd_line));//, shell));
+    inline DerivedClass* makeCommand(char **args, int num_args, const char* cmd_line){//, SmallShell& shell){
+        return dynamic_cast<DerivedClass*>(this->factoryHelper(args,num_args,cmd_line));//, shell));
     }
 
 protected:
@@ -139,7 +139,7 @@ protected:
  */
 class BuiltInCommandFactory : public CommandFactory<BuiltInCommand> {
 public:
-    BuiltInCommandFactory() = delete;
+    BuiltInCommandFactory() = default;
     virtual ~BuiltInCommandFactory() = default;
 protected:
 
@@ -165,7 +165,7 @@ protected:
  */
 class ExternalCommandFactory : public CommandFactory<ExternalCommand> {
 public:
-    ExternalCommandFactory() = delete;
+    ExternalCommandFactory() = default;
     virtual ~ExternalCommandFactory() = default;
 protected:
 
@@ -192,7 +192,7 @@ protected:
  */
 class SpecialCommandFactory : public CommandFactory<Command> {
     public:
-        SpecialCommandFactory() = delete;
+        SpecialCommandFactory() = default;
         virtual ~SpecialCommandFactory() = default;
     
     protected:
@@ -219,7 +219,7 @@ class SpecialCommandFactory : public CommandFactory<Command> {
  */
 class Error404CommandNotFound : public CommandFactory<Command> {
     public:
-    Error404CommandNotFound() = delete;
+    Error404CommandNotFound() = default;
         virtual ~Error404CommandNotFound() = default;
     
     protected:
@@ -425,8 +425,8 @@ public:
 
 class ChangeDirCommand : public BuiltInCommand { // AKA "cd"
 private:
-    const inline static char* TOO_MANY_ARGS = "smash error: cd: too many arguments";
-    const inline static char* OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
+    const static char* TOO_MANY_ARGS;// = "smash error: cd: too many arguments";
+    const static char* OLD_PWD_NOT_SET;// = "smash error: cd: OLDPWD not set";
     bool DoNothing = false;
     bool TooManyArgs = false;
     bool OldPWDNotSet = false;
@@ -575,6 +575,28 @@ public:
 
 
 
+
+
+
+
+
+
+// ########################## NOTE: AliasHandling code area V ##########################
+
+class AliasManager {
+    std::unordered_map<std::string, const char *> aliases;
+
+    public:
+
+    void addAlias(const std::string& newAliasName, const char * cmd_line);
+    bool isReserved(const std::string& newAliasName) const;
+    bool isSyntaxValid(const std::string& newAliasName) const;
+    void printAll() const;
+};
+
+// ########################## NOTE: AliasHandling code area ^ ##########################
+
+
 // ########################## NOTE: SmallShell code area V ##########################
 
 class SmallShell {
@@ -625,34 +647,12 @@ public:
 
     inline JobsList& getJobsList();
     inline AliasManager& getAliases();
-    
 
-    
+
+
 };
 
 // ########################## NOTE: SmallShell code area ^ ##########################
-
-
-
-
-
-// ########################## NOTE: AliasHandling code area V ##########################
-
-class AliasManager {
-    std::unordered_map<std::string, const char *> aliases;
-
-    public:
-
-    void addAlias(const std::string& newAliasName, const char * cmd_line);
-    bool isReserved(const std::string& newAliasName) const;
-    bool isSyntaxValid(const std::string& newAliasName) const;
-    void printAll() const;
-}
-
-// ########################## NOTE: AliasHandling code area ^ ##########################
-
-
-
 
 
 

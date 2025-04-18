@@ -6,6 +6,7 @@
 #include "signals.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "ostream"
 
 #define TOTAL_NUMBER_OF_TESTS (10)
 
@@ -96,8 +97,40 @@ void test1(){
     //test to check - how to run getcwd
 }
 
+bool isComplexCommand(const char* cmd_line){
+    --cmd_line;
+    while(*cmd_line++){
+      if (*cmd_line == '?'){
+        return true;
+      }
+      if (*cmd_line == '*'){
+        return true;
+      }
+    }
+    return false;
+}
+
+#include <string>
+#include <set>
+#include <cstdlib>  // for getenv
+#include <unistd.h> // for access()
+
+bool isBuiltInCommand(const std::string& cmd) {
+    static const std::set<std::string> builtins = {
+        "cd", "pwd", "jobs", "fg", "bg", "kill", "quit", "chprompt", "showpid", "set", "unset", "alias", "unalias"
+    };
+    return builtins.find(cmd) != builtins.end();
+}
+
 void test2(){
-    //test to check -
+    //test to check - isComplexCommand
+
+    std::string c;
+    std::cin >> c;
+    std::cout << "isBuiltInCommand: " << isBuiltInCommand(c.c_str()) << std::endl;
+    std::cout << "isComplexCommand: " << isComplexCommand(c.c_str()) << std::endl;
+
+      
 }
 
 void test3(){

@@ -145,6 +145,37 @@ void _removeBackgroundSign(char *cmd_line)
   cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = 0;
 }
 
+#include <string>
+#include <set>
+#include <cstdlib>  // for getenv
+#include <unistd.h> // for access()
+
+bool isBuiltInCommand(const std::string& cmd) {
+  static const std::set<std::string> builtins = {
+      "cd", "pwd", "jobs", "fg", "bg", "kill", "quit", "chprompt", "showpid", "set", "unset", "alias", "unalias"
+  };
+  return builtins.find(cmd) != builtins.end();
+}
+
+bool isComplexCommand(const char* cmd_line){
+  --cmd_line;
+  while(*cmd_line++){
+    if (*cmd_line == '?'){
+      return true;
+    }
+    if (*cmd_line == '*'){
+      return true;
+    }
+  }
+  return false;
+}
+/*
+bool isComplexCommand(const char* cmd_line) {
+  return (strchr(cmd_line, '?') || strchr(cmd_line, '*'));
+}
+
+*/
+
 // TODO: Add your implementation for classes in Commands.h
 
 // ########################## NOTE: AbstractCommand code area V ##########################
@@ -221,6 +252,46 @@ Command *ExternalCommandFactory::factoryHelper(char **args, int num_args, const 
   char *command = args[0];
 }
 
+/*
+void runExternalCommand(const char* cmd_line) {
+    pid_t pid = fork();
+    
+    if (pid == -1) {
+        // Fork failed
+        perror("fork failed");
+        return;
+    }
+    
+    if (pid == 0) {
+        // Child process
+
+        // Parse the cmd_line into program + arguments
+        char cmd_copy[1024];
+        strncpy(cmd_copy, cmd_line, sizeof(cmd_copy));
+        cmd_copy[sizeof(cmd_copy) - 1] = '\0'; // null-terminate
+        
+        // Tokenize the command
+        std::vector<char*> args;
+        char* token = strtok(cmd_copy, " ");
+        while (token != nullptr) {
+            args.push_back(token);
+            token = strtok(nullptr, " ");
+        }
+        args.push_back(nullptr); // execvp expects a nullptr at the end
+
+        // Execute the command
+        if (execvp(args[0], args.data()) == -1) {
+            perror("execvp failed");
+            exit(1);
+        }
+    } else {
+        // Parent process
+        int status;
+        waitpid(pid, &status, 0); // wait for the child
+    }
+}
+*/
+
 Command *SpecialCommandFactory::factoryHelper(char **args, int num_args, const char *cmd_line)
 {
   // TODO: your implementation here
@@ -280,22 +351,30 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   if (returnCommand == nullptr)
   {
-    returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
+    BuiltInCommandFactory factory;
+    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    //returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
-    returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
+    SpecialCommandFactory factory;
+    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    //returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
-    returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
+    ExternalCommandFactory factory;
+    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    //returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
-    returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
+    Error404CommandNotFound factory;
+    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    //returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
   commandDestructor(args, num_args);
@@ -449,6 +528,9 @@ ChangeDirCommand::ChangeDirCommand(char **args)
             to store the next path on this->next_path
   */
 }
+
+const char* ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
+const char* ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
 
 ChangeDirCommand::ChangeDirCommand(char **args, int num_args, const char *cmd_line)
     : ChangeDirCommand(args) {}
@@ -771,6 +853,8 @@ void AliasManager::addAlias(const std::string &newAliasName, const char *cmd_lin
   aliases.insert(std::make_pair(newAliasName, cmd_line));
 }
 
+#define ignore_for_now true
+#if !ignore_for_now
 bool AliasManager::isReserved(const std::string &newAliasName) const
 {
   if (aliases.find(newAliasName) != nullptr || newAliasName == "cd" || newAliasName == "pwd" || newAliasName == "chprompt" || newAliasName == "showpid" ||
@@ -782,6 +866,7 @@ bool AliasManager::isReserved(const std::string &newAliasName) const
   }
   return true;
 }
+#endif
 
 bool AliasManager::isSyntaxValid(const std::string &newAliasName) const
 {

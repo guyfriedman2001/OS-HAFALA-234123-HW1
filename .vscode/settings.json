@@ -38,7 +38,11 @@
         "string_view": "cpp",
         "variant": "cpp",
         "algorithm": "cpp",
+<<<<<<< Updated upstream
         "chrono": "cpp",
         "functional": "cpp"
+=======
+        "map": "cpp"
+>>>>>>> Stashed changes
     }
 }
