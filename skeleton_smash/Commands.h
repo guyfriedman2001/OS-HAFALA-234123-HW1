@@ -506,7 +506,7 @@ private:
     inline void print_job_list_is_empty() const;
 
 public:
-    //ForegroundCommand(char **args);
+    ForegroundCommand(const argv& args);
 
     //ForegroundCommand(char **args, int num_args, const char* cmd_line);
 

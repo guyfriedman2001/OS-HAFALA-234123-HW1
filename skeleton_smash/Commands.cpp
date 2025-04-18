@@ -698,9 +698,7 @@ void JobsCommand::execute()
   // TODO:
 }
 
-// ForegroundCommand::ForegroundCommand(char **args) {}
-
-ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
+ForegroundCommand::ForegroundCommand(const argv& args)
 {
   assert_not_empty(args);
   bool incorrect_args_ammount = args.size() > 2; //first arg should be "fg" and second (optional) arg should be a specific job ID
@@ -732,6 +730,9 @@ ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
 
 
 }
+
+ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line) : ForegroundCommand(args) {}
+
 
 const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
 
@@ -772,8 +773,7 @@ void ForegroundCommand::execute()
     this->print_job_list_is_empty();
     return;
   }
-  int exit_status;
-  exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
+  int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
   //now what?? need to print something? maybe print @exit_status????
   FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status); )
 }
