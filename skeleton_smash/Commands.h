@@ -544,8 +544,8 @@ public:
 class AliasCommand : public BuiltInCommand { // AKA "alias"
 
     bool aliasList;
-    char* actualCommand;
-    std::string aliasName;
+    string actualCommand;
+    string aliasName;
 public:
     AliasCommand(char **args);
 
@@ -555,11 +555,13 @@ public:
     }
     
     void execute() override;
-    std::string extractAlias(const char* cmd_line);
-    char* extractActualCommand(const char* cmd_line);
+    string extractAlias(argv args);
+    string extractActualCommand(argv args);
 };
     
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
+    bool noArgs;
+    argv aliasesToRemove;
 public:
     UnAliasCommand(char **args);
 
@@ -615,13 +617,16 @@ public:
 // ########################## NOTE: AliasHandling code area V ##########################
 
 class AliasManager {
-    std::unordered_map<std::string, const char *> aliases;
+    std::unordered_map<string, string> aliases;
 
     public:
 
-    void addAlias(const std::string& newAliasName, const char * cmd_line);
-    bool isReserved(const std::string& newAliasName) const;
-    bool isSyntaxValid(const std::string& newAliasName) const;
+    argv uncoverAlias(argv original);
+    void addAlias(const string& newAliasName, string args);
+    void removeAlias(const string& aliasToRemove);
+    bool isReserved(const string& newAliasName) const;
+    bool doesExist(const string& newAliasName) const;
+    bool isSyntaxValid(const string& newAliasName) const;
     void printAll() const;
 };
 
