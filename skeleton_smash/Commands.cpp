@@ -334,11 +334,12 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
+  argv args = argv(); //FIXME: after we make a function to return argv after aliasing, add call to that function @here
 
 
-  char *args[COMMAND_MAX_ARGS];
-  int num_args = _parseCommandLine(cmd_line, args); //get num of arguments
-  commandDestructor(args, num_args);
+  //char *args_[COMMAND_MAX_ARGS];
+  int num_args = args.size();//_parseCommandLine(cmd_line, args_); //get num of arguments
+  //commandDestructor(args_, num_args);
 
 
 
@@ -350,28 +351,28 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   if (returnCommand == nullptr)
   {
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     Error404CommandNotFound factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
@@ -465,15 +466,14 @@ std::string SmallShell::getEndStr()
 
 // ########################## NOTE: BuiltInCommand code area V ##########################
 
-CommandNotFound::CommandNotFound(char **args)
+CommandNotFound::CommandNotFound(const argv& args)
 {
   // TODO:
 }
 
-CommandNotFound::CommandNotFound(char **args, int num_args, const char *cmd_line)
-{
-  // TODO: Optionally use args, num_args, or cmd_line if needed
-  // Example: store cmd_line to display the unknown command later
+
+CommandNotFound::CommandNotFound(const argv& args, const char* cmd_line) {
+
 }
 
 void CommandNotFound::execute()
@@ -481,18 +481,18 @@ void CommandNotFound::execute()
   // TODO:
 }
 
-ChangePromptCommand::ChangePromptCommand(char **args) : nextPrompt((args[1] == NULL) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
 
-ChangePromptCommand::ChangePromptCommand(char **args, int num_args, const char *cmd_line) : ChangePromptCommand(args) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args, const char* cmd_line) : ChangePromptCommand(move(args)) {}
 
 void ChangePromptCommand::execute()
 {
   SHELL_INSTANCE.changePrompt(this->nextPrompt);
 }
 
-ShowPidCommand::ShowPidCommand(char **args) : smashPID(SHELL_INSTANCE.getPID()) {}
+ShowPidCommand::ShowPidCommand(const argv& args) : smashPID(SHELL_INSTANCE.getPID()) {}
 
-ShowPidCommand::ShowPidCommand(char **args, int num_args, const char *cmd_line)
+ShowPidCommand::ShowPidCommand(const argv& args, const char* cmd_line)
     : ShowPidCommand(args) {}
 
 void ShowPidCommand::execute()
@@ -500,20 +500,21 @@ void ShowPidCommand::execute()
   printf("smash pid is %d", this->smashPID);
 }
 
-GetCurrDirCommand::GetCurrDirCommand(char **args)
+GetCurrDirCommand::GetCurrDirCommand()
 {
   SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
 
-GetCurrDirCommand::GetCurrDirCommand(char **args, int num_args, const char *cmd_line)
-    : GetCurrDirCommand(args) {}
+GetCurrDirCommand::GetCurrDirCommand(const argv& args) : GetCurrDirCommand() {}
+
+GetCurrDirCommand::GetCurrDirCommand(const argv& args, const char* cmd_line) : GetCurrDirCommand(args) {}
 
 void GetCurrDirCommand::execute()
 {
   printf(this->current_path);
 }
 
-ChangeDirCommand::ChangeDirCommand(char **args)
+ChangeDirCommand::ChangeDirCommand(const argv& args)
 {
   /** TODO: get the arg, if its empty just need to update the do nothing flag,
             is its just "-" then need to load prev directory from shell to this next dir,
@@ -529,7 +530,7 @@ ChangeDirCommand::ChangeDirCommand(char **args)
 const char* ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
 const char* ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
 
-ChangeDirCommand::ChangeDirCommand(char **args, int num_args, const char *cmd_line)
+ChangeDirCommand::ChangeDirCommand(const argv& args, const char* cmd_line)
     : ChangeDirCommand(args) {}
 
 void ChangeDirCommand::execute()
@@ -559,16 +560,17 @@ void ChangeDirCommand::execute()
   }
 }
 
-JobsCommand::JobsCommand(char **args)
+JobsCommand::JobsCommand(const argv& args)
 {
   // TODO:
 }
 
-JobsCommand::JobsCommand(char **args, int num_args, const char *cmd_line)
+JobsCommand::JobsCommand(const argv& args, const char* cmd_line)
     : JobsCommand(args)
 {
   // TODO: finish dis
 }
+
 
 void JobsCommand::execute()
 {
@@ -577,7 +579,7 @@ void JobsCommand::execute()
 
 // ForegroundCommand::ForegroundCommand(char **args) {}
 
-ForegroundCommand::ForegroundCommand(char **args, int num_args, const char *cmd_line)
+ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
 {
   // TODO: finish dis
 }
