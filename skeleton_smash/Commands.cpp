@@ -589,7 +589,7 @@ void ForegroundCommand::execute()
 
 QuitCommand::QuitCommand(argv args, const char* cmd_line)
 {
-  killSpecified = (args[1] != NULL && strcmp(args[1], "kill") == 0);
+  killSpecified = (args[1] == "kill");
 }
 
 void QuitCommand::execute()
@@ -597,7 +597,7 @@ void QuitCommand::execute()
   if (killSpecified)
   {
     SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-    printf("smash: sending SIGKILL signal to %d jobs: \n", SHELL_INSTANCE.getJobsList().numberOfJobs());
+    cout << "smash: sending SIGKILL signal to " << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl;
     SHELL_INSTANCE.getJobsList().killAllJobs();
   }
   exit(0);
@@ -605,17 +605,17 @@ void QuitCommand::execute()
 
 KillCommand::KillCommand(argv args, const char* cmd_line)
 {
-  if (num_args > 3)
+  if (args.size() > 3)
   {
-    perror("smash error: invalid arguments");
+    cerr << "smash error: invalid arguments" << endl;
   }
 
-  signalToSend = atoi(args[1]);
-  pidToSendTo = atoi(args[2]);
+  signalToSend = stoi(args[1]);
+  pidToSendTo = stoi(args[2]);
 
   if (pidToSendTo == 0)
   {
-    perror("smash error: kill: job-id <job-id> does not exist");
+    cerr << "smash error: kill: job-id <job-id> does not exist" << endl;
   }
 }
 
@@ -626,77 +626,90 @@ void KillCommand::execute()
 
 AliasCommand::AliasCommand(argv args, const char* cmd_line)
 {
-  if (args[1] == NULL)
+  if (args.size() == 1)
   {
     aliasList = true;
   }
   else
   {
     aliasList = false;
-    aliasName = extractAlias(cmd_line);
-    actualCommand = extractActualCommand(cmd_line);
+    aliasName = extractAlias(args);
+    actualCommand = extractActualCommand(args);
   }
 }
 
 void AliasCommand::execute()
 {
-  if (aliasName == "" || actualCommand == NULL)
+  if (aliasName == "" || actualCommand.empty())
   {
-    perror("smash error: alias: invalid alias format");
+    cerr << "smash error: alias: invalid alias format" << endl;
   }
   else if (aliasList)
   {
     SHELL_INSTANCE.getAliases().printAll();
   } else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
-    perror("smash error: alias: <name> already exists or is a reserved command ");
+    cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
   }
   else if(SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName)){
-    perror("smash error: alias: invalid alias format");
+    cerr << "smash error: alias: invalid alias format" << endl;
   } else{
     SHELL_INSTANCE.getAliases().addAlias(aliasName,actualCommand);
   }
 }
 
-std::string extractAlias(const char *cmd_line)
+string extractAlias(argv args)
 {
-  const char *equalExists = strchr(cmd_line, '=');
-  if (!equalExists)
-  {
-    return ""; // = not found thus format is invalid
-  }
-  return std::string(cmd_line, equalExists);
+ int equal = args[1].find('=');
+ if (equal = -1) // = not found
+ {
+  return "";
+ }
+ return args[1].substr(0,equal); // return the string until the =
 }
 
-char *extractActualCommand(const char *cmd_line)
+string extractActualCommand(argv args)
 {
-  const char *commandStart = strchr(cmd_line, '\'');
-  if (!commandStart)
+  int firstQuote = args[1].find('\'');
+  int secondQuote = args[1].find('\'', firstQuote + 1);
+  if (firstQuote == -1 || secondQuote == -1) // ' ' not found
   {
-    return NULL; // ' not found thus format is invalid
+    return "";
   }
-
-  const char *commandEnd = strchr(commandStart + 1, '\'');
-  if (!commandEnd)
-  {
-    return NULL; // ' not found thus format is invalid
-  }
-  size_t length = commandStart - (commandEnd + 1);
-  char *actualCommand = new char[length + 1];
-  strncpy(actualCommand, commandStart + 1, length);
-  actualCommand[length] = '\0';
-
-  return actualCommand;
+  return args[1].substr(firstQuote + 1,secondQuote - firstQuote + 1); // return the string between the ' ' in a string form
 }
 
 UnAliasCommand::UnAliasCommand(argv args, const char* cmd_line)
 {
-  // TODO:
+  for (int i = 1; i < args.size(); i++)
+  {
+    aliasesToRemove.push_back(args[i]);
+  }
+  if (aliasesToRemove.size() == 0)
+  {
+    noArgs = true;
+  } else {
+  noArgs = false;
+  }
 }
 
 void UnAliasCommand::execute()
 {
-  // TODO:
+  if (noArgs)
+  {
+    cerr << "smash error: unalias: not enough arguments" << endl;
+  } else {
+  for (int i = 0; i < aliasesToRemove.size(); i++)
+  {
+    if (SHELL_INSTANCE.getAliases().doesExist(aliasesToRemove[i]))
+    {
+      SHELL_INSTANCE.getAliases().removeAlias(aliasesToRemove[i]);
+    } else {
+      cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
+      break;
+    }
+  }
+  }
 }
 
 UnSetEnvCommand::UnSetEnvCommand(argv args, const char* cmd_line)
@@ -835,27 +848,31 @@ int JobsList::getPID(int jobID)
 
 // ########################## NOTE: AliasHandling code area V ##########################
 
-void AliasManager::addAlias(const std::string &newAliasName, const char *cmd_line)
+void AliasManager::addAlias(const string &newAliasName, string args)
 {
   if (isReserved(newAliasName))
   {
-    perror("smash error: alias: <name> already exists or is a reserved command");
+    cerr << "smash error: alias: <name> already exists or is a reserved command" << endl;
   }
 
   if (isSyntaxValid(newAliasName))
   {
-    perror("smash error: alias: invalid alias format");
+    cerr << "smash error: alias: invalid alias format" << endl;
   }
 
-  aliases.insert(std::make_pair(newAliasName, cmd_line));
+  aliases.insert(std::make_pair(newAliasName, args));
 }
 
-#define ignore_for_now true
-#if !ignore_for_now
-bool AliasManager::isReserved(const std::string &newAliasName) const
+void AliasManager::removeAlias(const string& aliasToRemove){
+  aliases.erase(aliasToRemove);
+}
+
+
+
+bool AliasManager::isReserved(const string &newAliasName) const
 {
-  if (aliases.find(newAliasName) != nullptr || newAliasName == "cd" || newAliasName == "pwd" || newAliasName == "chprompt" || newAliasName == "showpid" ||
-      newAliasName == "jobs" || newAliasName == "fg" || newAliasName == "alias" || newAliasName == "quit" ||
+  if (newAliasName == "cd" || newAliasName == "pwd" || newAliasName == "chprompt" || newAliasName == "showpid" ||
+      newAliasName == "jobs" || newAliasName == "fg" || newAliasName == "alias" || newAliasName == "quit" || newAliasName == "unalias" ||
       newAliasName == "kill" || newAliasName == "unalias" || newAliasName == "unsetenv" || newAliasName == "watchproc" ||
       newAliasName == "lisidr" || newAliasName == "ls") // TODO maybe add more reserved words
   {
@@ -863,9 +880,20 @@ bool AliasManager::isReserved(const std::string &newAliasName) const
   }
   return true;
 }
+
+#define ignore_for_now false
+#if !ignore_for_now
+bool AliasManager::doesExist(const string& newAliasName) const
+{
+  if (aliases.find(newAliasName) != nullptr)
+  {
+    return true;
+  }
+  return false;
+}
 #endif
 
-bool AliasManager::isSyntaxValid(const std::string &newAliasName) const
+bool AliasManager::isSyntaxValid(const string &newAliasName) const
 {
   const std::regex pattern("^alias [a-zA-Z0-9_]+='[^']*'$");
   return std::regex_match(newAliasName, pattern);
@@ -875,8 +903,32 @@ void AliasManager::printAll() const
 {
   for (const auto &alias : aliases)
   {
-    printf("%s='%s'\n", alias.first.c_str(), alias.second);
+    cout <<  alias.first << "=" << "'" << alias.second << "'" << endl;
   }
 }
+
+argv AliasManager::uncoverAlias(argv original){
+  argv uncoveredArgv;
+
+  if (original[0] == "unalias" || original[0] == "alias")
+  {
+      return original;
+  }
+  for (int i = 0; i < original.size(); i++)
+  {
+    if (aliases.find(original[i]) != nullptr)
+    {
+      std::istringstream iss(aliases[original[i]]);
+      std::string word;
+      while (iss >> word) {
+        uncoveredArgv.push_back(word);
+    }
+    } else {
+      uncoveredArgv.push_back(original[i]);
+    }
+    return uncoveredArgv;
+  }
+}
+
 
 // ########################## NOTE: AliasHandling code area ^ ##########################
