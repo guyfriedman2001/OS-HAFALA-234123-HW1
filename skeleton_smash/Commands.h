@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <string>
 #include <cassert>
+#include <charconv>  // for std::from_chars
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -497,7 +498,13 @@ private:
     int jobID;
 
     JobsList::JobEntry* job;
-    
+
+    inline void print_no_job_with_id() const;
+
+    inline void print_invalid_args() const;
+
+    inline void print_job_list_is_empty() const;
+
 public:
     //ForegroundCommand(char **args);
 
@@ -505,8 +512,9 @@ public:
 
     ForegroundCommand(const argv& args, const char* cmd_line);
 
-    virtual ~ForegroundCommand() {
-    }
+    virtual ~ForegroundCommand() {}
+
+    //inline void job_doesnt_exist();
 
     void execute() override;
 };
@@ -694,7 +702,11 @@ public:
 
     inline void print_jobs();
 
+    inline int waitPID(pid_t pid);
 
+    JobsList::JobEntry *getJobById(int jobId);
+
+    int get_max_current_jobID();
 
 };
 

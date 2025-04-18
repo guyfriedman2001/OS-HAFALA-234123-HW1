@@ -21,6 +21,7 @@ class SmallShell;
   #define FOR_DEBUG_MODE(CODE_CONTENTS)
 #endif
 
+#define FOREGROUND_WAIT_MODIFIER 0
 // Global alias for the singleton instance
 SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
@@ -156,7 +157,7 @@ void _removeBackgroundSign(char *cmd_line)
 #include <string>
 #include <set>
 #include <cstdlib>  // for getenv
-#include <unistd.h> // for access()
+
 
 bool isBuiltInCommand(const std::string& cmd) {
   static const std::set<std::string> builtins = {
@@ -179,6 +180,31 @@ inline void assert_not_empty(const T& container) {
   assert(!container.empty());
 }
 
+/**
+ *
+ * @param s string to turn into int
+ * @param out location to store int convertion
+ * @return true if conversion succesfull, false otherwise
+ */
+bool stringToInt(const std::string& s, int& out) //function from StackOverflow, nned to make sure that it works
+{
+  char* end = nullptr;
+  errno = 0; // reset errno before call
+  long val = std::strtol(s.c_str(), &end, 10);
+
+  if (errno != 0 || end != s.c_str() + s.size()) {
+    // invalid number or not fully consumed
+    return false;
+  }
+
+  // check overflow for int range
+  if (val < INT_MIN || val > INT_MAX) {
+    return false;
+  }
+
+  out = static_cast<int>(val);
+  return true;
+}
 // TODO: Add your implementation for classes in Commands.h
 
 // ########################## NOTE: AbstractCommand code area V ##########################
@@ -346,6 +372,12 @@ void SmallShell::print_jobs()
   this->jobs.printJobsList();
 }
 
+JobsList::JobEntry* SmallShell::getJobById(int jobId)
+{
+  return this->jobs.getJobById(jobId);
+}
+
+
 
 
 
@@ -506,6 +538,20 @@ std::string SmallShell::getEndStr()
   return this->promptEndChar;
 }
 
+int SmallShell::waitPID(pid_t pid)
+{
+  int status;
+  waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER);
+  return status;
+}
+
+int  SmallShell::get_max_current_jobID()
+{
+  return this->jobs.get_max_current_jobID();
+}
+
+
+
 // ########################## NOTE: SmallShell code area ^ ##########################
 
 // ########################## NOTE: BuiltInCommand code area V ##########################
@@ -656,12 +702,80 @@ void JobsCommand::execute()
 
 ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
 {
-  // TODO: finish dis
+  assert_not_empty(args);
+  bool incorrect_args_ammount = args.size() > 2; //first arg should be "fg" and second (optional) arg should be a specific job ID
+  bool explicit_jobID_given = args.size() > 2;
+  bool second_arg_is_convertible_to_int;
+
+  if (explicit_jobID_given) {
+    second_arg_is_convertible_to_int = stringToInt(args[1],this->jobID); //if second arg was given, make sure that its an int
+  } else {
+    this->jobID = SHELL_INSTANCE.get_max_current_jobID();
+    second_arg_is_convertible_to_int = true;
+  }
+
+  if (incorrect_args_ammount ||(!second_arg_is_convertible_to_int)) {
+    this->invalid_syntax = true;
+    return;
+  }
+  this->job = SHELL_INSTANCE.getJobById(this->jobID);
+  if (this->job == nullptr && explicit_jobID_given) {
+    this->job_doesnt_exist = true;
+    return;
+  }
+  if (this->job == nullptr && !(explicit_jobID_given) ) {
+    this->job_doesnt_exist = false;
+    this->jobs_empty = true;
+  }
+
+  //TODO: COMPLETE LOGIC
+
+
+}
+
+const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
+
+const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
+
+const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
+
+const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+
+void ForegroundCommand::print_no_job_with_id() const
+{
+  char buf[256];
+  snprintf(buf, sizeof(buf), "%s%d%s", JOB_DOESNT_EXIST_MESSAGE_1, this->jobID, JOB_DOESNT_EXIST_MESSAGE_2);
+  perror(buf);
+}
+
+void ForegroundCommand::print_invalid_args() const
+{
+  perror(INVALID_SYNTAX_MESSAGE);
+}
+
+void ForegroundCommand::print_job_list_is_empty() const
+{
+  perror(NO_JOBS_MESSAGE);
 }
 
 void ForegroundCommand::execute()
 {
-  // TODO:
+  if (this->invalid_syntax) {
+    this->print_invalid_args();
+    return;
+  }
+  else if (this->job_doesnt_exist) {
+    this->print_no_job_with_id();
+    return;
+  }
+  else if (this->jobs_empty) {
+    this->print_job_list_is_empty();
+    return;
+  }
+  int exit_status;
+  exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
+  //now what?? need to print something? maybe print @exit_status????
+  FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status); )
 }
 
 QuitCommand::QuitCommand(argv args, const char* cmd_line)
@@ -838,14 +952,6 @@ int ExternalCommand::getPID()
 // ########################## NOTE: ExternalCommand code area V ##########################
 
 // ########################## NOTE: JobList code area V ##########################
-
-const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
-
-const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
-
-const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
-
-const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
 
 JobsList::JobEntry::JobEntry(ExternalCommand* command, int jobID) : command(command), jobID(jobID) {}
 
