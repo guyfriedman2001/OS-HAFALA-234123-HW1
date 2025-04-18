@@ -180,56 +180,56 @@ int Command::getPID()
 
 // ########################## NOTE: CommandFactory code area V ##########################
 
-Command *BuiltInCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
+Command *BuiltInCommandFactory::factoryHelper(argv args, const char* cmd_line)
 {
-  string& command = first_arg;
+  string& command = args[0];
   if (STRINGS_EQUAL(command, "chprompt"))
   {
-    return new ChangePromptCommand(first_arg, num_args, cmd_s);
+    return new ChangePromptCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "showpid"))
   {
-    return new ShowPidCommand(first_arg, num_args, cmd_s);
+    return new ShowPidCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "pwd"))
   {
-    return new GetCurrDirCommand(first_arg, num_args, cmd_s);
+    return new GetCurrDirCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "cd"))
   {
-    return new ChangeDirCommand(args, num_args, cmd_line);
+    return new ChangeDirCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "jobs"))
   {
-    return new JobsCommand(args, num_args, cmd_line);
+    return new JobsCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "fg"))
   {
-    return new ForegroundCommand(args, num_args, cmd_line);
+    return new ForegroundCommand(args,  cmd_line);
   }
   else if (STRINGS_EQUAL(command, "quit"))
   {
-    return new QuitCommand(args, num_args, cmd_line);
+    return new QuitCommand(args,  cmd_line);
   }
   else if (STRINGS_EQUAL(command, "kill"))
   {
-    return new KillCommand(args, num_args, cmd_line);
+    return new KillCommand(args,  cmd_line);
   }
   else if (STRINGS_EQUAL(command, "alias"))
   {
-    return new AliasCommand(args, num_args, cmd_line);
+    return new AliasCommand(args,  cmd_line);
   }
   else if (STRINGS_EQUAL(command, "unalias"))
   {
-    return new UnAliasCommand(args, num_args, cmd_line);
+    return new UnAliasCommand(args,  cmd_line);
   }
   else if (STRINGS_EQUAL(command, "unsetenv"))
   {
-    return new UnSetEnvCommand(args, num_args, cmd_line);
+    return new UnSetEnvCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "watchproc"))
   {
-    return new WatchProcCommand(args, num_args, cmd_line);
+    return new WatchProcCommand(args, cmd_line);
   }
   else
   { // unknown command
@@ -237,10 +237,10 @@ Command *BuiltInCommandFactory::factoryHelper(string first_arg,int num_args, str
   }
 }
 
-Command *ExternalCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
+Command *ExternalCommandFactory::factoryHelper(argv args, const char* cmd_line)
 {
   // TODO: your implementation here
-  string& command = first_arg;
+  string& command = args[0];
 }
 
 /*
@@ -283,15 +283,15 @@ void runExternalCommand(const char* cmd_line) {
 }
 */
 
-Command *SpecialCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
+Command *SpecialCommandFactory::factoryHelper(argv args, const char* cmd_line)
 {
   // TODO: your implementation here
-  string& command = first_arg;
+  string& command = args[0];
 }
 
-Command *Error404CommandNotFound::factoryHelper(string first_arg,int num_args, string cmd_s)
+Command *Error404CommandNotFound::factoryHelper(argv args, const char* cmd_line)
 {
-  return new CommandNotFound(first_arg, num_args, cmd_s);
+  return new CommandNotFound(args, cmd_line);
 }
 
 // ########################## NOTE: CommandFactory code area ^ ##########################
