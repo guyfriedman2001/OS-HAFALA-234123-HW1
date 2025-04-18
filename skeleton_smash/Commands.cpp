@@ -332,11 +332,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
-
-
   Command *returnCommand = nullptr;
+
+
   char *args[COMMAND_MAX_ARGS];
-  int num_args = _parseCommandLine(cmd_line, args);
+  int num_args = _parseCommandLine(cmd_line, args); //get num of arguments
+  commandDestructor(args, num_args);
+
+
 
   if (num_args == 0)
   {
@@ -371,7 +374,6 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
     //returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
-  commandDestructor(args, num_args);
   return returnCommand;
 }
 
