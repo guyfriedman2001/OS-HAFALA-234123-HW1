@@ -6,6 +6,7 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <cassert>
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -61,15 +62,21 @@ public:
 };
 
 class ExternalCommand : public Command {
+private:
+    char command[COMMAND_MAX_LENGTH];
 public:
     ExternalCommand(const char *cmd_line);
 
-    ExternalCommand(char** args);
+    ExternalCommand(const argv& args,const char *cmd_line);
 
     virtual ~ExternalCommand() {
     }
 
     void execute() override;
+
+    inline void printYourself();
+
+    inline int getPID();
 };
 
 // ########################## NOTE: AbstractCommands code area ^ ##########################
@@ -318,12 +325,14 @@ class JobsList {
 public:
     class JobEntry {
     private:
-        Command* command;
-        char* cmd_line;
+        ExternalCommand* command;
+        //char* cmd_line;
         int jobID;
     public:
-        void printYourself();
-        inline int getPID(); //get the PID of the running command
+        JobEntry(ExternalCommand* command, int jobID);
+        ~JobEntry() = default;
+        inline void printYourself();
+        inline int getJobPID(); //get the PID of the running command
 
     };
     typedef std::map<int, JobEntry> Jobs;
@@ -336,7 +345,7 @@ public:
 
     ~JobsList();
 
-    void addJob(Command *cmd, bool isStopped = false);
+    void addJob(ExternalCommand *cmd, bool isStopped = false);
 
     void printJobsList();
 
@@ -358,7 +367,7 @@ public:
 
     void sendSignalToJobById(int pidToSendTo, int signalToSend); //TODO need to handle signal errors inside - comes later in the HW
 
-    inline int getPID(int jobID); //get the PID of the running command of the job with a specifiec ID
+    inline int getJobPID(int jobID); //get the PID of the running command of the job with a specifiec ID
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
@@ -408,6 +417,8 @@ class ShowPidCommand : public BuiltInCommand {
     private:
         int smashPID;
     public:
+        ShowPidCommand();
+
         explicit ShowPidCommand(const argv& args);
 
         //ShowPidCommand(char **args, int num_args, const char* cmd_line);
@@ -622,9 +633,10 @@ class AliasManager {
 class SmallShell {
 private:
     // TODO: Add your data members
-    std::string currentPrompt;
-    std::string promptEndChar;
+    string currentPrompt;
+    string promptEndChar;
     char oldPWD[MAX_DIR_LENGTH];
+    bool old_path_set;
     SmallShell();
     JobsList jobs;
     AliasManager aliases;
@@ -659,14 +671,23 @@ public:
 
     inline void updateOldPath();
 
+    inline bool hasOldPath();
+
+    inline string getPreviousPath();
+
     inline bool changeShellDirectory(const char* next_dir);
 
     inline std::string getPrompt();
 
     inline std::string getEndStr();
 
+    inline void print_current_path() const;
+
     inline JobsList& getJobsList();
+
     inline AliasManager& getAliases();
+
+    inline void print_jobs();
 
 
 
