@@ -157,24 +157,14 @@ bool isBuiltInCommand(const std::string& cmd) {
   return builtins.find(cmd) != builtins.end();
 }
 
-bool isComplexCommand(const char* cmd_line){
-  --cmd_line;
-  while(*cmd_line++){
-    if (*cmd_line == '?'){
-      return true;
-    }
-    if (*cmd_line == '*'){
-      return true;
-    }
-  }
+bool isExternalComamnd(const char* cmd_line) {
+  //TODO: create
   return false;
 }
-/*
+
 bool isComplexCommand(const char* cmd_line) {
   return (strchr(cmd_line, '?') || strchr(cmd_line, '*'));
 }
-
-*/
 
 // TODO: Add your implementation for classes in Commands.h
 
@@ -339,6 +329,10 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
     return new ExternalCommand(cmd_line);
   }
   */
+
+  string cmd_s = _trim(string(cmd_line));
+  string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
+
 
   Command *returnCommand = nullptr;
   char *args[COMMAND_MAX_ARGS];
