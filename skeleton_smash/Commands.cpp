@@ -466,13 +466,13 @@ std::string SmallShell::getEndStr()
 
 // ########################## NOTE: BuiltInCommand code area V ##########################
 
-CommandNotFound::CommandNotFound(argv args)
+CommandNotFound::CommandNotFound(const argv& args)
 {
   // TODO:
 }
 
 
-CommandNotFound::CommandNotFound(argv args, const char* cmd_line) {
+CommandNotFound::CommandNotFound(const argv& args, const char* cmd_line) {
 
 }
 
@@ -481,39 +481,40 @@ void CommandNotFound::execute()
   // TODO:
 }
 
-ChangePromptCommand::ChangePromptCommand(argv args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
 
-ChangePromptCommand::ChangePromptCommand(argv args, const char* cmd_line) : ChangePromptCommand(move(args)) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args, const char* cmd_line) : ChangePromptCommand(move(args)) {}
 
 void ChangePromptCommand::execute()
 {
   SHELL_INSTANCE.changePrompt(this->nextPrompt);
 }
 
-ShowPidCommand::ShowPidCommand(argv args) : smashPID(SHELL_INSTANCE.getPID()) {}
+ShowPidCommand::ShowPidCommand(const argv& args) : smashPID(SHELL_INSTANCE.getPID()) {}
 
-ShowPidCommand::ShowPidCommand(argv args, const char* cmd_line)
-    : ShowPidCommand(move(args)) {}
+ShowPidCommand::ShowPidCommand(const argv& args, const char* cmd_line)
+    : ShowPidCommand(args) {}
 
 void ShowPidCommand::execute()
 {
   printf("smash pid is %d", this->smashPID);
 }
 
-GetCurrDirCommand::GetCurrDirCommand(argv args)
+GetCurrDirCommand::GetCurrDirCommand()
 {
   SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
 
-GetCurrDirCommand::GetCurrDirCommand(argv args, const char* cmd_line)
-    : GetCurrDirCommand(move(args)) {}
+GetCurrDirCommand::GetCurrDirCommand(const argv& args) : GetCurrDirCommand() {}
+
+GetCurrDirCommand::GetCurrDirCommand(const argv& args, const char* cmd_line) : GetCurrDirCommand(args) {}
 
 void GetCurrDirCommand::execute()
 {
   printf(this->current_path);
 }
 
-ChangeDirCommand::ChangeDirCommand(argv args)
+ChangeDirCommand::ChangeDirCommand(const argv& args)
 {
   /** TODO: get the arg, if its empty just need to update the do nothing flag,
             is its just "-" then need to load prev directory from shell to this next dir,
@@ -529,7 +530,7 @@ ChangeDirCommand::ChangeDirCommand(argv args)
 const char* ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
 const char* ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
 
-ChangeDirCommand::ChangeDirCommand(argv args, const char* cmd_line)
+ChangeDirCommand::ChangeDirCommand(const argv& args, const char* cmd_line)
     : ChangeDirCommand(args) {}
 
 void ChangeDirCommand::execute()
@@ -559,12 +560,12 @@ void ChangeDirCommand::execute()
   }
 }
 
-JobsCommand::JobsCommand(argv args)
+JobsCommand::JobsCommand(const argv& args)
 {
   // TODO:
 }
 
-JobsCommand::JobsCommand(argv args, const char* cmd_line)
+JobsCommand::JobsCommand(const argv& args, const char* cmd_line)
     : JobsCommand(args)
 {
   // TODO: finish dis
@@ -578,7 +579,7 @@ void JobsCommand::execute()
 
 // ForegroundCommand::ForegroundCommand(char **args) {}
 
-ForegroundCommand::ForegroundCommand(argv args, const char* cmd_line)
+ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
 {
   // TODO: finish dis
 }
