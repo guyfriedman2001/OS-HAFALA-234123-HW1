@@ -284,13 +284,13 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   }
 
   if (returnCommand == nullptr)
-  {
-    returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
+  { // TODO: might need a bit more logic to decide if a command is just external or special.
+    returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
-  { // TODO: might need a bit more logic to decide if a command is just external or special.
-    returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
+  {
+    returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
@@ -370,6 +370,7 @@ bool SmallShell::changeShellDirectory(const char *next_dir)
   }
   else
   {
+    // printf("chdir sucsess");
     return true;
   }
 }
@@ -465,7 +466,7 @@ void ChangeDirCommand::execute()
   }
   else if (this->OldPWDNotSet)
   {
-    perror(this->TOO_MANY_ARGS);
+    perror(this->OLD_PWD_NOT_SET);
     return;
   }
   bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
