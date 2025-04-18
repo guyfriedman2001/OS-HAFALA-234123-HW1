@@ -334,11 +334,12 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
+  argv args = argv(); //FIXME: after we make a function to return argv after aliasing, add call to that function @here
 
 
-  char *args[COMMAND_MAX_ARGS];
-  int num_args = _parseCommandLine(cmd_line, args); //get num of arguments
-  commandDestructor(args, num_args);
+  //char *args_[COMMAND_MAX_ARGS];
+  int num_args = args.size();//_parseCommandLine(cmd_line, args_); //get num of arguments
+  //commandDestructor(args_, num_args);
 
 
 
@@ -350,28 +351,28 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   if (returnCommand == nullptr)
   {
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     Error404CommandNotFound factory;
-    returnCommand = factory.makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
