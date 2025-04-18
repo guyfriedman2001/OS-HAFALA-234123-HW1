@@ -504,7 +504,7 @@ class QuitCommand : public BuiltInCommand { // AKA "quit"
 public:
     QuitCommand(char **args);
 
-    QuitCommand(char **args, int num_args, const char* cmd_line);
+    QuitCommand(argv args, const char* cmd_line);
 
 
     virtual ~QuitCommand() {
@@ -520,7 +520,7 @@ class KillCommand : public BuiltInCommand { // AKA "kill"
 public:
     KillCommand(char **args);
 
-    KillCommand(char **args, int num_args, const char* cmd_line);
+    KillCommand(argv args, const char* cmd_line);
 
     virtual ~KillCommand() {
     }
@@ -536,7 +536,7 @@ class AliasCommand : public BuiltInCommand { // AKA "alias"
 public:
     AliasCommand(char **args);
 
-    AliasCommand(char **args, int num_args, const char* cmd_line);
+    AliasCommand(argv args, const char* cmd_line);
 
     virtual ~AliasCommand() {
     }
@@ -550,7 +550,7 @@ class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
 public:
     UnAliasCommand(char **args);
 
-    UnAliasCommand(char **args, int num_args, const char* cmd_line);
+    UnAliasCommand(argv args, const char* cmd_line);
 
     virtual ~UnAliasCommand() {
     }
@@ -562,7 +562,7 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
     public:
         UnSetEnvCommand(char **args);
 
-        UnSetEnvCommand(char **args, int num_args, const char* cmd_line);
+        UnSetEnvCommand(argv args, const char* cmd_line);
     
         virtual ~UnSetEnvCommand() {
         }
@@ -574,7 +574,7 @@ class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
 public:
     WatchProcCommand(char **args);
 
-    WatchProcCommand(char **args, int num_args, const char* cmd_line);
+    WatchProcCommand(argv args, const char* cmd_line);
     
     virtual ~WatchProcCommand() {
     }

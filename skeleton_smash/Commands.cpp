@@ -588,7 +588,7 @@ void ForegroundCommand::execute()
   // TODO:
 }
 
-QuitCommand::QuitCommand(char **args)
+QuitCommand::QuitCommand(argv args, const char* cmd_line)
 {
   killSpecified = (args[1] != NULL && strcmp(args[1], "kill") == 0);
 }
@@ -604,7 +604,7 @@ void QuitCommand::execute()
   exit(0);
 }
 
-KillCommand::KillCommand(char **args, int num_args, const char *cmd_line)
+KillCommand::KillCommand(argv args, const char* cmd_line)
 {
   if (num_args > 3)
   {
@@ -625,7 +625,7 @@ void KillCommand::execute()
   SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo, signalToSend);
 }
 
-AliasCommand::AliasCommand(char **args, int num_args, const char *cmd_line)
+AliasCommand::AliasCommand(argv args, const char* cmd_line)
 {
   if (args[1] == NULL)
   {
@@ -690,7 +690,7 @@ char *extractActualCommand(const char *cmd_line)
   return actualCommand;
 }
 
-UnAliasCommand::UnAliasCommand(char **args)
+UnAliasCommand::UnAliasCommand(argv args, const char* cmd_line)
 {
   // TODO:
 }
@@ -700,7 +700,7 @@ void UnAliasCommand::execute()
   // TODO:
 }
 
-UnSetEnvCommand::UnSetEnvCommand(char **args)
+UnSetEnvCommand::UnSetEnvCommand(argv args, const char* cmd_line)
 {
   // TODO:
 }
@@ -710,7 +710,7 @@ void UnSetEnvCommand::execute()
   // TODO:
 }
 
-WatchProcCommand::WatchProcCommand(char **args)
+WatchProcCommand::WatchProcCommand(argv args, const char* cmd_line)
 {
   // TODO:
 }
