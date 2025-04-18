@@ -10,7 +10,8 @@
 
 class SmallShell;
 
-#define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
+//#define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
+#define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
 // Global alias for the singleton instance
@@ -179,20 +180,20 @@ int Command::getPID()
 
 // ########################## NOTE: CommandFactory code area V ##########################
 
-Command *BuiltInCommandFactory::factoryHelper(char **args, int num_args, const char *cmd_line)
+Command *BuiltInCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
 {
-  char *command = args[0];
+  string& command = first_arg;
   if (STRINGS_EQUAL(command, "chprompt"))
   {
-    return new ChangePromptCommand(args, num_args, cmd_line);
+    return new ChangePromptCommand(first_arg, num_args, cmd_s);
   }
   else if (STRINGS_EQUAL(command, "showpid"))
   {
-    return new ShowPidCommand(args, num_args, cmd_line);
+    return new ShowPidCommand(first_arg, num_args, cmd_s);
   }
   else if (STRINGS_EQUAL(command, "pwd"))
   {
-    return new GetCurrDirCommand(args, num_args, cmd_line);
+    return new GetCurrDirCommand(first_arg, num_args, cmd_s);
   }
   else if (STRINGS_EQUAL(command, "cd"))
   {
@@ -236,10 +237,10 @@ Command *BuiltInCommandFactory::factoryHelper(char **args, int num_args, const c
   }
 }
 
-Command *ExternalCommandFactory::factoryHelper(char **args, int num_args, const char *cmd_line)
+Command *ExternalCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
 {
   // TODO: your implementation here
-  char *command = args[0];
+  string& command = first_arg;
 }
 
 /*
@@ -282,15 +283,15 @@ void runExternalCommand(const char* cmd_line) {
 }
 */
 
-Command *SpecialCommandFactory::factoryHelper(char **args, int num_args, const char *cmd_line)
+Command *SpecialCommandFactory::factoryHelper(string first_arg,int num_args, string cmd_s)
 {
   // TODO: your implementation here
-  char *command = args[0];
+  string& command = first_arg;
 }
 
-Command *Error404CommandNotFound::factoryHelper(char **args, int num_args, const char *cmd_line)
+Command *Error404CommandNotFound::factoryHelper(string first_arg,int num_args, string cmd_s)
 {
-  return new CommandNotFound(args, num_args, cmd_line);
+  return new CommandNotFound(first_arg, num_args, cmd_s);
 }
 
 // ########################## NOTE: CommandFactory code area ^ ##########################

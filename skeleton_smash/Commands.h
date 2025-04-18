@@ -11,6 +11,9 @@
 #define COMMAND_MAX_ARGS (20)
 #define MAX_DIR_LENGTH (COMMAND_MAX_LENGTH)
 
+using std::string;
+
+typedef std::vector<std::string> argv;
 
 
 class SmallShell;
@@ -111,8 +114,8 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline DerivedClass* makeCommand(std::string first_arg,int num_args, std::string cmd_s){//, SmallShell& shell){
-        return dynamic_cast<DerivedClass*>(this->factoryHelper(first_arg,num_args,cmd_s));//, shell));
+    inline DerivedClass* makeCommand(argv args, const char* cmd_line){//, SmallShell& shell){
+        return dynamic_cast<DerivedClass*>(this->factoryHelper(args,cmd_line));//, shell));
     }
 
 protected:
@@ -125,7 +128,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    inline virtual Command* factoryHelper(std::string first_arg,int num_args, std::string cmd_s) = 0;
+    inline virtual Command* factoryHelper(argv args, const char* cmd_line) = 0;
 };
 
 /**
@@ -149,7 +152,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new BuiltInCommand object.
      */
-    inline virtual Command* factoryHelper(std::string first_arg,int num_args, std::string cmd_s) override;
+    inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
 };
 
 /**
@@ -175,7 +178,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    inline virtual Command* factoryHelper(std::string first_arg,int num_args, std::string cmd_s) override;
+    inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
 };
 
 /**
@@ -202,7 +205,7 @@ class SpecialCommandFactory : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(std::string first_arg,int num_args, std::string cmd_s) override;
+        inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
 };    
 
 /**
@@ -229,7 +232,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(std::string first_arg,int num_args, std::string cmd_s) override;
+        inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
 };   
 
 // ########################## NOTE: CommandFactory code area ^ ##########################
@@ -248,7 +251,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
 class RedirectionCommand : public Command {
     // TODO: Add your data members
 public:
-    explicit RedirectionCommand(const char *cmd_line);
+    explicit RedirectionCommand(argv args, const char* cmd_line);
 
     virtual ~RedirectionCommand() {
     }
@@ -259,7 +262,7 @@ public:
 class PipeCommand : public Command {
     // TODO: Add your data members
 public:
-    PipeCommand(const char *cmd_line);
+    PipeCommand(argv args, const char* cmd_line);
 
     virtual ~PipeCommand() {
     }
@@ -269,7 +272,7 @@ public:
 
 class DiskUsageCommand : public Command {
 public:
-    DiskUsageCommand(const char *cmd_line);
+    DiskUsageCommand(argv args, const char* cmd_line);
 
     virtual ~DiskUsageCommand() {
     }
@@ -279,7 +282,7 @@ public:
 
 class WhoAmICommand : public Command {
 public:
-    WhoAmICommand(const char *cmd_line);
+    WhoAmICommand(argv args, const char* cmd_line);
 
     virtual ~WhoAmICommand() {
     }
@@ -290,7 +293,7 @@ public:
 class NetInfo : public Command {
     // TODO: Add your data members **BONUS: 10 Points**
 public:
-    NetInfo(const char *cmd_line);
+    NetInfo(argv args, const char* cmd_line);
 
     virtual ~NetInfo() {
     }
@@ -379,7 +382,7 @@ public:
 
     CommandNotFound(char **args, int num_args, const char* cmd_line); //std::string first_arg,int num_args, std::string cmd_s
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    CommandNotFound(argv args, const char* cmd_line);
 
     virtual ~CommandNotFound() = default;
     
@@ -394,7 +397,7 @@ public:
 
     ChangePromptCommand(char **args, int num_args, const char* cmd_line);
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    ChangePromptCommand(argv args, const char* cmd_line);
     
     virtual ~ChangePromptCommand() = default;
     
@@ -409,7 +412,7 @@ class ShowPidCommand : public BuiltInCommand {
 
         ShowPidCommand(char **args, int num_args, const char* cmd_line);
 
-        CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+        ShowPidCommand(argv args, const char* cmd_line);
 
 
         virtual ~ShowPidCommand() = default;
@@ -425,7 +428,7 @@ public:
 
     GetCurrDirCommand(char **args, int num_args, const char* cmd_line);
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    GetCurrDirCommand(argv args, const char* cmd_line);
 
     virtual ~GetCurrDirCommand() = default;
         
@@ -445,7 +448,7 @@ public:
 
     ChangeDirCommand(char **args, int num_args, const char* cmd_line);
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    ChangeDirCommand(argv args, const char* cmd_line);
 
     virtual ~ChangeDirCommand() = default;
 
@@ -459,7 +462,7 @@ public:
 
     JobsCommand(char **args, int num_args, const char* cmd_line);
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    JobsCommand(argv args, const char* cmd_line);
 
     virtual ~JobsCommand() {
     }
@@ -487,7 +490,7 @@ public:
 
     ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
-    CommandNotFound(std::string first_arg,int num_args, std::string cmd_s);
+    ForegroundCommand(argv args, const char* cmd_line);
 
     virtual ~ForegroundCommand() {
     }
