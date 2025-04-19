@@ -38,7 +38,9 @@ public:
 
     Command(const char *cmd_line);
 
-    Command(char **args, SmallShell& shell);
+    Command(char **args, SmallShell& shell); //TODO: CHEACK IF WE CAN DELETE THIS CONSTRUCTOR (DONT USE IT IF YOU HAVENT ALREADY)
+
+    Command(const argv& args, const char *cmd_line);
 
     virtual ~Command() = default;
 
@@ -57,7 +59,9 @@ public:
     
     BuiltInCommand(const char *cmd_line);
 
-    BuiltInCommand(char **args, SmallShell& shell);
+    BuiltInCommand(char **args, SmallShell& shell); //TODO: CHEACK IF WE CAN DELETE THIS CONSTRUCTOR (DONT USE IT IF YOU HAVENT ALREADY)
+
+    BuiltInCommand(const argv& args, const char *cmd_line);
 
     virtual ~BuiltInCommand() = default;
 };
@@ -100,7 +104,62 @@ public:
     virtual inline void executeHelper() override;
 };
 
+class SpecialCommand : public ExternalCommand {
+private:
+
+public:
+    SpecialCommand(const char *cmd_line);
+
+    SpecialCommand(const argv& args, const char *cmd_line);
+
+    virtual ~SpecialCommand() = default;
+
+    virtual void execute();
+
+};
+
+class EmptyCommand : public Command {
+public:
+    EmptyCommand() = default;
+
+    EmptyCommand(const char *cmd_line) : EmptyCommand() {}
+
+    EmptyCommand(const argv& args, const char *cmd_line) : EmptyCommand(cmd_line) {}
+
+    virtual ~EmptyCommand() = default;
+
+    virtual void execute() override {printf("\n");};
+
+};
+
 // ########################## NOTE: AbstractCommands code area ^ ##########################
+
+
+
+
+
+
+
+
+
+
+// ########################## NOTE: Functor code area V ##########################
+
+class Functor {
+    public:
+    Functor() = default;
+    virtual ~Functor() = default;
+    virtual void operator()() = 0;
+};
+
+
+
+
+
+
+
+
+// ########################## NOTE: Functor code area ^ ##########################
 
 
 
@@ -221,7 +280,7 @@ protected:
  *   - This should be used for any command that can be identified and created dynamically.
  *   - Input `args` must be a null-terminated array produced by `_parseCommandLine`.
  */
-class SpecialCommandFactory : public CommandFactory<Command> {
+class SpecialCommandFactory : public CommandFactory<SpecialCommand> {
     public:
         SpecialCommandFactory() = default;
         virtual ~SpecialCommandFactory() = default;

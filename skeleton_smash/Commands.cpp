@@ -167,13 +167,33 @@ bool isBuiltInCommand(const std::string& cmd) {
   return builtins.find(cmd) != builtins.end();
 }
 
-bool isExternalComamnd(const char* cmd_line) {
+inline bool isExternalComamnd(const char* cmd_line) {
   //TODO: create
   return false;
 }
 
-bool isComplexCommand(const char* cmd_line) {
-  return (strchr(cmd_line, '?') || strchr(cmd_line, '*'));
+inline bool isWildCard(const char* cmd_line){
+  return strchr(cmd_line, '?');
+}
+
+inline bool isCompleExternalCommand(const char* cmd_line) {
+  return (isWildCard(cmd_line) || strchr(cmd_line, '*'));
+}
+
+inline bool isPipeCommand(const char* cmd_line) {
+  return (strchr(cmd_line, '|'));
+}
+
+inline bool isInputRedirectionCommand(const char* cmd_line) {
+  return (strchr(cmd_line, '<'));
+}
+
+inline bool isOutputRedirectionCommand(const char* cmd_line) {
+  return (strchr(cmd_line, '>'));
+}
+
+inline bool isIORedirectionCommand(const char* cmd_line) {
+  return (isInputRedirectionCommand(cmd_line) || isOutputRedirectionCommand(cmd_line));
 }
 
 template <typename T>
@@ -418,18 +438,18 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
 
   //char *args_[COMMAND_MAX_ARGS];
-  int num_args = args.size();//_parseCommandLine(cmd_line, args_); //get num of arguments
+  size_t num_args = args.size();//_parseCommandLine(cmd_line, args_); //get num of arguments
   //commandDestructor(args_, num_args);
 
 
 
   if (num_args == 0)
   {
-    return nullptr; // TODO: maybe make 'empty command'
+    returnCommand = new EmptyCommand(args,  cmd_line); // TODO: maybe make 'empty command'
   }
 
   if (returnCommand == nullptr)
-  {
+  { //try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
     returnCommand = factory.makeCommand(args,  cmd_line);
     //returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
@@ -491,7 +511,7 @@ std::string SmallShell::getDefaultPrompt()
 
 void SmallShell::changePrompt(std::string nextPrompt)
 {
-  SHELL_INSTANCE.currentPrompt = nextPrompt;
+  this->currentPrompt = move(nextPrompt);
 }
 
 int SmallShell::getPID()
