@@ -6,6 +6,8 @@
 #include <map>
 #include <unordered_map>
 #include <string>
+#include <cassert>
+#include <charconv>  // for std::from_chars
 
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
@@ -42,7 +44,7 @@ public:
 
     virtual void execute() = 0;
 
-    inline int getPID();
+    inline static pid_t getPID();
 
     //virtual void prepare();
     //virtual void cleanup();
@@ -61,15 +63,41 @@ public:
 };
 
 class ExternalCommand : public Command {
+private:
+    char command[COMMAND_MAX_LENGTH];
+    argv given_args;
+    pid_t jobPID = 0;
 public:
     ExternalCommand(const char *cmd_line);
 
-    ExternalCommand(char** args);
+    ExternalCommand(const argv& args,const char *cmd_line);
 
     virtual ~ExternalCommand() {
     }
 
-    void execute() override;
+    virtual void execute() override;
+
+    inline void printYourself();
+
+    //inline int getPID();
+
+    virtual inline void executeHelper();
+
+};
+
+class ComplexExternalCommand : public ExternalCommand {
+private:
+    char command[COMMAND_MAX_LENGTH];
+    argv given_args;
+public:
+    ComplexExternalCommand(const char *cmd_line) : ExternalCommand(cmd_line) {}
+
+    ComplexExternalCommand(const argv& args,const char *cmd_line) : ExternalCommand(args,cmd_line) {}
+
+    virtual ~ComplexExternalCommand() {
+    }
+
+    virtual inline void executeHelper() override;
 };
 
 // ########################## NOTE: AbstractCommands code area ^ ##########################
@@ -312,18 +340,27 @@ public:
 
 
 
-// ########################## NOTE: JobHandling code area V ##########################
+// ########################## NOTE: JobsList code area V ##########################
+// ########################## NOTE: JobEntry code area V ##########################
 
 class JobsList {
 public:
     class JobEntry {
     private:
-        Command* command;
-        char* cmd_line;
+        ExternalCommand* command;
+        //char* cmd_line;
         int jobID;
+        //int jobPID;
     public:
-        void printYourself();
-        inline int getPID(); //get the PID of the running command
+        JobEntry(ExternalCommand* command, int jobID);
+
+        //JobEntry(ExternalCommand* command, int jobID, int JobPID) : JobEntry(command, jobID) { this->jobPID = jobPID; }
+
+        ~JobEntry() = default;
+
+        inline void printYourself();
+
+        inline pid_t getJobPID(); //get the PID of the running command
 
     };
     typedef std::map<int, JobEntry> Jobs;
@@ -336,7 +373,7 @@ public:
 
     ~JobsList();
 
-    void addJob(Command *cmd, bool isStopped = false);
+    void addJob(ExternalCommand *cmd, bool isStopped = false);
 
     void printJobsList();
 
@@ -358,11 +395,12 @@ public:
 
     void sendSignalToJobById(int pidToSendTo, int signalToSend); //TODO need to handle signal errors inside - comes later in the HW
 
-    inline int getPID(int jobID); //get the PID of the running command of the job with a specifiec ID
+    inline pid_t getJobPID(int jobID); //get the PID of the running command of the job with a specifiec ID
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
 
+// ########################## NOTE: JobEntry code area ^ ##########################
 // ########################## NOTE: JobHandling code area ^ ##########################
 
 
@@ -408,6 +446,8 @@ class ShowPidCommand : public BuiltInCommand {
     private:
         int smashPID;
     public:
+        ShowPidCommand();
+
         explicit ShowPidCommand(const argv& args);
 
         //ShowPidCommand(char **args, int num_args, const char* cmd_line);
@@ -486,16 +526,23 @@ private:
     int jobID;
 
     JobsList::JobEntry* job;
-    
+
+    inline void print_no_job_with_id() const;
+
+    inline void print_invalid_args() const;
+
+    inline void print_job_list_is_empty() const;
+
 public:
-    //ForegroundCommand(char **args);
+    ForegroundCommand(const argv& args);
 
     //ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
     ForegroundCommand(const argv& args, const char* cmd_line);
 
-    virtual ~ForegroundCommand() {
-    }
+    virtual ~ForegroundCommand() {}
+
+    //inline void job_doesnt_exist();
 
     void execute() override;
 };
@@ -627,9 +674,10 @@ class AliasManager {
 class SmallShell {
 private:
     // TODO: Add your data members
-    std::string currentPrompt;
-    std::string promptEndChar;
+    string currentPrompt;
+    string promptEndChar;
     char oldPWD[MAX_DIR_LENGTH];
+    bool old_path_set;
     SmallShell();
     JobsList jobs;
     AliasManager aliases;
@@ -664,16 +712,29 @@ public:
 
     inline void updateOldPath();
 
+    inline bool hasOldPath();
+
+    inline string getPreviousPath();
+
     inline bool changeShellDirectory(const char* next_dir);
 
     inline std::string getPrompt();
 
     inline std::string getEndStr();
 
+    inline void print_current_path() const;
+
     inline JobsList& getJobsList();
+
     inline AliasManager& getAliases();
 
+    inline void print_jobs();
 
+    inline int waitPID(pid_t pid);
+
+    JobsList::JobEntry *getJobById(int jobId);
+
+    int get_max_current_jobID();
 
 };
 

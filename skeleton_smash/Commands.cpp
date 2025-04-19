@@ -7,6 +7,9 @@
 #include <iomanip>
 #include <regex>
 #include "Commands.h"
+#include <string>
+#include <set>
+#include <cstdlib>  // for getenv
 
 class SmallShell;
 
@@ -14,6 +17,14 @@ class SmallShell;
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
+#define DEBUG_MODE true
+#if DEBUG_MODE
+  #define FOR_DEBUG_MODE(CODE_CONTENTS) CODE_CONTENTS
+#else
+  #define FOR_DEBUG_MODE(CODE_CONTENTS)
+#endif
+
+#define FOREGROUND_WAIT_MODIFIER 0
 // Global alias for the singleton instance
 SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
@@ -146,10 +157,8 @@ void _removeBackgroundSign(char *cmd_line)
   cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = 0;
 }
 
-#include <string>
-#include <set>
-#include <cstdlib>  // for getenv
-#include <unistd.h> // for access()
+
+
 
 bool isBuiltInCommand(const std::string& cmd) {
   static const std::set<std::string> builtins = {
@@ -167,14 +176,47 @@ bool isComplexCommand(const char* cmd_line) {
   return (strchr(cmd_line, '?') || strchr(cmd_line, '*'));
 }
 
+template <typename T>
+inline void assert_not_empty(const T& container) {
+  assert(!container.empty());
+}
+
+/**
+ *
+ * @param s string to turn into int
+ * @param out location to store int convertion
+ * @return true if conversion succesfull, false otherwise
+ */
+bool stringToInt(const std::string& s, int& out) //function from StackOverflow, nned to make sure that it works
+{
+  char* end = nullptr;
+  errno = 0; // reset errno before call
+  long val = std::strtol(s.c_str(), &end, 10);
+
+  if (errno != 0 || end != s.c_str() + s.size()) {
+    // invalid number or not fully consumed
+    return false;
+  }
+
+  // check overflow for int range
+  if (val < INT_MIN || val > INT_MAX) {
+    return false;
+  }
+
+  out = static_cast<int>(val);
+  return true;
+}
 // TODO: Add your implementation for classes in Commands.h
 
 // ########################## NOTE: AbstractCommand code area V ##########################
 
-int Command::getPID()
+//pid_t Command::getPID(){return getpid();}
+
+pid_t Command::getPID()
 {
-  // TODO: get pid of the procces running this command
+  return getpid();
 }
+
 
 // ########################## NOTE: AbstractCommand code area V ##########################
 
@@ -299,7 +341,7 @@ Command *Error404CommandNotFound::factoryHelper(argv args, const char* cmd_line)
 // ########################## NOTE: SmallShell code area V ##########################
 
 SmallShell::SmallShell()
-    : currentPrompt("smash"), promptEndChar(">")
+    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false)
 {
 }
 
@@ -307,6 +349,44 @@ SmallShell::~SmallShell()
 {
   // TODO: add your implementation
 }
+
+bool SmallShell::hasOldPath()
+{
+  return this->old_path_set;
+}
+
+string SmallShell::getPreviousPath()
+{
+  return oldPWD;
+}
+
+inline void SmallShell::print_current_path() const
+{
+  GetCurrDirCommand temp;
+  temp.execute();
+}
+
+JobsList& SmallShell::getJobsList()
+{
+  return this->jobs;
+}
+
+void SmallShell::print_jobs()
+{
+  this->jobs.printJobsList();
+}
+
+JobsList::JobEntry* SmallShell::getJobById(int jobId)
+{
+  return this->jobs.getJobById(jobId);
+}
+
+
+
+
+
+
+
 
 /**
  * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
@@ -416,7 +496,7 @@ void SmallShell::changePrompt(std::string nextPrompt)
 
 int SmallShell::getPID()
 {
-  // TODO: get shell pid;
+  return getpid();
 }
 
 char *SmallShell::loadShellPath(char *buffer_location, size_t buffer_size)
@@ -429,12 +509,14 @@ void SmallShell::tryLoadShellPath(char *buffer_location, size_t buffer_size)
   if (loadShellPath(buffer_location, buffer_size) == nullptr)
   {
     perror("smash error: getcwd failed");
+    FOR_DEBUG_MODE(perror("void SmallShell::tryLoadShellPath(char *buffer_location, size_t buffer_size)\n");)
   }
 }
 
 void SmallShell::updateOldPath()
 { // store the current path @oldPWD, to be called before path changing;
   tryLoadShellPath(this->oldPWD, sizeof(this->oldPWD));
+  this->old_path_set = true;
 }
 
 bool SmallShell::changeShellDirectory(const char *next_dir)
@@ -443,6 +525,7 @@ bool SmallShell::changeShellDirectory(const char *next_dir)
   if (chdir(next_dir) != 0)
   {
     // perror("chdir failed");
+    FOR_DEBUG_MODE(perror("failure in 'bool SmallShell::changeShellDirectory(const char *next_dir)'\n");)
     return false;
   }
   else
@@ -461,6 +544,20 @@ std::string SmallShell::getEndStr()
 {
   return this->promptEndChar;
 }
+
+int SmallShell::waitPID(pid_t pid)
+{
+  int status;
+  waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER);
+  return status;
+}
+
+int  SmallShell::get_max_current_jobID()
+{
+  return this->jobs.get_max_current_jobID();
+}
+
+
 
 // ########################## NOTE: SmallShell code area ^ ##########################
 
@@ -481,16 +578,22 @@ void CommandNotFound::execute()
   // TODO:
 }
 
-ChangePromptCommand::ChangePromptCommand(const argv& args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : std::string(args[1])) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : string(args[1])) {
+  assert_not_empty(args);
+}
 
-ChangePromptCommand::ChangePromptCommand(const argv& args, const char* cmd_line) : ChangePromptCommand(move(args)) {}
+ChangePromptCommand::ChangePromptCommand(const argv& args, const char* cmd_line) : ChangePromptCommand(args) {}
 
 void ChangePromptCommand::execute()
 {
   SHELL_INSTANCE.changePrompt(this->nextPrompt);
 }
 
-ShowPidCommand::ShowPidCommand(const argv& args) : smashPID(SHELL_INSTANCE.getPID()) {}
+ShowPidCommand::ShowPidCommand() : smashPID(SHELL_INSTANCE.getPID()) {}
+
+ShowPidCommand::ShowPidCommand(const argv& args) : ShowPidCommand() {
+  assert_not_empty(args);
+}
 
 ShowPidCommand::ShowPidCommand(const argv& args, const char* cmd_line)
     : ShowPidCommand(args) {}
@@ -500,18 +603,21 @@ void ShowPidCommand::execute()
   printf("smash pid is %d", this->smashPID);
 }
 
-GetCurrDirCommand::GetCurrDirCommand()
+GetCurrDirCommand::GetCurrDirCommand() //TODO: need to initialise fields? maybe.
 {
   SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
 
-GetCurrDirCommand::GetCurrDirCommand(const argv& args) : GetCurrDirCommand() {}
+GetCurrDirCommand::GetCurrDirCommand(const argv& args) : GetCurrDirCommand() {
+  assert_not_empty(args);
+}
 
 GetCurrDirCommand::GetCurrDirCommand(const argv& args, const char* cmd_line) : GetCurrDirCommand(args) {}
 
 void GetCurrDirCommand::execute()
 {
-  printf(this->current_path);
+  FOR_DEBUG_MODE(printf("void GetCurrDirCommand::execute()\n");)
+  printf("%s", this->current_path);
 }
 
 ChangeDirCommand::ChangeDirCommand(const argv& args)
@@ -525,6 +631,28 @@ ChangeDirCommand::ChangeDirCommand(const argv& args)
             if all flags are to remain 'false' (meaning command is ok), need
             to store the next path on this->next_path
   */
+  assert_not_empty(args);
+  int given_args = args.size() - 1; //first arg is the call to the function itself, so its accounted for with the -1.
+  if (given_args == 0) {
+    this->DoNothing = true;
+  }
+  if (given_args > 1) {
+    this->TooManyArgs = true;
+  }
+
+  string next_path_arg = args[1];
+
+  if (STRINGS_EQUAL(args[1], "-")) {
+    if (SHELL_INSTANCE.hasOldPath()) {
+      next_path_arg = SHELL_INSTANCE.getPreviousPath();
+    } else {
+      this->OldPWDNotSet = true;
+    }
+  }
+  bool command_invalid = (this->DoNothing || this->TooManyArgs || this->OldPWDNotSet);
+  if (!command_invalid) {
+    strcpy(this->next_path, next_path_arg.c_str());
+  }
 }
 
 const char* ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
@@ -536,27 +664,27 @@ ChangeDirCommand::ChangeDirCommand(const argv& args, const char* cmd_line)
 void ChangeDirCommand::execute()
 {
   if (this->DoNothing)
-  { // inapropriate command handling
+  { // no args were given.
     return;
   }
   else if (this->TooManyArgs)
-  {
+  { // too many args were given.
     perror(this->TOO_MANY_ARGS);
     return;
   }
   else if (this->OldPWDNotSet)
-  {
+  { //tried to load a non existing old path
     perror(this->OLD_PWD_NOT_SET);
     return;
   }
   bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
   if (succses)
-  {
-    printf(this->next_path);
+  { //print updated path
+    SHELL_INSTANCE.print_current_path();
   }
   else
   {
-    perror("some trouble in 'void ChangeDirCommand::execute()'");
+    FOR_DEBUG_MODE(perror("some trouble in 'void ChangeDirCommand::execute()'");)
   }
 }
 
@@ -577,16 +705,84 @@ void JobsCommand::execute()
   // TODO:
 }
 
-// ForegroundCommand::ForegroundCommand(char **args) {}
-
-ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line)
+ForegroundCommand::ForegroundCommand(const argv& args)
 {
-  // TODO: finish dis
+  assert_not_empty(args);
+  bool incorrect_args_ammount = args.size() > 2; //first arg should be "fg" and second (optional) arg should be a specific job ID
+  bool explicit_jobID_given = args.size() > 2;
+  bool second_arg_is_convertible_to_int;
+
+  if (explicit_jobID_given) {
+    second_arg_is_convertible_to_int = stringToInt(args[1],this->jobID); //if second arg was given, make sure that its an int
+  } else {
+    this->jobID = SHELL_INSTANCE.get_max_current_jobID();
+    second_arg_is_convertible_to_int = true;
+  }
+
+  if (incorrect_args_ammount ||(!second_arg_is_convertible_to_int)) {
+    this->invalid_syntax = true;
+    return;
+  }
+  this->job = SHELL_INSTANCE.getJobById(this->jobID);
+  if (this->job == nullptr && explicit_jobID_given) {
+    this->job_doesnt_exist = true;
+    return;
+  }
+  if (this->job == nullptr && !(explicit_jobID_given) ) {
+    this->job_doesnt_exist = false;
+    this->jobs_empty = true;
+  }
+
+  //TODO: COMPLETE LOGIC
+
+
+}
+
+ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line) : ForegroundCommand(args) {}
+
+
+const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
+
+const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
+
+const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
+
+const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+
+void ForegroundCommand::print_no_job_with_id() const
+{
+  char buf[256];
+  snprintf(buf, sizeof(buf), "%s%d%s", JOB_DOESNT_EXIST_MESSAGE_1, this->jobID, JOB_DOESNT_EXIST_MESSAGE_2);
+  perror(buf);
+}
+
+void ForegroundCommand::print_invalid_args() const
+{
+  perror(INVALID_SYNTAX_MESSAGE);
+}
+
+void ForegroundCommand::print_job_list_is_empty() const
+{
+  perror(NO_JOBS_MESSAGE);
 }
 
 void ForegroundCommand::execute()
 {
-  // TODO:
+  if (this->invalid_syntax) {
+    this->print_invalid_args();
+    return;
+  }
+  else if (this->job_doesnt_exist) {
+    this->print_no_job_with_id();
+    return;
+  }
+  else if (this->jobs_empty) {
+    this->print_job_list_is_empty();
+    return;
+  }
+  int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
+  //now what?? need to print something? maybe print @exit_status????
+  FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status); )
 }
 
 QuitCommand::QuitCommand(argv args, const char* cmd_line)
@@ -736,19 +932,152 @@ void WatchProcCommand::execute()
 
 // ########################## NOTE: BuiltInCommand code area ^ ##########################
 
+// ########################## NOTE: ExternalCommand&&ComplexExternalCommand code area V ##########################
+
+ExternalCommand::ExternalCommand(const char *cmd_line)
+{
+  strcpy(this->command, cmd_line);
+  this->jobPID = getpid();
+}
+
+ExternalCommand::ExternalCommand(const argv& args,const char *cmd_line) : ExternalCommand(cmd_line)
+{
+  // Inhereting classes can call Ctor():ExternalCommand(){} to take care of command copying;
+  assert_not_empty(this->given_args);
+  this->given_args = args;
+}
+
+void ExternalCommand::printYourself()
+{
+  printf("%s", this->command);
+}
+
+//int ExternalCommand::getPID(){return getpid();}
+
+/*
+void ExternalCommand::execute() {
+  argv args& = this->given_args;
+
+
+    pid_t pid = fork();
+
+    if (pid == -1) {
+      perror("fork failed");
+      return;
+    }
+
+    if (pid == 0) {
+      // Child process
+
+      // Build argv array (char* array)
+      char* argv[args.size() + 1];  // +1 for the nullptr at the end
+      for (size_t i = 0; i < args.size(); ++i) {
+        argv[i] = strdup(args[i].c_str());  // copy the string
+      }
+      argv[args.size()] = nullptr;  // exec expects null-terminated array
+
+      // Execute the external command
+      execvp(argv[0], argv);
+
+      // If execvp returns, it must have failed
+      perror("execvp failed");
+      // Free memory before exiting
+      for (size_t i = 0; i < args.size(); ++i) {
+        free(argv[i]);
+      }
+      exit(1);  // important: child must exit if exec fails
+    } else {
+      // Parent process
+      int status;
+      if (_isBackgroundComamnd(this->command)) {
+        if (waitpid(pid, &status, 0) == -1) {
+          perror("waitpid failed");
+        }
+      } else {
+        //TODO: add child to JobList
+      }
+    }
+}
+
+void ExternalCommand::executeHelper() {}
+*/
+
+void ExternalCommand::execute() {
+  argv& args = this->given_args;
+
+  pid_t pid = fork();
+  this->jobPID = getpid();
+
+  if (pid == -1) {
+    perror("fork failed");
+    return;
+  }
+
+  if (pid == 0) { // Child
+    this->executeHelper(); // <---- DELEGATE to a helper method
+    exit(1); // If executeHelper returns, it means exec failed
+  } else { // Parent
+    int status;
+    if (!_isBackgroundComamnd(this->command)) {
+      do {
+        FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
+        if (waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER) == -1) {
+          FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
+          perror("waitpid failed");
+        }
+      } while (false); // close waitpid 'if' expression like was shown in lecture for 'DO_SYS' macro
+    } else {
+      // TODO: add job with child to JobList
+    }
+  }
+}
+
+void ExternalCommand::executeHelper() {
+  argv& args = this->given_args;
+
+  // Build argv array (char* array)
+  char* argv[args.size() + 1]; // +1 for the nullptr at the end
+  for (size_t i = 0; i < args.size(); ++i) {
+    argv[i] = strdup(args[i].c_str()); // copy the string
+  }
+  argv[args.size()] = nullptr; // exec expects null-terminated array
+
+  // Execute the external command
+  execvp(argv[0], argv);
+
+  // If execvp returns, it must have failed
+  perror("execvp failed");
+
+  // Free memory before exiting
+  for (size_t i = 0; i < args.size(); ++i) {
+    free(argv[i]);
+  }
+}
+
+void ComplexExternalCommand::executeHelper() override {
+  const char* bash_path = "/bin/bash";
+  const char* bash_args[] = {"bash", "-c", this->command, nullptr};
+
+  execv(bash_path, (char* const*)bash_args);
+
+  FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
+  perror("execv (bash) failed");
+}
+
+
+
+
+
+// ########################## NOTE: ExternalCommand&&ComplexExternalCommand code area V ##########################
+
 // ########################## NOTE: JobList code area V ##########################
 
-const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
-
-const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
-
-const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
-
-const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+JobsList::JobEntry::JobEntry(ExternalCommand* command, int jobID) : command(command), jobID(jobID) {}
 
 void JobsList::JobEntry::printYourself()
 {
-  // TODO:
+  printf("[%d] ");
+  this->command->printYourself();
 }
 
 JobsList::JobsList()
@@ -761,13 +1090,12 @@ JobsList::~JobsList()
   // TODO:
 }
 
-void JobsList::addJob(Command *cmd, bool isStopped)
+void JobsList::addJob(ExternalCommand *cmd, bool isStopped)
 {
   Jobs &jbs = this->jobs;
   int max_curr_job_id = this->get_max_current_jobID();
   int next_id = ++max_curr_job_id;
-  // FIXME: add call to a proper JobEntry constructor;
-  JobEntry toInsert;
+  JobEntry toInsert = JobEntry(cmd, next_id);
   jbs.insert(std::make_pair(next_id, toInsert));
 }
 
@@ -775,9 +1103,10 @@ void JobsList::printJobsList()
 {
   for (auto &pair : jobs)
   {
-    int jobId = pair.first;
+    //int jobId = pair.first;
     JobEntry &job = pair.second;
     job.printYourself();
+    printf("\n");
   }
 }
 
@@ -791,15 +1120,19 @@ void JobsList::removeFinishedJobs()
   // TODO: remove finished jobs
 }
 
-JobsList::JobEntry *JobsList::getJobById(int jobId)
+JobsList::JobEntry* JobsList::getJobById(int jobId)
 {
-  // TODO: get job by id
+  auto it = this->jobs.find(jobId);
+  if (it != this->jobs.end()) {
+    return &(it->second);
+  }
   return nullptr;
 }
 
+
 void JobsList::removeJobById(int jobId)
 {
-  // TODO: remove job by id
+  this->jobs.erase(jobId); //to decide, do we want the destructor of command to be called or not?
 }
 
 JobsList::JobEntry *JobsList::getLastJob(int *lastJobId)
@@ -823,22 +1156,22 @@ int JobsList::get_max_current_jobID()
   }
   else
   {
-    int max_key = jobs.rbegin()->first;
+    int max_key = jbs.rbegin()->first;
     return max_key;
   }
 }
 
-int JobsList::JobEntry::getPID()
+pid_t JobsList::JobEntry::getJobPID()
 {
   return this->command->getPID();
 }
 
-int JobsList::getPID(int jobID)
+pid_t JobsList::getJobPID(int jobID)
 {
   auto it = this->jobs.find(jobID); // search for the key
   if (it != jobs.end())
   { // found the key
-    return it->second.getPID();
+    return it->second.getJobPID();
   }
   else
   {            // did not find the key
