@@ -852,7 +852,7 @@ int JobsList::getPID(int jobID)
 
 void AliasManager::addAlias(const string &newAliasName, string args)
 {
-  if (isReserved(newAliasName))
+  /*if (isReserved(newAliasName) || doesExist(newAliasName))
   {
     cerr << "smash error: alias: <name> already exists or is a reserved command" << endl;
   }
@@ -860,8 +860,7 @@ void AliasManager::addAlias(const string &newAliasName, string args)
   if (isSyntaxValid(newAliasName))
   {
     cerr << "smash error: alias: invalid alias format" << endl;
-  }
-
+  } */
   aliases.insert(std::make_pair(newAliasName, args));
 }
 
