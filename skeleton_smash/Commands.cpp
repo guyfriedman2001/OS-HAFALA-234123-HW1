@@ -805,7 +805,7 @@ KillCommand::KillCommand(argv args, const char* cmd_line)
 {
   if (args.size() > 3)
   {
-    cerr << "smash error: invalid arguments" << endl;
+    std::cerr << "smash error: invalid arguments" << endl;
   }
 
   signalToSend = stoi(args[1]);
@@ -813,7 +813,7 @@ KillCommand::KillCommand(argv args, const char* cmd_line)
 
   if (pidToSendTo == 0)
   {
-    cerr << "smash error: kill: job-id <job-id> does not exist" << endl;
+    std::cerr << "smash error: kill: job-id <job-id> does not exist" << endl;
   }
 }
 
@@ -840,17 +840,17 @@ void AliasCommand::execute()
 {
   if (aliasName == "" || actualCommand.empty())
   {
-    cerr << "smash error: alias: invalid alias format" << endl;
+    std::cerr << "smash error: alias: invalid alias format" << endl;
   }
   else if (aliasList)
   {
     SHELL_INSTANCE.getAliases().printAll();
   } else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
-    cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
+    std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
   }
   else if(SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName)){
-    cerr << "smash error: alias: invalid alias format" << endl;
+    std::cerr << "smash error: alias: invalid alias format" << endl;
   } else{
     SHELL_INSTANCE.getAliases().addAlias(aliasName,actualCommand);
   }
@@ -895,7 +895,7 @@ void UnAliasCommand::execute()
 {
   if (noArgs)
   {
-    cerr << "smash error: unalias: not enough arguments" << endl;
+    std::cerr << "smash error: unalias: not enough arguments" << endl;
   } else {
   for (int i = 0; i < aliasesToRemove.size(); i++)
   {
@@ -903,7 +903,7 @@ void UnAliasCommand::execute()
     {
       SHELL_INSTANCE.getAliases().removeAlias(aliasesToRemove[i]);
     } else {
-      cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
+      std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
       break;
     }
   }
@@ -912,12 +912,53 @@ void UnAliasCommand::execute()
 
 UnSetEnvCommand::UnSetEnvCommand(argv args, const char* cmd_line)
 {
-  // TODO:
+  variablesToRemove = extractVariables(args);
 }
 
 void UnSetEnvCommand::execute()
 {
-  // TODO:
+  if (variablesToRemove.size() == 0)
+  {
+    cerr << "smash error: unsetenv: not enough arguments";
+  } else {
+    for (const auto& var : variablesToRemove)
+    {
+      if (!(removeVariable(var)))
+      {
+        cerr << "smash error: unsetenv: " << var << " does not exist";
+        break;
+      }
+    }
+  }
+}
+
+argv& UnSetEnvCommand::extractVariables(argv args)
+{
+  argv varsToRemove;
+  for (int i = 1; i < args.size(); i++)
+  {
+    {
+      varsToRemove.push_back(args[i]);
+
+    }
+    return varsToRemove;
+  }
+}
+
+bool UnSetEnvCommand::removeVariable(const string &var)
+{
+    for (char **env = __environ; *env != nullptr; ++env) {     // Loop through the environment array
+        if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=') {         // Check if the current entry starts with "var_name=" (exact match)
+            char **cur = env;
+            while (*(cur + 1) != nullptr) { //shift all following environment pointers םne step left
+                *cur = *(cur + 1); 
+                ++cur;              
+            }
+            *cur = nullptr;  // Terminate the environment array
+            return true;
+        }
+    }
+    return false;
 }
 
 WatchProcCommand::WatchProcCommand(argv args, const char* cmd_line)
@@ -1023,7 +1064,7 @@ void ExternalCommand::execute() {
         FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
         if (waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER) == -1) {
           FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
-          perror("waitpid failed");
+          std::cerr << "waitpid failed";
         }
       } while (false); // close waitpid 'if' expression like was shown in lecture for 'DO_SYS' macro
     } else {
@@ -1046,7 +1087,7 @@ void ExternalCommand::executeHelper() {
   execvp(argv[0], argv);
 
   // If execvp returns, it must have failed
-  perror("execvp failed");
+  std::cerr << ("execvp failed");
 
   // Free memory before exiting
   for (size_t i = 0; i < args.size(); ++i) {
@@ -1061,7 +1102,7 @@ void ComplexExternalCommand::executeHelper() override {
   execv(bash_path, (char* const*)bash_args);
 
   FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
-  perror("execv (bash) failed");
+  std::cerr << "execv (bash) failed";
 }
 
 
@@ -1207,7 +1248,7 @@ bool AliasManager::isReserved(const string &newAliasName) const
 {
   if (newAliasName == "cd" || newAliasName == "pwd" || newAliasName == "chprompt" || newAliasName == "showpid" ||
       newAliasName == "jobs" || newAliasName == "fg" || newAliasName == "alias" || newAliasName == "quit" || newAliasName == "unalias" ||
-      newAliasName == "kill" || newAliasName == "unalias" || newAliasName == "unsetenv" || newAliasName == "watchproc" ||
+      newAliasName == "kill" || newAliasName == "unsetenv" || newAliasName == "watchproc" ||
       newAliasName == "lisidr" || newAliasName == "ls") // TODO maybe add more reserved words
   {
     return false;
@@ -1242,7 +1283,7 @@ void AliasManager::printAll() const
 }
 
 argv AliasManager::uncoverAlias(argv original){
-  argv uncoveredArgv;
+  argv uncoveredArgs;
 
   if (original[0] == "unalias" || original[0] == "alias")
   {
@@ -1252,15 +1293,15 @@ argv AliasManager::uncoverAlias(argv original){
   {
     if (aliases.find(original[i]) != nullptr)
     {
-      std::istringstream iss(aliases[original[i]]);
-      std::string word;
+      istringstream iss(aliases[original[i]]);
+      string word;
       while (iss >> word) {
-        uncoveredArgv.push_back(word);
+        uncoveredArgs.push_back(word);
     }
     } else {
-      uncoveredArgv.push_back(original[i]);
+      uncoveredArgs.push_back(original[i]);
     }
-    return uncoveredArgv;
+    return uncoveredArgs;
   }
 }
 

@@ -610,6 +610,7 @@ public:
 };
 
 class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
+    argv variablesToRemove;
     public:
         UnSetEnvCommand(char **args);
 
@@ -619,6 +620,8 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
         }
     
         void execute() override;
+        argv& extractVariables(argv args);
+        bool removeVariable(const string& var);
 };
 
 class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
