@@ -44,7 +44,7 @@ public:
 
     virtual void execute() = 0;
 
-    inline int getPID();
+    inline static pid_t getPID();
 
     //virtual void prepare();
     //virtual void cleanup();
@@ -65,6 +65,8 @@ public:
 class ExternalCommand : public Command {
 private:
     char command[COMMAND_MAX_LENGTH];
+    argv given_args;
+    pid_t jobPID = 0;
 public:
     ExternalCommand(const char *cmd_line);
 
@@ -73,11 +75,29 @@ public:
     virtual ~ExternalCommand() {
     }
 
-    void execute() override;
+    virtual void execute() override;
 
     inline void printYourself();
 
-    inline int getPID();
+    //inline int getPID();
+
+    virtual inline void executeHelper();
+
+};
+
+class ComplexExternalCommand : public ExternalCommand {
+private:
+    char command[COMMAND_MAX_LENGTH];
+    argv given_args;
+public:
+    ComplexExternalCommand(const char *cmd_line) : ExternalCommand(cmd_line) {}
+
+    ComplexExternalCommand(const argv& args,const char *cmd_line) : ExternalCommand(args,cmd_line) {}
+
+    virtual ~ComplexExternalCommand() {
+    }
+
+    virtual inline void executeHelper() override;
 };
 
 // ########################## NOTE: AbstractCommands code area ^ ##########################
@@ -320,7 +340,8 @@ public:
 
 
 
-// ########################## NOTE: JobHandling code area V ##########################
+// ########################## NOTE: JobsList code area V ##########################
+// ########################## NOTE: JobEntry code area V ##########################
 
 class JobsList {
 public:
@@ -329,11 +350,17 @@ public:
         ExternalCommand* command;
         //char* cmd_line;
         int jobID;
+        //int jobPID;
     public:
         JobEntry(ExternalCommand* command, int jobID);
+
+        //JobEntry(ExternalCommand* command, int jobID, int JobPID) : JobEntry(command, jobID) { this->jobPID = jobPID; }
+
         ~JobEntry() = default;
+
         inline void printYourself();
-        inline int getJobPID(); //get the PID of the running command
+
+        inline pid_t getJobPID(); //get the PID of the running command
 
     };
     typedef std::map<int, JobEntry> Jobs;
@@ -368,11 +395,12 @@ public:
 
     void sendSignalToJobById(int pidToSendTo, int signalToSend); //TODO need to handle signal errors inside - comes later in the HW
 
-    inline int getJobPID(int jobID); //get the PID of the running command of the job with a specifiec ID
+    inline pid_t getJobPID(int jobID); //get the PID of the running command of the job with a specifiec ID
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };
 
+// ########################## NOTE: JobEntry code area ^ ##########################
 // ########################## NOTE: JobHandling code area ^ ##########################
 
 
