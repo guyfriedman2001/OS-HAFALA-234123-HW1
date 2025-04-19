@@ -24,7 +24,8 @@ class SmallShell;
   #define FOR_DEBUG_MODE(CODE_CONTENTS)
 #endif
 
-#define FOREGROUND_WAIT_MODIFIER 0
+#define Block_until_the_child_terminates 0
+#define check_if_process_finished_without_blocking WNOHANG
 // Global alias for the singleton instance
 SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
@@ -568,7 +569,7 @@ std::string SmallShell::getEndStr()
 int SmallShell::waitPID(pid_t pid)
 {
   int status;
-  waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER);
+  waitpid(pid, &status, Block_until_the_child_terminates);
   return status;
 }
 
@@ -1067,7 +1068,7 @@ void ExternalCommand::execute() {
   argv& args = this->given_args;
 
   pid_t pid = fork();
-  this->jobPID = getpid();
+  this->jobPID = pid;
 
   if (pid == -1) {
     perror("fork failed");
@@ -1082,11 +1083,11 @@ void ExternalCommand::execute() {
     if (!_isBackgroundComamnd(this->command)) {
       do {
         FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
-        if (waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER) == -1) {
+        if (waitpid(pid, &status, Block_until_the_child_terminates) == -1) {
           FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
           std::cerr << "waitpid failed";
         }
-      } while (false); // close waitpid 'if' expression like was shown in lecture for 'DO_SYS' macro
+      } while (false); // close waitpid->'if' expression like was shown in lecture for 'DO_SYS' macro
     } else {
       // TODO: add job with child to JobList
     }
