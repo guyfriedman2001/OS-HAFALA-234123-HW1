@@ -1,4 +1,5 @@
-#include <unistd.h>
+#include <fcntl.h> // for open()
+#include <unistd.h> //for close()
 #include <string.h>
 #include <iostream>
 #include <vector>
@@ -968,13 +969,13 @@ argv& UnSetEnvCommand::extractVariables(argv args)
 bool UnSetEnvCommand::removeVariable(const string &var)
 {
     for (char **env = __environ; *env != nullptr; ++env) {     // Loop through the environment array
-        if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=') {         // Check if the current entry starts with "var_name=" (exact match)
+        if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=') { // Check if the current entry starts with var=
             char **cur = env;
-            while (*(cur + 1) != nullptr) { //shift all following environment pointers םne step left
+            while (*(cur + 1) != nullptr) { //shift all following environment pointers one step left
                 *cur = *(cur + 1); 
                 ++cur;              
             }
-            *cur = nullptr;  // Terminate the environment array
+            *cur = nullptr;  // update the environment array end
             return true;
         }
     }
@@ -983,12 +984,146 @@ bool UnSetEnvCommand::removeVariable(const string &var)
 
 WatchProcCommand::WatchProcCommand(argv args, const char* cmd_line)
 {
-  // TODO:
+  if (args.size() == 2)
+  {
+    pid = static_cast<pid_t>(args[1].c_str(), nullptr, 10);
+    argsFormat = true;
+  }
+  argsFormat = false;
 }
 
 void WatchProcCommand::execute()
 {
-  // TODO:
+  if (argsFormat)
+  {
+    if (doesPidExist())
+    {
+      cpuUsage = calculateCpuUsage();
+      memoryUsage = calculateMemoryUsage();
+      cout << "PID: " << pid << " | CPU Usage: " << cpuUsage << "%" << " | Memory Usage: " << memoryUsage << " MB" << endl;  
+    } else {
+      cerr << "smash error: watchproc: pid " << pid << " does not exist"; 
+    }
+  } else {
+    cerr << "smash error: watchproc: invalid arguments";
+  }
+}
+
+bool WatchProcCommand::doesPidExist()
+{
+    if (kill(pid, 0) == 0) {
+        return true;  // process exists and have a premission to send signal
+    }
+    if (errno == ESRCH) { //process doesnt exist
+        return false;
+    }
+    return true; //process exists but doesnt have a premission to send signal
+}
+
+float WatchProcCommand::calculateCpuUsage()
+{
+  //Read process CPU time (utime + stime)
+    string path = "/proc/" + std::to_string(pid) + "/stat";
+
+    // Open /proc/<pid>/stat for reading
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1) { 
+        return -1; //failed to open
+    }
+
+    char buffer1[4096] = {0}; //initalize a char array
+    ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
+    close(fd);
+    if (bytesRead <= 0) { 
+        return -1; //failed to read
+    }
+
+    
+    char* ptr = strchr(buffer1, ')'); // Skip to after the process name which is inside ()
+    if (!ptr) { 
+        return -1; //failed to find one of the ()
+    }
+    ++ptr; // Move past the closing )
+
+    
+    long utime = 0, stime = 0;
+    int field = 1;
+    char* token = strtok(ptr, " "); //divides the string acording to the space 
+    while (token && field <= 15) { // Extract the 14th and 15th fields: utime and stime
+        if (field == 13){ // field 14
+        utime = atol(token);
+        }  
+        if (field == 14){ // field 15
+        stime = atol(token);
+        }  
+        token = strtok(nullptr, " "); //resume the search from the same place
+        ++field; //advance to the next field
+    }
+
+    long processTime = utime + stime;
+
+   
+    fd = open("/proc/stat", O_RDONLY);  //read total system CPU time from /proc/stat
+    if (fd == -1) {
+        return -1;  //failed to open
+    }
+
+    char buffer2[4096] = {0}; //initalize a char array
+    bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
+    close(fd);
+    if (bytesRead <= 0) { 
+        return -1; //failed to read
+    }
+
+     
+    long user, nice, system, idle, iowait, irq, softirq, steal;
+    if (std::sscanf(buffer2, "cpu %ld %ld %ld %ld %ld %ld %ld %ld",
+               &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal) < 8) { //failed to read
+        return -1;
+    }
+
+    long totalTime = user + nice + system + idle + iowait + irq + softirq + steal; //calculate total system CPU time from /proc/stat
+
+    if (totalTime == 0){ //in order not to divide in 0
+      return -1; 
+    }
+
+    float usage = ((float)processTime / totalTime) * 100.0f; //Calculate usage percentage
+    return usage;
+}
+
+float WatchProcCommand::calculateMemoryUsage()
+{
+    string path = "/proc/" + std::to_string(pid) + "/status";
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1) {
+        return -1; //failed to open
+    }
+
+    char buffer[4096] = {0};
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    close(fd);
+    if (bytesRead <= 0) {
+        return -1; //failed to read
+    }
+
+    const char* keyword = "VmRSS:";
+    char* line = strstr(buffer, keyword); //Search for the line starting with "VmRSS:"
+    if (!line) { 
+        return -1; //line not found
+    }
+
+    //Move past everything that it is not a number
+    while (*line && (*line < '0' || *line > '9')){
+       ++line;
+    }
+
+    
+    float mem = 0;
+    sscanf(line, "%d", &mem); //Extract the value in kB
+
+    
+    return (mem / 1024.0f); //Convert to MB
 }
 
 // ########################## NOTE: BuiltInCommand code area ^ ##########################
@@ -1083,7 +1218,7 @@ void ExternalCommand::execute() {
       do {
         FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
         if (waitpid(pid, &status, FOREGROUND_WAIT_MODIFIER) == -1) {
-          FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
+          FOR_DEBUG_MODE(std::fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
           std::cerr << "waitpid failed";
         }
       } while (false); // close waitpid 'if' expression like was shown in lecture for 'DO_SYS' macro
@@ -1121,7 +1256,7 @@ void ComplexExternalCommand::executeHelper() override {
 
   execv(bash_path, (char* const*)bash_args);
 
-  FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
+  FOR_DEBUG_MODE(std::fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
   std::cerr << "execv (bash) failed";
 }
 
@@ -1222,9 +1357,19 @@ int JobsList::get_max_current_jobID()
   }
 }
 
+int JobsList::numberOfJobs()
+{
+    return 0; //TODO
+}
+
 pid_t JobsList::JobEntry::getJobPID()
 {
   return this->command->getPID();
+}
+
+void JobsList::sendSignalToJobById(int pidToSendTo, int signalToSend)
+{
+  //TODO
 }
 
 pid_t JobsList::getJobPID(int jobID)

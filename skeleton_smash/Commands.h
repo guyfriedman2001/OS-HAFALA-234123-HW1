@@ -684,6 +684,10 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
 };
 
 class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
+    pid_t pid;
+    bool argsFormat;
+    float cpuUsage;
+    float memoryUsage;
 public:
     WatchProcCommand(char **args);
 
@@ -693,6 +697,9 @@ public:
     }
     
     void execute() override;
+    bool doesPidExist();
+    float calculateCpuUsage();
+    float calculateMemoryUsage();
 };
 
 // ########################## NOTE: BuiltInCommand code area ^ ##########################
