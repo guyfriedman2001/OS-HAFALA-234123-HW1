@@ -360,6 +360,9 @@ public:
 };
 
 class DiskUsageCommand : public Command {
+    bool pathGiven;
+    bool tooManyArgs;
+    string path;
 public:
     DiskUsageCommand(argv args, const char* cmd_line);
 
@@ -367,6 +370,8 @@ public:
     }
 
     void execute() override;
+    bool directoryExists(const string& path);
+    int calculateDiskUsage(const string& path);
 };
 
 class WhoAmICommand : public Command {
