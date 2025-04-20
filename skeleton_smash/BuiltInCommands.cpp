@@ -3,3 +3,573 @@
 //
 
 #include "BuiltInCommands.h"
+
+#include <signal.h>
+
+#include "SmallShellHeaders.h"
+
+#include <unistd.h>
+
+
+
+ChangePromptCommand::ChangePromptCommand(const argv &args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : string(args[1]))
+{
+  assert_not_empty(args);
+}
+
+ChangePromptCommand::ChangePromptCommand(const argv &args, const char *cmd_line) : ChangePromptCommand(args) {}
+
+void ChangePromptCommand::execute()
+{
+  SHELL_INSTANCE.changePrompt(this->nextPrompt);
+}
+
+ShowPidCommand::ShowPidCommand() : smashPID(SHELL_INSTANCE.getPID()) {}
+
+ShowPidCommand::ShowPidCommand(const argv &args) : ShowPidCommand()
+{
+  assert_not_empty(args);
+}
+
+ShowPidCommand::ShowPidCommand(const argv &args, const char *cmd_line)
+    : ShowPidCommand(args) {}
+
+void ShowPidCommand::execute()
+{
+  printf("smash pid is %d", this->smashPID);
+}
+
+GetCurrDirCommand::GetCurrDirCommand() // TODO: need to initialise fields? maybe.
+{
+  SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
+}
+
+GetCurrDirCommand::GetCurrDirCommand(const argv &args) : GetCurrDirCommand()
+{
+  assert_not_empty(args);
+}
+
+GetCurrDirCommand::GetCurrDirCommand(const argv &args, const char *cmd_line) : GetCurrDirCommand(args) {}
+
+void GetCurrDirCommand::execute()
+{
+  FOR_DEBUG_MODE(printf("void GetCurrDirCommand::execute()\n");)
+  printf("%s", this->current_path);
+}
+
+ChangeDirCommand::ChangeDirCommand(const argv &args)
+{
+  /** TODO: get the arg, if its empty just need to update the do nothing flag,
+            is its just "-" then need to load prev directory from shell to this next dir,
+            if prev path not set then need to see how to notice it and set appropriate flag
+            if its an addition to a relative path, need to see how to do it
+            if its to many arguments, need to set the corresponding flag
+
+            if all flags are to remain 'false' (meaning command is ok), need
+            to store the next path on this->next_path
+  */
+  assert_not_empty(args);
+  int given_args = args.size() - 1; // first arg is the call to the function itself, so its accounted for with the -1.
+  if (given_args == 0)
+  {
+    this->DoNothing = true;
+  }
+  if (given_args > 1)
+  {
+    this->TooManyArgs = true;
+  }
+
+  string next_path_arg = args[1];
+
+  if (STRINGS_EQUAL(args[1], "-"))
+  {
+    if (SHELL_INSTANCE.hasOldPath())
+    {
+      next_path_arg = SHELL_INSTANCE.getPreviousPath();
+    }
+    else
+    {
+      this->OldPWDNotSet = true;
+    }
+  }
+  bool command_invalid = (this->DoNothing || this->TooManyArgs || this->OldPWDNotSet);
+  if (!command_invalid)
+  {
+    strcpy(this->next_path, next_path_arg.c_str());
+  }
+}
+
+
+ChangeDirCommand::ChangeDirCommand(const argv &args, const char *cmd_line)
+    : ChangeDirCommand(args) {}
+
+void ChangeDirCommand::execute()
+{
+  if (this->DoNothing)
+  { // no args were given.
+    return;
+  }
+  else if (this->TooManyArgs)
+  { // too many args were given.
+    perror(this->TOO_MANY_ARGS);
+    return;
+  }
+  else if (this->OldPWDNotSet)
+  { // tried to load a non existing old path
+    perror(this->OLD_PWD_NOT_SET);
+    return;
+  }
+  bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
+  if (succses)
+  { // print updated path
+    SHELL_INSTANCE.print_current_path();
+  }
+  else
+  {
+    FOR_DEBUG_MODE(perror("some trouble in 'void ChangeDirCommand::execute()'");)
+  }
+}
+
+JobsCommand::JobsCommand(const argv &args)
+{
+  // TODO:
+}
+
+JobsCommand::JobsCommand(const argv &args, const char *cmd_line)
+    : JobsCommand(args)
+{
+  // TODO: finish dis
+}
+
+void JobsCommand::execute()
+{
+  // TODO:
+}
+
+ForegroundCommand::ForegroundCommand(const argv &args)
+{
+  assert_not_empty(args);
+  bool incorrect_args_ammount = args.size() > 2; // first arg should be "fg" and second (optional) arg should be a specific job ID
+  bool explicit_jobID_given = args.size() > 2;
+  bool second_arg_is_convertible_to_int;
+
+  if (explicit_jobID_given)
+  {
+    second_arg_is_convertible_to_int = stringToInt(args[1], this->jobID); // if second arg was given, make sure that its an int
+  }
+  else
+  {
+    this->jobID = SHELL_INSTANCE.get_max_current_jobID();
+    second_arg_is_convertible_to_int = true;
+  }
+
+  if (incorrect_args_ammount || (!second_arg_is_convertible_to_int))
+  {
+    this->invalid_syntax = true;
+    return;
+  }
+  this->job = SHELL_INSTANCE.getJobById(this->jobID);
+  if (this->job == nullptr && explicit_jobID_given)
+  {
+    this->job_doesnt_exist = true;
+    return;
+  }
+  if (this->job == nullptr && !(explicit_jobID_given))
+  {
+    this->job_doesnt_exist = false;
+    this->jobs_empty = true;
+  }
+
+  // TODO: COMPLETE LOGIC
+}
+
+ForegroundCommand::ForegroundCommand(const argv &args, const char *cmd_line) : ForegroundCommand(args) {}
+
+
+
+void ForegroundCommand::print_no_job_with_id() const
+{
+  char buf[256];
+  snprintf(buf, sizeof(buf), "%s%d%s", JOB_DOESNT_EXIST_MESSAGE_1, this->jobID, JOB_DOESNT_EXIST_MESSAGE_2);
+  perror(buf);
+}
+
+void ForegroundCommand::print_invalid_args() const
+{
+  perror(INVALID_SYNTAX_MESSAGE);
+}
+
+void ForegroundCommand::print_job_list_is_empty() const
+{
+  perror(NO_JOBS_MESSAGE);
+}
+
+void ForegroundCommand::execute()
+{
+  if (this->invalid_syntax)
+  {
+    this->print_invalid_args();
+    return;
+  }
+  else if (this->job_doesnt_exist)
+  {
+    this->print_no_job_with_id();
+    return;
+  }
+  else if (this->jobs_empty)
+  {
+    this->print_job_list_is_empty();
+    return;
+  }
+  int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
+  // now what?? need to print something? maybe print @exit_status????
+  FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)
+}
+
+QuitCommand::QuitCommand(argv args, const char *cmd_line)
+{
+  killSpecified = (args[1] == "kill");
+}
+
+void QuitCommand::execute()
+{
+  if (killSpecified)
+  {
+    SHELL_INSTANCE.getJobsList().removeFinishedJobs();
+    cout << "smash: sending SIGKILL signal to " << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl;
+    SHELL_INSTANCE.getJobsList().killAllJobs();
+  }
+  exit(0);
+}
+
+KillCommand::KillCommand(argv args, const char *cmd_line)
+{
+  if (args.size() > 3)
+  {
+    std::cerr << "smash error: invalid arguments" << endl;
+  }
+
+  signalToSend = stoi(args[1]);
+  pidToSendTo = stoi(args[2]);
+
+  if (pidToSendTo == 0)
+  {
+    std::cerr << "smash error: kill: job-id <job-id> does not exist" << endl;
+  }
+}
+
+void KillCommand::execute()
+{
+  SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo, signalToSend);
+}
+
+AliasCommand::AliasCommand(argv args, const char *cmd_line)
+{
+  if (args.size() == 1)
+  {
+    aliasList = true;
+  }
+  else
+  {
+    aliasList = false;
+    aliasName = extractAlias(args);
+    actualCommand = extractActualCommand(args);
+  }
+}
+
+void AliasCommand::execute()
+{
+  if (aliasName == "" || actualCommand.empty())
+  {
+    std::cerr << "smash error: alias: invalid alias format" << endl;
+  }
+  else if (aliasList)
+  {
+    SHELL_INSTANCE.getAliases().printAll();
+  }
+  else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
+  {
+    std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
+  }
+  else if (SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName))
+  {
+    std::cerr << "smash error: alias: invalid alias format" << endl;
+  }
+  else
+  {
+    SHELL_INSTANCE.getAliases().addAlias(aliasName, actualCommand);
+  }
+}
+
+string extractAlias(argv args)
+{
+  int equal = args[1].find('=');
+  if (equal = -1) // = not found
+  {
+    return "";
+  }
+  return args[1].substr(0, equal); // return the string until the =
+}
+
+string extractActualCommand(argv args)
+{
+  int firstQuote = args[1].find('\'');
+  int secondQuote = args[1].find('\'', firstQuote + 1);
+  if (firstQuote == -1 || secondQuote == -1) // ' ' not found
+  {
+    return "";
+  }
+  return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1); // return the string between the ' ' in a string form
+}
+
+UnAliasCommand::UnAliasCommand(argv args, const char *cmd_line)
+{
+  for (int i = 1; i < args.size(); i++)
+  {
+    aliasesToRemove.push_back(args[i]);
+  }
+  if (aliasesToRemove.size() == 0)
+  {
+    noArgs = true;
+  }
+  else
+  {
+    noArgs = false;
+  }
+}
+
+void UnAliasCommand::execute()
+{
+  if (noArgs)
+  {
+    std::cerr << "smash error: unalias: not enough arguments" << endl;
+  }
+  else
+  {
+    for (int i = 0; i < aliasesToRemove.size(); i++)
+    {
+      if (SHELL_INSTANCE.getAliases().doesExist(aliasesToRemove[i]))
+      {
+        SHELL_INSTANCE.getAliases().removeAlias(aliasesToRemove[i]);
+      }
+      else
+      {
+        std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
+        break;
+      }
+    }
+  }
+}
+
+UnSetEnvCommand::UnSetEnvCommand(argv args, const char *cmd_line)
+{
+  variablesToRemove = extractVariables(args);
+}
+
+void UnSetEnvCommand::execute()
+{
+  if (variablesToRemove.size() == 0)
+  {
+    cerr << "smash error: unsetenv: not enough arguments";
+  }
+  else
+  {
+    for (const auto &var : variablesToRemove)
+    {
+      if (!(removeVariable(var)))
+      {
+        cerr << "smash error: unsetenv: " << var << " does not exist";
+        break;
+      }
+    }
+  }
+}
+
+argv &UnSetEnvCommand::extractVariables(argv args)
+{
+  argv varsToRemove;
+  for (int i = 1; i < args.size(); i++)
+  {
+    {
+      varsToRemove.push_back(args[i]);
+    }
+    return varsToRemove;
+  }
+}
+
+bool UnSetEnvCommand::removeVariable(const string &var)
+{
+  for (char **env = __environ; *env != nullptr; ++env)
+  { // Loop through the environment array
+    if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=')
+    { // Check if the current entry starts with var=
+      char **cur = env;
+      while (*(cur + 1) != nullptr)
+      { // shift all following environment pointers one step left
+        *cur = *(cur + 1);
+        ++cur;
+      }
+      *cur = nullptr; // update the environment array end
+      return true;
+    }
+  }
+  return false;
+}
+
+WatchProcCommand::WatchProcCommand(argv args, const char *cmd_line)
+{
+  if (args.size() == 2)
+  {
+    pid = static_cast<pid_t>(args[1].c_str(), nullptr, 10);
+    argsFormat = true;
+  }
+  argsFormat = false;
+}
+
+void WatchProcCommand::execute()
+{
+  if (argsFormat)
+  {
+    if (doesPidExist())
+    {
+      cpuUsage = calculateCpuUsage();
+      memoryUsage = calculateMemoryUsage();
+      cout << "PID: " << pid << " | CPU Usage: " << cpuUsage << "%" << " | Memory Usage: " << memoryUsage << " MB" << endl;
+    }
+    else
+    {
+      cerr << "smash error: watchproc: pid " << pid << " does not exist";
+    }
+  }
+  else
+  {
+    cerr << "smash error: watchproc: invalid arguments";
+  }
+}
+
+bool WatchProcCommand::doesPidExist()
+{
+  if (kill(pid, 0) == 0)
+  {
+    return true; // process exists and have a premission to send signal to it
+  }
+  if (errno == ESRCH)
+  { // process doesnt exist
+    return false;
+  }
+  return true; // process exists but doesnt have a premission to send signal to it
+}
+
+float WatchProcCommand::calculateCpuUsage()
+{
+  // Read process cpu time (utime + stime)
+  string path = "/proc/" + std::to_string(pid) + "/stat";
+
+  // Open /proc/<pid>/stat for reading
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
+
+  char buffer1[4096] = {0}; // initalize a char array
+  ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
+
+  char *ptr = strchr(buffer1, ')'); // Skip to after the process name which is inside ()
+  if (!ptr)
+  {
+    return -1; // failed to find one of the ()
+  }
+  ++ptr; // Move past the closing )
+
+  long utime = 0, stime = 0;
+  int field = 1;
+  char *token = strtok(ptr, " "); // divides the string acording to the space
+  while (token && field <= 15)
+  { // Extract the 14th and 15th fields: utime and stime
+    if (field == 13)
+    { // field 14
+      utime = atol(token);
+    }
+    if (field == 14)
+    { // field 15
+      stime = atol(token);
+    }
+    token = strtok(nullptr, " "); // resume the search from the same place
+    ++field;                      // advance to the next field
+  }
+
+  long processTime = utime + stime;
+
+  fd = open("/proc/stat", O_RDONLY); // read total system CPU time from /proc/stat
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
+
+  char buffer2[4096] = {0}; // initalize a char array
+  bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
+
+  long user, nice, system, idle, iowait, irq, softirq, steal;
+  if (std::sscanf(buffer2, "cpu %ld %ld %ld %ld %ld %ld %ld %ld",
+                  &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal) < 8)
+  { // failed to read
+    return -1;
+  }
+
+  long totalTime = user + nice + system + idle + iowait + irq + softirq + steal; // calculate total system CPU time from /proc/stat
+
+  if (totalTime == 0)
+  { // in order not to divide in 0
+    return -1;
+  }
+
+  float usage = ((float)processTime / totalTime) * 100.0f; // Calculate usage percentage
+  return usage;
+}
+
+float WatchProcCommand::calculateMemoryUsage()
+{
+  string path = "/proc/" + std::to_string(pid) + "/status";
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
+
+  char buffer[4096] = {0};
+  ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
+
+  const char *keyword = "VmRSS:";
+  char *line = strstr(buffer, keyword); // Search for the line starting with "VmRSS:"
+  if (!line)
+  {
+    return -1; // line not found
+  }
+
+  // Move past everything that it is not a number
+  while (*line && (*line < '0' || *line > '9'))
+  {
+    ++line;
+  }
+
+  float mem = 0;
+  sscanf(line, "%d", &mem); // Extract the value in kB
+
+  return (mem / 1024.0f); // Convert to MB
+}

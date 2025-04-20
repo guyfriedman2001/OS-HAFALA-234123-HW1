@@ -16,6 +16,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ExternalCommands.cpp" "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o.d"
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/JobList.cpp" "CMakeFiles/skeleton_smash.dir/JobList.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/JobList.cpp.o.d"
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SmallShell.cpp" "CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o.d"
+  "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SpecialCommands.cpp" "CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.d"
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/main.cpp" "CMakeFiles/skeleton_smash.dir/main.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/main.cpp.o.d"
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/signals.cpp" "CMakeFiles/skeleton_smash.dir/signals.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/signals.cpp.o.d"
   "/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/smash.cpp" "CMakeFiles/skeleton_smash.dir/smash.cpp.o" "gcc" "CMakeFiles/skeleton_smash.dir/smash.cpp.o.d"
