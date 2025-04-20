@@ -104,10 +104,12 @@ public:
     virtual inline void executeHelper() override;
 };
 
-class SpecialCommand : public ExternalCommand {
+class SpecialCommand : public Command {
 private:
 
 public:
+    SpecialCommand() = default;
+
     SpecialCommand(const char *cmd_line);
 
     SpecialCommand(const argv& args, const char *cmd_line);
