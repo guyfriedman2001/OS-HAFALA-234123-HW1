@@ -3,13 +3,16 @@
 //
 
 #include "JobList.h"
+
+#include <signal.h>
+
 #include "SmallShellHeaders.h"
 
 JobsList::JobEntry::JobEntry(ExternalCommand *command, int jobID) : command(command), jobID(jobID) {}
 
 void JobsList::JobEntry::printYourself()
 {
-  printf("[%d] ");
+  printf("[%d] ",this->jobID);
   this->command->printYourself();
 }
 
@@ -65,6 +68,7 @@ JobsList::JobEntry *JobsList::getJobById(int jobId)
 
 void JobsList::removeJobById(int jobId)
 {
+  //TODO: decide if we want to print an error if the job doesnt exist
   this->jobs.erase(jobId); // to decide, do we want the destructor of command to be called or not?
 }
 
@@ -96,7 +100,7 @@ int JobsList::get_max_current_jobID()
 
 int JobsList::numberOfJobs()
 {
-  return 0; // TODO
+  return this->jobs.size();
 }
 
 pid_t JobsList::JobEntry::getJobPID()
@@ -104,9 +108,16 @@ pid_t JobsList::JobEntry::getJobPID()
   return this->command->getPID();
 }
 
-void JobsList::sendSignalToJobById(int pidToSendTo, int signalToSend)
+void JobsList::sendSignalToJobById(int jobIDtoSendTo, int signalToSend)
 {
-  // TODO
+  pid_t pid = this->getJobPID(jobIDtoSendTo);
+  if (pid == -1) {
+    cerr << "JobsList::sendSignalToJobById: PID not found" << endl;
+    FOR_DEBUG_MODE(cerr << "Looked for pid: " << jobIDtoSendTo << endl;)
+  }
+  if(SYSTEM_CALL_FAILED(kill(pid, signalToSend))) {
+    cerr << "JobsList::sendSignalToJobById: kill failed" << endl;
+  }
 }
 
 pid_t JobsList::getJobPID(int jobID)

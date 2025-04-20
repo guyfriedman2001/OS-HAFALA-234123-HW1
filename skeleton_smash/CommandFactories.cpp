@@ -111,6 +111,7 @@ Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
   // TODO: your implementation here
   string &command = args[0];
+  return nullptr;
 }
 
 Command *Error404CommandNotFound::factoryHelper(argv args, const char *cmd_line)

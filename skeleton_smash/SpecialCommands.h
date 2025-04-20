@@ -10,6 +10,7 @@
 class SpecialCommand : public Command {
 private:
 
+
 public:
     SpecialCommand() = default;
 
@@ -21,20 +22,40 @@ public:
 
     virtual void execute();
 
+    inline pid_t getPID();
+
 };
 
-class RedirectionCommand : public SpecialCommand {
-    // TODO: Add your data members
+class IORedirection : public SpecialCommand {
+protected:
+    pid_t pid;
+    argv args;
+    char cmd_line[COMMAND_MAX_LENGTH];
+public:
+    explicit IORedirection(argv args, const char* cmd_line);
+
+    virtual ~IORedirection() {}
+
+    void execute() override;
+
+    open_flag getOpenFlag(const string& arg);
+
+    pid_t create_fork();
+};
+
+class RedirectionCommand : public IORedirection {
+
 public:
     explicit RedirectionCommand(argv args, const char* cmd_line);
 
-    virtual ~RedirectionCommand() {
-    }
+    virtual ~RedirectionCommand() {}
 
     void execute() override;
+
+    open_flag getOpenFlag(const string& arg);
 };
 
-class PipeCommand : public SpecialCommand {
+class PipeCommand : public IORedirection {
     // TODO: Add your data members
 public:
     PipeCommand(argv args, const char* cmd_line);

@@ -52,6 +52,7 @@ using std::cin;
 using std::istringstream;
 
 typedef std::vector<std::string> argv;
+typedef int open_flag;
 
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
@@ -66,12 +67,22 @@ typedef std::vector<std::string> argv;
 #define Block_until_the_child_terminates 0
 #define check_if_process_finished_without_blocking WNOHANG
 
+#define O_RDONLY (0x0000)
+#define O_WRONLY (0x0001)
+#define O_RDWR   (0x0002)
+#define O_CREAT  (0x0200)
+#define O_TRUNC  (0x0400)
+#define O_APPEND (0x0008)
+#define ERR_ARG (-1)
+
+#define SYSTEM_CALL_ERROR (-1)
+#define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR)
+
 //TODO: add here project files headers V
 
 #include "Commands.h"
 #include "BuiltInCommands.h"
 #include "EXternalCommands.h"
-#include "ComplexExternalCommands.h"
 #include "SpecialCommands.h"
 #include "CommandFactories.h"
 #include "JobList.h"

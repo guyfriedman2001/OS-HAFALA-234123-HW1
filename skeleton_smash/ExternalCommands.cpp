@@ -100,7 +100,7 @@ void ExternalCommand::execute()
   else
   { // Parent
     int status;
-    if (!_isBackgroundComamnd(this->command))
+    if (!_isBackgroundComamnd(this->command)) //we need to wait for this command
     {
       do
       {

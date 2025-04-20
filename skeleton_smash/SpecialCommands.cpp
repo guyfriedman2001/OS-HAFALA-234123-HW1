@@ -10,6 +10,20 @@ RedirectionCommand::RedirectionCommand(argv args, const char *cmd_line)
   //TODO
 }
 
+open_flag RedirectionCommand::getOpenFlag(const std::string& arg) {
+  if (STRINGS_EQUAL(arg, "<")) {
+    return O_RDONLY;
+  } else if (STRINGS_EQUAL(arg, ">")) {
+    return O_WRONLY | O_CREAT | O_TRUNC;
+  } else if (STRINGS_EQUAL(arg, ">>")) {
+    return O_WRONLY | O_CREAT | O_APPEND;
+  } else if (STRINGS_EQUAL(arg, "<<")) {
+    return O_RDONLY;
+  } else { //wrong argument given
+    return ERR_ARG;
+  }
+}
+
 void RedirectionCommand::execute()
 {
   //TODO

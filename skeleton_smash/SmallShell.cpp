@@ -158,6 +158,11 @@ void SmallShell::executeCommand(const char *cmd_line)
   _trim(non_const_cmd); // TODO: same here
   // TODO: command pre - proccesing
   */
+
+  /*
+  Command* cmd = this->createCommand(cmd_line);
+  cmd->execute();
+   */
 }
 
 void SmallShell::executeCommand(Command *command)
