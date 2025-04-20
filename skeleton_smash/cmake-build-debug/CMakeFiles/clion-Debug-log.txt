@@ -1,4 +1,4 @@
 /Applications/CLion.app/Contents/bin/cmake/mac/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -S /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash -B /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug
--- Configuring done (0.1s)
+-- Configuring done (0.0s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug

@@ -129,6 +129,78 @@ skeleton_smash/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/build
 .PHONY : skeleton_smash/fast
 
+AliasManager.o: AliasManager.cpp.o
+.PHONY : AliasManager.o
+
+# target to build an object file
+AliasManager.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o
+.PHONY : AliasManager.cpp.o
+
+AliasManager.i: AliasManager.cpp.i
+.PHONY : AliasManager.i
+
+# target to preprocess a source file
+AliasManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/AliasManager.cpp.i
+.PHONY : AliasManager.cpp.i
+
+AliasManager.s: AliasManager.cpp.s
+.PHONY : AliasManager.s
+
+# target to generate assembly for a file
+AliasManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/AliasManager.cpp.s
+.PHONY : AliasManager.cpp.s
+
+BuiltInCommands.o: BuiltInCommands.cpp.o
+.PHONY : BuiltInCommands.o
+
+# target to build an object file
+BuiltInCommands.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o
+.PHONY : BuiltInCommands.cpp.o
+
+BuiltInCommands.i: BuiltInCommands.cpp.i
+.PHONY : BuiltInCommands.i
+
+# target to preprocess a source file
+BuiltInCommands.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.i
+.PHONY : BuiltInCommands.cpp.i
+
+BuiltInCommands.s: BuiltInCommands.cpp.s
+.PHONY : BuiltInCommands.s
+
+# target to generate assembly for a file
+BuiltInCommands.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.s
+.PHONY : BuiltInCommands.cpp.s
+
+CommandFactories.o: CommandFactories.cpp.o
+.PHONY : CommandFactories.o
+
+# target to build an object file
+CommandFactories.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o
+.PHONY : CommandFactories.cpp.o
+
+CommandFactories.i: CommandFactories.cpp.i
+.PHONY : CommandFactories.i
+
+# target to preprocess a source file
+CommandFactories.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.i
+.PHONY : CommandFactories.cpp.i
+
+CommandFactories.s: CommandFactories.cpp.s
+.PHONY : CommandFactories.s
+
+# target to generate assembly for a file
+CommandFactories.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.s
+.PHONY : CommandFactories.cpp.s
+
 Commands.o: Commands.cpp.o
 .PHONY : Commands.o
 
@@ -152,6 +224,102 @@ Commands.s: Commands.cpp.s
 Commands.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Commands.cpp.s
 .PHONY : Commands.cpp.s
+
+ComplexExternalCommands.o: ComplexExternalCommands.cpp.o
+.PHONY : ComplexExternalCommands.o
+
+# target to build an object file
+ComplexExternalCommands.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o
+.PHONY : ComplexExternalCommands.cpp.o
+
+ComplexExternalCommands.i: ComplexExternalCommands.cpp.i
+.PHONY : ComplexExternalCommands.i
+
+# target to preprocess a source file
+ComplexExternalCommands.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.i
+.PHONY : ComplexExternalCommands.cpp.i
+
+ComplexExternalCommands.s: ComplexExternalCommands.cpp.s
+.PHONY : ComplexExternalCommands.s
+
+# target to generate assembly for a file
+ComplexExternalCommands.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.s
+.PHONY : ComplexExternalCommands.cpp.s
+
+ExternalCommands.o: ExternalCommands.cpp.o
+.PHONY : ExternalCommands.o
+
+# target to build an object file
+ExternalCommands.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o
+.PHONY : ExternalCommands.cpp.o
+
+ExternalCommands.i: ExternalCommands.cpp.i
+.PHONY : ExternalCommands.i
+
+# target to preprocess a source file
+ExternalCommands.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.i
+.PHONY : ExternalCommands.cpp.i
+
+ExternalCommands.s: ExternalCommands.cpp.s
+.PHONY : ExternalCommands.s
+
+# target to generate assembly for a file
+ExternalCommands.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s
+.PHONY : ExternalCommands.cpp.s
+
+JobList.o: JobList.cpp.o
+.PHONY : JobList.o
+
+# target to build an object file
+JobList.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/JobList.cpp.o
+.PHONY : JobList.cpp.o
+
+JobList.i: JobList.cpp.i
+.PHONY : JobList.i
+
+# target to preprocess a source file
+JobList.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/JobList.cpp.i
+.PHONY : JobList.cpp.i
+
+JobList.s: JobList.cpp.s
+.PHONY : JobList.s
+
+# target to generate assembly for a file
+JobList.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/JobList.cpp.s
+.PHONY : JobList.cpp.s
+
+SmallShell.o: SmallShell.cpp.o
+.PHONY : SmallShell.o
+
+# target to build an object file
+SmallShell.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o
+.PHONY : SmallShell.cpp.o
+
+SmallShell.i: SmallShell.cpp.i
+.PHONY : SmallShell.i
+
+# target to preprocess a source file
+SmallShell.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SmallShell.cpp.i
+.PHONY : SmallShell.cpp.i
+
+SmallShell.s: SmallShell.cpp.s
+.PHONY : SmallShell.s
+
+# target to generate assembly for a file
+SmallShell.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SmallShell.cpp.s
+.PHONY : SmallShell.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -234,9 +402,30 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... skeleton_smash"
+	@echo "... AliasManager.o"
+	@echo "... AliasManager.i"
+	@echo "... AliasManager.s"
+	@echo "... BuiltInCommands.o"
+	@echo "... BuiltInCommands.i"
+	@echo "... BuiltInCommands.s"
+	@echo "... CommandFactories.o"
+	@echo "... CommandFactories.i"
+	@echo "... CommandFactories.s"
 	@echo "... Commands.o"
 	@echo "... Commands.i"
 	@echo "... Commands.s"
+	@echo "... ComplexExternalCommands.o"
+	@echo "... ComplexExternalCommands.i"
+	@echo "... ComplexExternalCommands.s"
+	@echo "... ExternalCommands.o"
+	@echo "... ExternalCommands.i"
+	@echo "... ExternalCommands.s"
+	@echo "... JobList.o"
+	@echo "... JobList.i"
+	@echo "... JobList.s"
+	@echo "... SmallShell.o"
+	@echo "... SmallShell.i"
+	@echo "... SmallShell.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -120,7 +120,7 @@ public:
 
 };
 
-class EmptyCommand : public Command {
+class EmptyCommand : public Command { //will go with "Command" and Command404not found in the same file
 public:
     EmptyCommand() = default;
 
