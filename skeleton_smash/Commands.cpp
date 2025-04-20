@@ -1,4 +1,4 @@
-#include <fcntl.h> // for open()
+#include <fcntl.h>  // for open()
 #include <unistd.h> //for close()
 #include <string.h>
 #include <iostream>
@@ -10,19 +10,19 @@
 #include "Commands.h"
 #include <string>
 #include <set>
-#include <cstdlib>  // for getenv
+#include <cstdlib> // for getenv
 
 class SmallShell;
 
-//#define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
+// #define STRINGS_EQUAL(A, B) (strcmp((A), (B)) == 0)
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
 #define DEBUG_MODE true
 #if DEBUG_MODE
-  #define FOR_DEBUG_MODE(CODE_CONTENTS) CODE_CONTENTS
+#define FOR_DEBUG_MODE(CODE_CONTENTS) CODE_CONTENTS
 #else
-  #define FOR_DEBUG_MODE(CODE_CONTENTS)
+#define FOR_DEBUG_MODE(CODE_CONTENTS)
 #endif
 
 #define Block_until_the_child_terminates 0
@@ -159,47 +159,52 @@ void _removeBackgroundSign(char *cmd_line)
   cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = 0;
 }
 
-
-
-
-bool isBuiltInCommand(const std::string& cmd) {
+bool isBuiltInCommand(const std::string &cmd)
+{
   static const std::set<std::string> builtins = {
-      "cd", "pwd", "jobs", "fg", "bg", "kill", "quit", "chprompt", "showpid", "set", "unset", "alias", "unalias"
-  };
+      "cd", "pwd", "jobs", "fg", "bg", "kill", "quit", "chprompt", "showpid", "set", "unset", "alias", "unalias"};
   return builtins.find(cmd) != builtins.end();
 }
 
-inline bool isExternalComamnd(const char* cmd_line) {
-  //TODO: create
+inline bool isExternalComamnd(const char *cmd_line)
+{
+  // TODO: create
   return false;
 }
 
-inline bool isWildCard(const char* cmd_line){
+inline bool isWildCard(const char *cmd_line)
+{
   return strchr(cmd_line, '?');
 }
 
-inline bool isCompleExternalCommand(const char* cmd_line) {
+inline bool isCompleExternalCommand(const char *cmd_line)
+{
   return (isWildCard(cmd_line) || strchr(cmd_line, '*'));
 }
 
-inline bool isPipeCommand(const char* cmd_line) {
+inline bool isPipeCommand(const char *cmd_line)
+{
   return (strchr(cmd_line, '|'));
 }
 
-inline bool isInputRedirectionCommand(const char* cmd_line) {
+inline bool isInputRedirectionCommand(const char *cmd_line)
+{
   return (strchr(cmd_line, '<'));
 }
 
-inline bool isOutputRedirectionCommand(const char* cmd_line) {
+inline bool isOutputRedirectionCommand(const char *cmd_line)
+{
   return (strchr(cmd_line, '>'));
 }
 
-inline bool isIORedirectionCommand(const char* cmd_line) {
+inline bool isIORedirectionCommand(const char *cmd_line)
+{
   return (isInputRedirectionCommand(cmd_line) || isOutputRedirectionCommand(cmd_line));
 }
 
 template <typename T>
-inline void assert_not_empty(const T& container) {
+inline void assert_not_empty(const T &container)
+{
   assert(!container.empty());
 }
 
@@ -209,19 +214,21 @@ inline void assert_not_empty(const T& container) {
  * @param out location to store int convertion
  * @return true if conversion succesfull, false otherwise
  */
-bool stringToInt(const std::string& s, int& out) //function from StackOverflow, nned to make sure that it works
+bool stringToInt(const std::string &s, int &out) // function from StackOverflow, nned to make sure that it works
 {
-  char* end = nullptr;
+  char *end = nullptr;
   errno = 0; // reset errno before call
   long val = std::strtol(s.c_str(), &end, 10);
 
-  if (errno != 0 || end != s.c_str() + s.size()) {
+  if (errno != 0 || end != s.c_str() + s.size())
+  {
     // invalid number or not fully consumed
     return false;
   }
 
   // check overflow for int range
-  if (val < INT_MIN || val > INT_MAX) {
+  if (val < INT_MIN || val > INT_MAX)
+  {
     return false;
   }
 
@@ -232,21 +239,20 @@ bool stringToInt(const std::string& s, int& out) //function from StackOverflow, 
 
 // ########################## NOTE: AbstractCommand code area V ##########################
 
-//pid_t Command::getPID(){return getpid();}
+// pid_t Command::getPID(){return getpid();}
 
 pid_t Command::getPID()
 {
   return getpid();
 }
 
-
 // ########################## NOTE: AbstractCommand code area V ##########################
 
 // ########################## NOTE: CommandFactory code area V ##########################
 
-Command *BuiltInCommandFactory::factoryHelper(argv args, const char* cmd_line)
+Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
-  string& command = args[0];
+  string &command = args[0];
   if (STRINGS_EQUAL(command, "chprompt"))
   {
     return new ChangePromptCommand(args, cmd_line);
@@ -269,23 +275,23 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char* cmd_line)
   }
   else if (STRINGS_EQUAL(command, "fg"))
   {
-    return new ForegroundCommand(args,  cmd_line);
+    return new ForegroundCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "quit"))
   {
-    return new QuitCommand(args,  cmd_line);
+    return new QuitCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "kill"))
   {
-    return new KillCommand(args,  cmd_line);
+    return new KillCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "alias"))
   {
-    return new AliasCommand(args,  cmd_line);
+    return new AliasCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "unalias"))
   {
-    return new UnAliasCommand(args,  cmd_line);
+    return new UnAliasCommand(args, cmd_line);
   }
   else if (STRINGS_EQUAL(command, "unsetenv"))
   {
@@ -301,22 +307,22 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char* cmd_line)
   }
 }
 
-Command *ExternalCommandFactory::factoryHelper(argv args, const char* cmd_line)
+Command *ExternalCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
   // TODO: your implementation here
-  string& command = args[0];
+  string &command = args[0];
 }
 
 /*
 void runExternalCommand(const char* cmd_line) {
     pid_t pid = fork();
-    
+
     if (pid == -1) {
         // Fork failed
         perror("fork failed");
         return;
     }
-    
+
     if (pid == 0) {
         // Child process
 
@@ -324,7 +330,7 @@ void runExternalCommand(const char* cmd_line) {
         char cmd_copy[1024];
         strncpy(cmd_copy, cmd_line, sizeof(cmd_copy));
         cmd_copy[sizeof(cmd_copy) - 1] = '\0'; // null-terminate
-        
+
         // Tokenize the command
         std::vector<char*> args;
         char* token = strtok(cmd_copy, " ");
@@ -347,13 +353,13 @@ void runExternalCommand(const char* cmd_line) {
 }
 */
 
-Command *SpecialCommandFactory::factoryHelper(argv args, const char* cmd_line)
+Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
   // TODO: your implementation here
-  string& command = args[0];
+  string &command = args[0];
 }
 
-Command *Error404CommandNotFound::factoryHelper(argv args, const char* cmd_line)
+Command *Error404CommandNotFound::factoryHelper(argv args, const char *cmd_line)
 {
   return new CommandNotFound(args, cmd_line);
 }
@@ -388,7 +394,7 @@ inline void SmallShell::print_current_path() const
   temp.execute();
 }
 
-JobsList& SmallShell::getJobsList()
+JobsList &SmallShell::getJobsList()
 {
   return this->jobs;
 }
@@ -398,17 +404,10 @@ void SmallShell::print_jobs()
   this->jobs.printJobsList();
 }
 
-JobsList::JobEntry* SmallShell::getJobById(int jobId)
+JobsList::JobEntry *SmallShell::getJobById(int jobId)
 {
   return this->jobs.getJobById(jobId);
 }
-
-
-
-
-
-
-
 
 /**
  * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
@@ -436,46 +435,43 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
-  argv args = argv(); //FIXME: after we make a function to return argv after aliasing, add call to that function @here
+  argv args = argv(); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
 
-
-  //char *args_[COMMAND_MAX_ARGS];
-  size_t num_args = args.size();//_parseCommandLine(cmd_line, args_); //get num of arguments
-  //commandDestructor(args_, num_args);
-
-
+  // char *args_[COMMAND_MAX_ARGS];
+  size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
+  // commandDestructor(args_, num_args);
 
   if (num_args == 0)
   {
-    returnCommand = new EmptyCommand(args,  cmd_line); // TODO: maybe make 'empty command'
+    returnCommand = new EmptyCommand(args, cmd_line); // TODO: maybe make 'empty command'
   }
 
   if (returnCommand == nullptr)
-  { //try and create a BuiltInCommand command
+  { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(args,  cmd_line);
-    //returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args, cmd_line);
+    // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(args,  cmd_line);
-    //returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args, cmd_line);
+    // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(args,  cmd_line);
-    //returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args, cmd_line);
+    // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     Error404CommandNotFound factory;
-    returnCommand = factory.makeCommand(args,  cmd_line);
-    //returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
+    returnCommand = factory.makeCommand(args, cmd_line);
+    // returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
   return returnCommand;
@@ -574,25 +570,22 @@ int SmallShell::waitPID(pid_t pid)
   return status;
 }
 
-int  SmallShell::get_max_current_jobID()
+int SmallShell::get_max_current_jobID()
 {
   return this->jobs.get_max_current_jobID();
 }
-
-
 
 // ########################## NOTE: SmallShell code area ^ ##########################
 
 // ########################## NOTE: BuiltInCommand code area V ##########################
 
-CommandNotFound::CommandNotFound(const argv& args)
+CommandNotFound::CommandNotFound(const argv &args)
 {
   // TODO:
 }
 
-
-CommandNotFound::CommandNotFound(const argv& args, const char* cmd_line) {
-
+CommandNotFound::CommandNotFound(const argv &args, const char *cmd_line)
+{
 }
 
 void CommandNotFound::execute()
@@ -600,11 +593,12 @@ void CommandNotFound::execute()
   // TODO:
 }
 
-ChangePromptCommand::ChangePromptCommand(const argv& args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : string(args[1])) {
+ChangePromptCommand::ChangePromptCommand(const argv &args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : string(args[1]))
+{
   assert_not_empty(args);
 }
 
-ChangePromptCommand::ChangePromptCommand(const argv& args, const char* cmd_line) : ChangePromptCommand(args) {}
+ChangePromptCommand::ChangePromptCommand(const argv &args, const char *cmd_line) : ChangePromptCommand(args) {}
 
 void ChangePromptCommand::execute()
 {
@@ -613,11 +607,12 @@ void ChangePromptCommand::execute()
 
 ShowPidCommand::ShowPidCommand() : smashPID(SHELL_INSTANCE.getPID()) {}
 
-ShowPidCommand::ShowPidCommand(const argv& args) : ShowPidCommand() {
+ShowPidCommand::ShowPidCommand(const argv &args) : ShowPidCommand()
+{
   assert_not_empty(args);
 }
 
-ShowPidCommand::ShowPidCommand(const argv& args, const char* cmd_line)
+ShowPidCommand::ShowPidCommand(const argv &args, const char *cmd_line)
     : ShowPidCommand(args) {}
 
 void ShowPidCommand::execute()
@@ -625,16 +620,17 @@ void ShowPidCommand::execute()
   printf("smash pid is %d", this->smashPID);
 }
 
-GetCurrDirCommand::GetCurrDirCommand() //TODO: need to initialise fields? maybe.
+GetCurrDirCommand::GetCurrDirCommand() // TODO: need to initialise fields? maybe.
 {
   SHELL_INSTANCE.tryLoadShellPath(this->current_path, sizeof(this->current_path));
 }
 
-GetCurrDirCommand::GetCurrDirCommand(const argv& args) : GetCurrDirCommand() {
+GetCurrDirCommand::GetCurrDirCommand(const argv &args) : GetCurrDirCommand()
+{
   assert_not_empty(args);
 }
 
-GetCurrDirCommand::GetCurrDirCommand(const argv& args, const char* cmd_line) : GetCurrDirCommand(args) {}
+GetCurrDirCommand::GetCurrDirCommand(const argv &args, const char *cmd_line) : GetCurrDirCommand(args) {}
 
 void GetCurrDirCommand::execute()
 {
@@ -642,7 +638,7 @@ void GetCurrDirCommand::execute()
   printf("%s", this->current_path);
 }
 
-ChangeDirCommand::ChangeDirCommand(const argv& args)
+ChangeDirCommand::ChangeDirCommand(const argv &args)
 {
   /** TODO: get the arg, if its empty just need to update the do nothing flag,
             is its just "-" then need to load prev directory from shell to this next dir,
@@ -654,33 +650,40 @@ ChangeDirCommand::ChangeDirCommand(const argv& args)
             to store the next path on this->next_path
   */
   assert_not_empty(args);
-  int given_args = args.size() - 1; //first arg is the call to the function itself, so its accounted for with the -1.
-  if (given_args == 0) {
+  int given_args = args.size() - 1; // first arg is the call to the function itself, so its accounted for with the -1.
+  if (given_args == 0)
+  {
     this->DoNothing = true;
   }
-  if (given_args > 1) {
+  if (given_args > 1)
+  {
     this->TooManyArgs = true;
   }
 
   string next_path_arg = args[1];
 
-  if (STRINGS_EQUAL(args[1], "-")) {
-    if (SHELL_INSTANCE.hasOldPath()) {
+  if (STRINGS_EQUAL(args[1], "-"))
+  {
+    if (SHELL_INSTANCE.hasOldPath())
+    {
       next_path_arg = SHELL_INSTANCE.getPreviousPath();
-    } else {
+    }
+    else
+    {
       this->OldPWDNotSet = true;
     }
   }
   bool command_invalid = (this->DoNothing || this->TooManyArgs || this->OldPWDNotSet);
-  if (!command_invalid) {
+  if (!command_invalid)
+  {
     strcpy(this->next_path, next_path_arg.c_str());
   }
 }
 
-const char* ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
-const char* ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
+const char *ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
+const char *ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
 
-ChangeDirCommand::ChangeDirCommand(const argv& args, const char* cmd_line)
+ChangeDirCommand::ChangeDirCommand(const argv &args, const char *cmd_line)
     : ChangeDirCommand(args) {}
 
 void ChangeDirCommand::execute()
@@ -695,13 +698,13 @@ void ChangeDirCommand::execute()
     return;
   }
   else if (this->OldPWDNotSet)
-  { //tried to load a non existing old path
+  { // tried to load a non existing old path
     perror(this->OLD_PWD_NOT_SET);
     return;
   }
   bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
   if (succses)
-  { //print updated path
+  { // print updated path
     SHELL_INSTANCE.print_current_path();
   }
   else
@@ -710,58 +713,60 @@ void ChangeDirCommand::execute()
   }
 }
 
-JobsCommand::JobsCommand(const argv& args)
+JobsCommand::JobsCommand(const argv &args)
 {
   // TODO:
 }
 
-JobsCommand::JobsCommand(const argv& args, const char* cmd_line)
+JobsCommand::JobsCommand(const argv &args, const char *cmd_line)
     : JobsCommand(args)
 {
   // TODO: finish dis
 }
-
 
 void JobsCommand::execute()
 {
   // TODO:
 }
 
-ForegroundCommand::ForegroundCommand(const argv& args)
+ForegroundCommand::ForegroundCommand(const argv &args)
 {
   assert_not_empty(args);
-  bool incorrect_args_ammount = args.size() > 2; //first arg should be "fg" and second (optional) arg should be a specific job ID
+  bool incorrect_args_ammount = args.size() > 2; // first arg should be "fg" and second (optional) arg should be a specific job ID
   bool explicit_jobID_given = args.size() > 2;
   bool second_arg_is_convertible_to_int;
 
-  if (explicit_jobID_given) {
-    second_arg_is_convertible_to_int = stringToInt(args[1],this->jobID); //if second arg was given, make sure that its an int
-  } else {
+  if (explicit_jobID_given)
+  {
+    second_arg_is_convertible_to_int = stringToInt(args[1], this->jobID); // if second arg was given, make sure that its an int
+  }
+  else
+  {
     this->jobID = SHELL_INSTANCE.get_max_current_jobID();
     second_arg_is_convertible_to_int = true;
   }
 
-  if (incorrect_args_ammount ||(!second_arg_is_convertible_to_int)) {
+  if (incorrect_args_ammount || (!second_arg_is_convertible_to_int))
+  {
     this->invalid_syntax = true;
     return;
   }
   this->job = SHELL_INSTANCE.getJobById(this->jobID);
-  if (this->job == nullptr && explicit_jobID_given) {
+  if (this->job == nullptr && explicit_jobID_given)
+  {
     this->job_doesnt_exist = true;
     return;
   }
-  if (this->job == nullptr && !(explicit_jobID_given) ) {
+  if (this->job == nullptr && !(explicit_jobID_given))
+  {
     this->job_doesnt_exist = false;
     this->jobs_empty = true;
   }
 
-  //TODO: COMPLETE LOGIC
-
-
+  // TODO: COMPLETE LOGIC
 }
 
-ForegroundCommand::ForegroundCommand(const argv& args, const char* cmd_line) : ForegroundCommand(args) {}
-
+ForegroundCommand::ForegroundCommand(const argv &args, const char *cmd_line) : ForegroundCommand(args) {}
 
 const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
 
@@ -790,24 +795,27 @@ void ForegroundCommand::print_job_list_is_empty() const
 
 void ForegroundCommand::execute()
 {
-  if (this->invalid_syntax) {
+  if (this->invalid_syntax)
+  {
     this->print_invalid_args();
     return;
   }
-  else if (this->job_doesnt_exist) {
+  else if (this->job_doesnt_exist)
+  {
     this->print_no_job_with_id();
     return;
   }
-  else if (this->jobs_empty) {
+  else if (this->jobs_empty)
+  {
     this->print_job_list_is_empty();
     return;
   }
   int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
-  //now what?? need to print something? maybe print @exit_status????
-  FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status); )
+  // now what?? need to print something? maybe print @exit_status????
+  FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)
 }
 
-QuitCommand::QuitCommand(argv args, const char* cmd_line)
+QuitCommand::QuitCommand(argv args, const char *cmd_line)
 {
   killSpecified = (args[1] == "kill");
 }
@@ -823,7 +831,7 @@ void QuitCommand::execute()
   exit(0);
 }
 
-KillCommand::KillCommand(argv args, const char* cmd_line)
+KillCommand::KillCommand(argv args, const char *cmd_line)
 {
   if (args.size() > 3)
   {
@@ -844,7 +852,7 @@ void KillCommand::execute()
   SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo, signalToSend);
 }
 
-AliasCommand::AliasCommand(argv args, const char* cmd_line)
+AliasCommand::AliasCommand(argv args, const char *cmd_line)
 {
   if (args.size() == 1)
   {
@@ -867,25 +875,29 @@ void AliasCommand::execute()
   else if (aliasList)
   {
     SHELL_INSTANCE.getAliases().printAll();
-  } else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
+  }
+  else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
     std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
   }
-  else if(SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName)){
+  else if (SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName))
+  {
     std::cerr << "smash error: alias: invalid alias format" << endl;
-  } else{
-    SHELL_INSTANCE.getAliases().addAlias(aliasName,actualCommand);
+  }
+  else
+  {
+    SHELL_INSTANCE.getAliases().addAlias(aliasName, actualCommand);
   }
 }
 
 string extractAlias(argv args)
 {
- int equal = args[1].find('=');
- if (equal = -1) // = not found
- {
-  return "";
- }
- return args[1].substr(0,equal); // return the string until the =
+  int equal = args[1].find('=');
+  if (equal = -1) // = not found
+  {
+    return "";
+  }
+  return args[1].substr(0, equal); // return the string until the =
 }
 
 string extractActualCommand(argv args)
@@ -896,10 +908,10 @@ string extractActualCommand(argv args)
   {
     return "";
   }
-  return args[1].substr(firstQuote + 1,secondQuote - firstQuote + 1); // return the string between the ' ' in a string form
+  return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1); // return the string between the ' ' in a string form
 }
 
-UnAliasCommand::UnAliasCommand(argv args, const char* cmd_line)
+UnAliasCommand::UnAliasCommand(argv args, const char *cmd_line)
 {
   for (int i = 1; i < args.size(); i++)
   {
@@ -908,8 +920,10 @@ UnAliasCommand::UnAliasCommand(argv args, const char* cmd_line)
   if (aliasesToRemove.size() == 0)
   {
     noArgs = true;
-  } else {
-  noArgs = false;
+  }
+  else
+  {
+    noArgs = false;
   }
 }
 
@@ -918,21 +932,25 @@ void UnAliasCommand::execute()
   if (noArgs)
   {
     std::cerr << "smash error: unalias: not enough arguments" << endl;
-  } else {
-  for (int i = 0; i < aliasesToRemove.size(); i++)
-  {
-    if (SHELL_INSTANCE.getAliases().doesExist(aliasesToRemove[i]))
-    {
-      SHELL_INSTANCE.getAliases().removeAlias(aliasesToRemove[i]);
-    } else {
-      std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
-      break;
-    }
   }
+  else
+  {
+    for (int i = 0; i < aliasesToRemove.size(); i++)
+    {
+      if (SHELL_INSTANCE.getAliases().doesExist(aliasesToRemove[i]))
+      {
+        SHELL_INSTANCE.getAliases().removeAlias(aliasesToRemove[i]);
+      }
+      else
+      {
+        std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
+        break;
+      }
+    }
   }
 }
 
-UnSetEnvCommand::UnSetEnvCommand(argv args, const char* cmd_line)
+UnSetEnvCommand::UnSetEnvCommand(argv args, const char *cmd_line)
 {
   variablesToRemove = extractVariables(args);
 }
@@ -942,8 +960,10 @@ void UnSetEnvCommand::execute()
   if (variablesToRemove.size() == 0)
   {
     cerr << "smash error: unsetenv: not enough arguments";
-  } else {
-    for (const auto& var : variablesToRemove)
+  }
+  else
+  {
+    for (const auto &var : variablesToRemove)
     {
       if (!(removeVariable(var)))
       {
@@ -954,14 +974,13 @@ void UnSetEnvCommand::execute()
   }
 }
 
-argv& UnSetEnvCommand::extractVariables(argv args)
+argv &UnSetEnvCommand::extractVariables(argv args)
 {
   argv varsToRemove;
   for (int i = 1; i < args.size(); i++)
   {
     {
       varsToRemove.push_back(args[i]);
-
     }
     return varsToRemove;
   }
@@ -969,21 +988,24 @@ argv& UnSetEnvCommand::extractVariables(argv args)
 
 bool UnSetEnvCommand::removeVariable(const string &var)
 {
-    for (char **env = __environ; *env != nullptr; ++env) {     // Loop through the environment array
-        if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=') { // Check if the current entry starts with var=
-            char **cur = env;
-            while (*(cur + 1) != nullptr) { //shift all following environment pointers one step left
-                *cur = *(cur + 1); 
-                ++cur;              
-            }
-            *cur = nullptr;  // update the environment array end
-            return true;
-        }
+  for (char **env = __environ; *env != nullptr; ++env)
+  { // Loop through the environment array
+    if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=')
+    { // Check if the current entry starts with var=
+      char **cur = env;
+      while (*(cur + 1) != nullptr)
+      { // shift all following environment pointers one step left
+        *cur = *(cur + 1);
+        ++cur;
+      }
+      *cur = nullptr; // update the environment array end
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
-WatchProcCommand::WatchProcCommand(argv args, const char* cmd_line)
+WatchProcCommand::WatchProcCommand(argv args, const char *cmd_line)
 {
   if (args.size() == 2)
   {
@@ -1001,130 +1023,144 @@ void WatchProcCommand::execute()
     {
       cpuUsage = calculateCpuUsage();
       memoryUsage = calculateMemoryUsage();
-      cout << "PID: " << pid << " | CPU Usage: " << cpuUsage << "%" << " | Memory Usage: " << memoryUsage << " MB" << endl;  
-    } else {
-      cerr << "smash error: watchproc: pid " << pid << " does not exist"; 
+      cout << "PID: " << pid << " | CPU Usage: " << cpuUsage << "%" << " | Memory Usage: " << memoryUsage << " MB" << endl;
     }
-  } else {
+    else
+    {
+      cerr << "smash error: watchproc: pid " << pid << " does not exist";
+    }
+  }
+  else
+  {
     cerr << "smash error: watchproc: invalid arguments";
   }
 }
 
 bool WatchProcCommand::doesPidExist()
 {
-    if (kill(pid, 0) == 0) {
-        return true;  // process exists and have a premission to send signal
-    }
-    if (errno == ESRCH) { //process doesnt exist
-        return false;
-    }
-    return true; //process exists but doesnt have a premission to send signal
+  if (kill(pid, 0) == 0)
+  {
+    return true; // process exists and have a premission to send signal to it
+  }
+  if (errno == ESRCH)
+  { // process doesnt exist
+    return false;
+  }
+  return true; // process exists but doesnt have a premission to send signal to it
 }
 
 float WatchProcCommand::calculateCpuUsage()
 {
-  //Read process CPU time (utime + stime)
-    string path = "/proc/" + std::to_string(pid) + "/stat";
+  // Read process CPU time (utime + stime)
+  string path = "/proc/" + std::to_string(pid) + "/stat";
 
-    // Open /proc/<pid>/stat for reading
-    int fd = open(path.c_str(), O_RDONLY);
-    if (fd == -1) { 
-        return -1; //failed to open
+  // Open /proc/<pid>/stat for reading
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
+
+  char buffer1[4096] = {0}; // initalize a char array
+  ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
+
+  char *ptr = strchr(buffer1, ')'); // Skip to after the process name which is inside ()
+  if (!ptr)
+  {
+    return -1; // failed to find one of the ()
+  }
+  ++ptr; // Move past the closing )
+
+  long utime = 0, stime = 0;
+  int field = 1;
+  char *token = strtok(ptr, " "); // divides the string acording to the space
+  while (token && field <= 15)
+  { // Extract the 14th and 15th fields: utime and stime
+    if (field == 13)
+    { // field 14
+      utime = atol(token);
     }
-
-    char buffer1[4096] = {0}; //initalize a char array
-    ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
-    close(fd);
-    if (bytesRead <= 0) { 
-        return -1; //failed to read
+    if (field == 14)
+    { // field 15
+      stime = atol(token);
     }
+    token = strtok(nullptr, " "); // resume the search from the same place
+    ++field;                      // advance to the next field
+  }
 
-    
-    char* ptr = strchr(buffer1, ')'); // Skip to after the process name which is inside ()
-    if (!ptr) { 
-        return -1; //failed to find one of the ()
-    }
-    ++ptr; // Move past the closing )
+  long processTime = utime + stime;
 
-    
-    long utime = 0, stime = 0;
-    int field = 1;
-    char* token = strtok(ptr, " "); //divides the string acording to the space 
-    while (token && field <= 15) { // Extract the 14th and 15th fields: utime and stime
-        if (field == 13){ // field 14
-        utime = atol(token);
-        }  
-        if (field == 14){ // field 15
-        stime = atol(token);
-        }  
-        token = strtok(nullptr, " "); //resume the search from the same place
-        ++field; //advance to the next field
-    }
+  fd = open("/proc/stat", O_RDONLY); // read total system CPU time from /proc/stat
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
 
-    long processTime = utime + stime;
+  char buffer2[4096] = {0}; // initalize a char array
+  bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
 
-   
-    fd = open("/proc/stat", O_RDONLY);  //read total system CPU time from /proc/stat
-    if (fd == -1) {
-        return -1;  //failed to open
-    }
+  long user, nice, system, idle, iowait, irq, softirq, steal;
+  if (std::sscanf(buffer2, "cpu %ld %ld %ld %ld %ld %ld %ld %ld",
+                  &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal) < 8)
+  { // failed to read
+    return -1;
+  }
 
-    char buffer2[4096] = {0}; //initalize a char array
-    bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
-    close(fd);
-    if (bytesRead <= 0) { 
-        return -1; //failed to read
-    }
+  long totalTime = user + nice + system + idle + iowait + irq + softirq + steal; // calculate total system CPU time from /proc/stat
 
-     
-    long user, nice, system, idle, iowait, irq, softirq, steal;
-    if (std::sscanf(buffer2, "cpu %ld %ld %ld %ld %ld %ld %ld %ld",
-               &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal) < 8) { //failed to read
-        return -1;
-    }
+  if (totalTime == 0)
+  { // in order not to divide in 0
+    return -1;
+  }
 
-    long totalTime = user + nice + system + idle + iowait + irq + softirq + steal; //calculate total system CPU time from /proc/stat
-
-    if (totalTime == 0){ //in order not to divide in 0
-      return -1; 
-    }
-
-    float usage = ((float)processTime / totalTime) * 100.0f; //Calculate usage percentage
-    return usage;
+  float usage = ((float)processTime / totalTime) * 100.0f; // Calculate usage percentage
+  return usage;
 }
 
 float WatchProcCommand::calculateMemoryUsage()
 {
-    string path = "/proc/" + std::to_string(pid) + "/status";
-    int fd = open(path.c_str(), O_RDONLY);
-    if (fd == -1) {
-        return -1; //failed to open
-    }
+  string path = "/proc/" + to_string(pid) + "/status";
+  int fd = open(path.c_str(), O_RDONLY);
+  if (fd == -1)
+  {
+    return -1; // failed to open
+  }
 
-    char buffer[4096] = {0};
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
-    if (bytesRead <= 0) {
-        return -1; //failed to read
-    }
+  char buffer[4096] = {0};
+  ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+  close(fd);
+  if (bytesRead <= 0)
+  {
+    return -1; // failed to read
+  }
 
-    const char* keyword = "VmRSS:";
-    char* line = strstr(buffer, keyword); //Search for the line starting with "VmRSS:"
-    if (!line) { 
-        return -1; //line not found
-    }
+  const char *keyword = "VmRSS:";
+  char *line = strstr(buffer, keyword); // Search for the line starting with "VmRSS:"
+  if (!line)
+  {
+    return -1; // line not found
+  }
 
-    //Move past everything that it is not a number
-    while (*line && (*line < '0' || *line > '9')){
-       ++line;
-    }
+  // Move past everything that it is not a number
+  while (*line && (*line < '0' || *line > '9'))
+  {
+    ++line;
+  }
 
-    
-    float mem = 0;
-    sscanf(line, "%d", &mem); //Extract the value in kB
+  float mem = 0;
+  sscanf(line, "%d", &mem); // Extract the value in kB
 
-    
-    return (mem / 1024.0f); //Convert to MB
+  return (mem / 1024.0f); // Convert to MB
 }
 
 // ########################## NOTE: BuiltInCommand code area ^ ##########################
@@ -1137,7 +1173,7 @@ ExternalCommand::ExternalCommand(const char *cmd_line)
   this->jobPID = getpid();
 }
 
-ExternalCommand::ExternalCommand(const argv& args,const char *cmd_line) : ExternalCommand(cmd_line)
+ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : ExternalCommand(cmd_line)
 {
   // Inhereting classes can call Ctor():ExternalCommand(){} to take care of command copying;
   assert_not_empty(this->given_args);
@@ -1149,7 +1185,7 @@ void ExternalCommand::printYourself()
   printf("%s", this->command);
 }
 
-//int ExternalCommand::getPID(){return getpid();}
+// int ExternalCommand::getPID(){return getpid();}
 
 /*
 void ExternalCommand::execute() {
@@ -1199,42 +1235,54 @@ void ExternalCommand::execute() {
 void ExternalCommand::executeHelper() {}
 */
 
-void ExternalCommand::execute() {
-  argv& args = this->given_args;
+void ExternalCommand::execute()
+{
+  argv &args = this->given_args;
 
   pid_t pid = fork();
   this->jobPID = pid;
 
-  if (pid == -1) {
+  if (pid == -1)
+  {
     perror("fork failed");
     return;
   }
 
-  if (pid == 0) { // Child
+  if (pid == 0)
+  {                        // Child
     this->executeHelper(); // <---- DELEGATE to a helper method
-    exit(1); // If executeHelper returns, it means exec failed
-  } else { // Parent
+    exit(1);               // If executeHelper returns, it means exec failed
+  }
+  else
+  { // Parent
     int status;
-    if (!_isBackgroundComamnd(this->command)) {
-      do {
+    if (!_isBackgroundComamnd(this->command))
+    {
+      do
+      {
         FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
-        if (waitpid(pid, &status, Block_until_the_child_terminates) == -1) {
+        if (waitpid(pid, &status, Block_until_the_child_terminates) == -1)
+        {
           FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
           std::cerr << "waitpid failed";
         }
       } while (false); // close waitpid->'if' expression like was shown in lecture for 'DO_SYS' macro
-    } else {
+    }
+    else
+    {
       // TODO: add job with child to JobList
     }
   }
 }
 
-void ExternalCommand::executeHelper() {
-  argv& args = this->given_args;
+void ExternalCommand::executeHelper()
+{
+  argv &args = this->given_args;
 
   // Build argv array (char* array)
-  char* argv[args.size() + 1]; // +1 for the nullptr at the end
-  for (size_t i = 0; i < args.size(); ++i) {
+  char *argv[args.size() + 1]; // +1 for the nullptr at the end
+  for (size_t i = 0; i < args.size(); ++i)
+  {
     argv[i] = strdup(args[i].c_str()); // copy the string
   }
   argv[args.size()] = nullptr; // exec expects null-terminated array
@@ -1246,30 +1294,81 @@ void ExternalCommand::executeHelper() {
   std::cerr << ("execvp failed");
 
   // Free memory before exiting
-  for (size_t i = 0; i < args.size(); ++i) {
+  for (size_t i = 0; i < args.size(); ++i)
+  {
     free(argv[i]);
   }
 }
 
-void ComplexExternalCommand::executeHelper() override {
-  const char* bash_path = "/bin/bash";
-  const char* bash_args[] = {"bash", "-c", this->command, nullptr};
+void ComplexExternalCommand::executeHelper() override
+{
+  const char *bash_path = "/bin/bash";
+  const char *bash_args[] = {"bash", "-c", this->command, nullptr};
 
-  execv(bash_path, (char* const*)bash_args);
+  execv(bash_path, (char *const *)bash_args);
 
   FOR_DEBUG_MODE(std::fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
   std::cerr << "execv (bash) failed";
 }
+// ########################## NOTE: SpecialCoomands code area V ##########################
 
+RedirectionCommand::RedirectionCommand(argv args, const char *cmd_line)
+{
+  //TODO
+}
 
+void RedirectionCommand::execute()
+{
+  //TODO
+}
 
+PipeCommand::PipeCommand(argv args, const char *cmd_line)
+{
+  //TODO
+}
 
+void PipeCommand::execute()
+{
+  //TODO
+}
+
+DiskUsageCommand::DiskUsageCommand(argv args, const char *cmd_line)
+{
+  //TODO
+}
+
+void DiskUsageCommand::execute()
+{
+  //TODO
+}
+
+WhoAmICommand::WhoAmICommand(argv args, const char *cmd_line)
+{
+  //TODO
+}
+
+void WhoAmICommand::execute()
+{
+  //TODO
+}
+
+NetInfo::NetInfo(argv args, const char *cmd_line) 
+{
+  //BONUS
+}
+
+void NetInfo::execute()
+{
+  //BONUS
+}
+
+// ########################## NOTE: SpecialCoomands code area ^ ##########################
 
 // ########################## NOTE: ExternalCommand&&ComplexExternalCommand code area V ##########################
 
 // ########################## NOTE: JobList code area V ##########################
 
-JobsList::JobEntry::JobEntry(ExternalCommand* command, int jobID) : command(command), jobID(jobID) {}
+JobsList::JobEntry::JobEntry(ExternalCommand *command, int jobID) : command(command), jobID(jobID) {}
 
 void JobsList::JobEntry::printYourself()
 {
@@ -1300,7 +1399,7 @@ void JobsList::printJobsList()
 {
   for (auto &pair : jobs)
   {
-    //int jobId = pair.first;
+    // int jobId = pair.first;
     JobEntry &job = pair.second;
     job.printYourself();
     printf("\n");
@@ -1317,19 +1416,19 @@ void JobsList::removeFinishedJobs()
   // TODO: remove finished jobs
 }
 
-JobsList::JobEntry* JobsList::getJobById(int jobId)
+JobsList::JobEntry *JobsList::getJobById(int jobId)
 {
   auto it = this->jobs.find(jobId);
-  if (it != this->jobs.end()) {
+  if (it != this->jobs.end())
+  {
     return &(it->second);
   }
   return nullptr;
 }
 
-
 void JobsList::removeJobById(int jobId)
 {
-  this->jobs.erase(jobId); //to decide, do we want the destructor of command to be called or not?
+  this->jobs.erase(jobId); // to decide, do we want the destructor of command to be called or not?
 }
 
 JobsList::JobEntry *JobsList::getLastJob(int *lastJobId)
@@ -1360,7 +1459,7 @@ int JobsList::get_max_current_jobID()
 
 int JobsList::numberOfJobs()
 {
-    return 0; //TODO
+  return 0; // TODO
 }
 
 pid_t JobsList::JobEntry::getJobPID()
@@ -1370,7 +1469,7 @@ pid_t JobsList::JobEntry::getJobPID()
 
 void JobsList::sendSignalToJobById(int pidToSendTo, int signalToSend)
 {
-  //TODO
+  // TODO
 }
 
 pid_t JobsList::getJobPID(int jobID)
@@ -1404,11 +1503,10 @@ void AliasManager::addAlias(const string &newAliasName, string args)
   aliases.insert(std::make_pair(newAliasName, args));
 }
 
-void AliasManager::removeAlias(const string& aliasToRemove){
+void AliasManager::removeAlias(const string &aliasToRemove)
+{
   aliases.erase(aliasToRemove);
 }
-
-
 
 bool AliasManager::isReserved(const string &newAliasName) const
 {
@@ -1424,7 +1522,7 @@ bool AliasManager::isReserved(const string &newAliasName) const
 
 #define ignore_for_now false
 #if !ignore_for_now
-bool AliasManager::doesExist(const string& newAliasName) const
+bool AliasManager::doesExist(const string &newAliasName) const
 {
   if (aliases.find(newAliasName) != nullptr)
   {
@@ -1444,16 +1542,17 @@ void AliasManager::printAll() const
 {
   for (const auto &alias : aliases)
   {
-    cout <<  alias.first << "=" << "'" << alias.second << "'" << endl;
+    cout << alias.first << "=" << "'" << alias.second << "'" << endl;
   }
 }
 
-argv AliasManager::uncoverAlias(argv original){
+argv AliasManager::uncoverAlias(argv original)
+{
   argv uncoveredArgs;
 
   if (original[0] == "unalias" || original[0] == "alias")
   {
-      return original;
+    return original;
   }
   for (int i = 0; i < original.size(); i++)
   {
@@ -1461,15 +1560,19 @@ argv AliasManager::uncoverAlias(argv original){
     {
       istringstream iss(aliases[original[i]]);
       string word;
-      while (iss >> word) {
+      while (iss >> word)
+      {
         uncoveredArgs.push_back(word);
+      }
     }
-    } else {
+    else
+    {
       uncoveredArgs.push_back(original[i]);
     }
     return uncoveredArgs;
   }
 }
 
-
 // ########################## NOTE: AliasHandling code area ^ ##########################
+
+
