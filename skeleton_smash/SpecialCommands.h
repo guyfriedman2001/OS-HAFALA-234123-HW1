@@ -31,34 +31,42 @@ protected:
     pid_t pid;
     argv args;
     char cmd_line[COMMAND_MAX_LENGTH];
+    open_flag m_open_flag;
 public:
-    explicit IORedirection(argv args, const char* cmd_line);
+    explicit IORedirection(const argv& args, const char* cmd_line);
 
     virtual ~IORedirection() {}
 
     void execute() override;
 
-    open_flag getOpenFlag(const string& arg);
+    //open_flag getOpenFlag(const string& arg);
 
-    pid_t create_fork();
+    virtual inline pid_t create_fork();
+
+    virtual inline int get_first_redirection_index(const argv& args) = 0;
 };
 
 class RedirectionCommand : public IORedirection {
 
 public:
-    explicit RedirectionCommand(argv args, const char* cmd_line);
+    explicit RedirectionCommand(const argv& args, const char* cmd_line);
 
     virtual ~RedirectionCommand() {}
 
     void execute() override;
 
-    open_flag getOpenFlag(const string& arg);
+    inline static open_flag getOpenFlag(const string& arg);
+
+    virtual inline int get_first_redirection_index(const argv& args) override;
 };
 
 class PipeCommand : public IORedirection {
-    // TODO: Add your data members
+private:
+    argv left_args;
+    argv right_args;
+    bool is_stderr_pipe = false;
 public:
-    PipeCommand(argv args, const char* cmd_line);
+    PipeCommand(const argv& args, const char* cmd_line);
 
     virtual ~PipeCommand() {
     }
