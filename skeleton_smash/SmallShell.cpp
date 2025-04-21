@@ -90,7 +90,14 @@ pid_t SmallShell::get_foreground_pid()
 int SmallShell::kill_foreground_process(int sig_num)
 {
   pid_t foreground_pid = this->get_foreground_pid();
+  if (foreground_pid == SYSTEM_CALL_ERROR) { //meaning no foreground process atm and signall should be ignored
+    return 0;
+  }
   return kill(foreground_pid, sig_num);
+}
+
+int SmallShell::kill_process(pid_t pid, int sig_num) {
+
 }
 
 

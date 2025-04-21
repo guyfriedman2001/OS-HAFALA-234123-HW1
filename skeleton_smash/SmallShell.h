@@ -76,6 +76,8 @@ public:
 
     int kill_foreground_process(int status);
 
+    int kill_process(pid_t pid, int sig_num);
+
 };
 
 
