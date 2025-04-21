@@ -87,6 +87,8 @@ public:
     void execute() override;
     bool directoryExists(const string& path);
     int calculateDiskUsage(const string& path);
+    string getCurrentDirectory();
+    int getFileSize(const string& path);
 };
 
 class WhoAmICommand : public SpecialCommand {
