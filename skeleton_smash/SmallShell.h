@@ -72,6 +72,10 @@ public:
 
     int get_max_current_jobID();
 
+    pid_t get_foreground_pid();
+
+    int kill_foreground_process(int status);
+
 };
 
 

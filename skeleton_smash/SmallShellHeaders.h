@@ -78,6 +78,15 @@ typedef int open_flag;
 #define SYSTEM_CALL_ERROR (-1)
 #define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR)
 
+#define DO_SYS(x) \
+do { \
+if ((x) == -1) { \
+perror(#x); \
+exit(1); \
+} \
+} while (0)
+
+
 //TODO: add here project files headers V
 
 #include "Commands.h"

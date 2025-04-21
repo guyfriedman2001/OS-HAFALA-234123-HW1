@@ -13,6 +13,13 @@
 #include "SmallShellHeaders.h"
 #include "ExternalCommands.h"
 
+void ctrlCHandler(int sig_num) {
+  printf("smash: got ctrl-C\n");
+
+  DO_SYS(SmallShell::getInstance().kill_foreground_process(sig_num));
+
+}
+
 int main(int argc, char *argv[]) {
     if (signal(SIGINT, ctrlCHandler) == SIG_ERR) {
         perror("smash error: failed to set ctrl-C handler");
@@ -29,6 +36,8 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
+
+
 
 
 SmallShell::SmallShell()
@@ -71,6 +80,20 @@ JobsList::JobEntry *SmallShell::getJobById(int jobId)
 {
   return this->jobs.getJobById(jobId);
 }
+
+pid_t SmallShell::get_foreground_pid()
+{
+  //TODO: how to get the pid of the job runing in the foreground???
+  return ERR_ARG;
+}
+
+int SmallShell::kill_foreground_process(int sig_num)
+{
+  pid_t foreground_pid = this->get_foreground_pid();
+  return kill(foreground_pid, sig_num);
+}
+
+
 
 /**
  * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
