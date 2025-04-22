@@ -236,7 +236,7 @@ void QuitCommand::execute()
   if (killSpecified)
   {
     SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-    cout << "smash: sending SIGKILL signal to " << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl;
+    cout << "smash: sending SIGKILL signal to " << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl; //TODO add to small shell headers
     SHELL_INSTANCE.getJobsList().killAllJobs();
   }
   exit(0);
@@ -246,7 +246,7 @@ KillCommand::KillCommand(argv args, const char *cmd_line)
 {
   if (args.size() > 3)
   {
-    std::cerr << "smash error: invalid arguments" << endl;
+    std::cerr << "smash error: invalid arguments" << endl; //TODO add to small shell headers
   }
 
   signalToSend = stoi(args[1]);
@@ -254,7 +254,7 @@ KillCommand::KillCommand(argv args, const char *cmd_line)
 
   if (pidToSendTo == 0)
   {
-    std::cerr << "smash error: kill: job-id <job-id> does not exist" << endl;
+    std::cerr << "smash error: kill: job-id <job-id> does not exist" << endl; //TODO add to small shell headers
   }
 }
 
@@ -281,7 +281,7 @@ void AliasCommand::execute()
 {
   if (aliasName == "" || actualCommand.empty())
   {
-    std::cerr << "smash error: alias: invalid alias format" << endl;
+    std::cerr << "smash error: alias: invalid alias format" << endl; //TODO add to small shell headers
   }
   else if (aliasList)
   {
@@ -289,11 +289,11 @@ void AliasCommand::execute()
   }
   else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
-    std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl;
+    std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl; //TODO add to small shell headers
   }
   else if (SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName))
   {
-    std::cerr << "smash error: alias: invalid alias format" << endl;
+    std::cerr << "smash error: alias: invalid alias format" << endl; //TODO add to small shell headers
   }
   else
   {
@@ -342,7 +342,7 @@ void UnAliasCommand::execute()
 {
   if (noArgs)
   {
-    std::cerr << "smash error: unalias: not enough arguments" << endl;
+    std::cerr << "smash error: unalias: not enough arguments" << endl; //TODO add to small shell headers
   }
   else
   {
@@ -354,7 +354,7 @@ void UnAliasCommand::execute()
       }
       else
       {
-        std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl;
+        std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl; //TODO add to small shell headers
         break;
       }
     }
@@ -370,7 +370,7 @@ void UnSetEnvCommand::execute()
 {
   if (variablesToRemove.size() == 0)
   {
-    cerr << "smash error: unsetenv: not enough arguments";
+    cerr << "smash error: unsetenv: not enough arguments"; //TODO add to small shell headers
   }
   else
   {
@@ -378,7 +378,7 @@ void UnSetEnvCommand::execute()
     {
       if (!(removeVariable(var)))
       {
-        cerr << "smash error: unsetenv: " << var << " does not exist";
+        cerr << "smash error: unsetenv: " << var << " does not exist"; //TODO add to small shell headers
         break;
       }
     }
@@ -400,16 +400,16 @@ argv &UnSetEnvCommand::extractVariables(argv args)
 bool UnSetEnvCommand::removeVariable(const string &var)
 {
   for (char **env = __environ; *env != nullptr; ++env)
-  { // Loop through the environment array
+  { 
     if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=')
-    { // Check if the current entry starts with var=
+    { 
       char **cur = env;
       while (*(cur + 1) != nullptr)
-      { // shift all following environment pointers one step left
+      { 
         *cur = *(cur + 1);
         ++cur;
       }
-      *cur = nullptr; // update the environment array end
+      *cur = nullptr; 
       return true;
     }
   }
@@ -451,13 +451,13 @@ bool WatchProcCommand::doesPidExist()
 {
   if (kill(pid, 0) == 0)
   {
-    return true; // process exists and have a premission to send signal to it
+    return true; 
   }
   if (errno == ESRCH)
-  { // process doesnt exist
+  { 
     return false;
   }
-  return true; // process exists but doesnt have a premission to send signal to it
+  return true;
 }
 
 float WatchProcCommand::calculateCpuUsage()
@@ -467,7 +467,7 @@ float WatchProcCommand::calculateCpuUsage()
 
   // Open /proc/<pid>/stat for reading
   int fd = open(path.c_str(), O_RDONLY);
-  if (fd == -1)
+  if (fd == -1) 
   {
     return -1; // failed to open
   }

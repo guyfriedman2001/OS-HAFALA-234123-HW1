@@ -78,6 +78,8 @@ class DiskUsageCommand : public SpecialCommand {
     bool pathGiven;
     bool tooManyArgs;
     string path;
+    char buffer[MAX_DIR_LENGTH];
+
 public:
     DiskUsageCommand(argv args, const char* cmd_line);
 

@@ -252,7 +252,7 @@ void PipeCommand::execute()
         close(fds[0]); // Close after dup2
 
         // Execute right command
-        std::string right_cmd_line;
+        string right_cmd_line;
         for (const auto& arg : right_args) {
             right_cmd_line += arg + " ";
         }
@@ -282,6 +282,7 @@ DiskUsageCommand::DiskUsageCommand(argv args, const char *cmd_line)
   if (args.size() == 1)
   {
     pathGiven = false;
+    path = getCurrentDirectory();
   } else if (args.size() == 2)
   {
     pathGiven = true;
@@ -297,7 +298,7 @@ void DiskUsageCommand::execute()
 {
   if (tooManyArgs)
   {
-    cerr << "smash error: du: too many arguments" << endl;
+    cerr << "smash error: du: too many arguments" << endl; //TODO add to small shell headers
     return;
   } else if (!pathGiven)
   {
@@ -306,7 +307,7 @@ void DiskUsageCommand::execute()
   {
     cout << "Total disk usage: " << calculateDiskUsage(path) << " KB";
   } else {
-    cerr << "smash error: du: directory " << path << " does not exist";
+    cerr << "smash error: du: directory " << path << " does not exist"; //TODO add to small shell headers
   }
   
     
@@ -317,6 +318,7 @@ bool DiskUsageCommand::directoryExists(const string &path)
 {
     int fd = open(path.c_str(), O_RDONLY | O_DIRECTORY);
     if (fd == -1) {
+        cerr << "smash error: open failed";
         return false;  
     }
     close(fd);      
@@ -332,10 +334,10 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
         cerr << "smash error: open failed";
         return 0;
     }
-    char buffer[4096] = {0};
+    char buffer[4000] = {0};
     int bytesRead;
     struct linux_dirent64* entry;
-    int bytesRead = syscall(SYS_getdents64, fd, buffer, BUF_SIZE);
+    int bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
     while (bytesRead > 0) {
         int offset = 0;
         while (offset < bytesRead) {
@@ -350,7 +352,7 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
             }
             offset += entry->d_reclen; 
         }
-        bytesRead = syscall(SYS_getdents64, fd, buffer, BUF_SIZE);
+        bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
     }
     close(fd);
     return totalSize;
@@ -358,7 +360,8 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
 
 string DiskUsageCommand::getCurrentDirectory()
 {
-    return (); //TODO
+    SmallShell::getInstance().tryloadShellPath(this->buffer, sizeof(this->buffer));
+    return this->buffer;
 }
 
 int getFileSize(const string& path) 
@@ -372,12 +375,12 @@ int getFileSize(const string& path)
 
 WhoAmICommand::WhoAmICommand(argv args, const char *cmd_line)
 {
-  //TODO
+  
 }
 
 void WhoAmICommand::execute()
 {
-  //TODO
+  
 }
 
 NetInfo::NetInfo(argv args, const char *cmd_line)

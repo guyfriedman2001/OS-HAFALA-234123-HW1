@@ -48,12 +48,29 @@ void JobsList::printJobsList()
 
 void JobsList::killAllJobs()
 {
-  // TODO: kill all jobs
+  for (const auto& job : jobs)
+  {
+    pid_t pid = job.second.getJobPID();
+    if (pid != -1)
+    {
+      if (SYSTEM_CALL_FAILED(kill(pid, SIGKILL)))
+      {
+        cerr << "smash error: kill failed" << endl;
+        this->jobs.erase(jobId);
+      }
+    }
+  }
 }
 
 void JobsList::removeFinishedJobs()
 {
-  // TODO: remove finished jobs
+  for (const auto& job: jobs)
+  {
+    if (waitpid(job.second.getJobPID(), nullptr, check_if_process_finished_without_blocking) != 0)
+    {
+      jobs.earse(job.first);
+    }
+  }
 }
 
 JobsList::JobEntry *JobsList::getJobById(int jobId)
@@ -71,7 +88,7 @@ void JobsList::removeJobById(int jobId)
   //TODO: decide if we want to print an error if the job doesnt exist
   this->jobs.erase(jobId); // to decide, do we want the destructor of command to be called or not?
 }
-
+/*
 JobsList::JobEntry *JobsList::getLastJob(int *lastJobId)
 {
   // TODO: get last job
@@ -82,7 +99,7 @@ JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId)
 {
   // TODO: get last stopped job
   return nullptr;
-}
+} */
 
 int JobsList::get_max_current_jobID()
 {

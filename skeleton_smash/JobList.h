@@ -49,9 +49,9 @@ public:
 
     void removeJobById(int jobId);
 
-    JobEntry *getLastJob(int *lastJobId);
+    //JobEntry *getLastJob(int *lastJobId);
 
-    JobEntry *getLastStoppedJob(int *jobId);
+    //JobEntry *getLastStoppedJob(int *jobId);
 
     int get_max_current_jobID();
 
