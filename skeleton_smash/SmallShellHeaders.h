@@ -57,6 +57,7 @@ typedef int open_flag;
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
+//FIXME: flip flag and test before submission!
 #define DEBUG_MODE true
 #if DEBUG_MODE
 #define FOR_DEBUG_MODE(CODE_CONTENTS) CODE_CONTENTS
@@ -78,11 +79,19 @@ typedef int open_flag;
 #define SYSTEM_CALL_ERROR (-1)
 #define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR)
 
-#define DO_SYS(x) \
+//TODO: maybe remove DO_SYS
+#define DO_SYS(SYSTEM_CALL, ERROR_STRING) \
 do { \
-if ((x) == -1) { \
-perror(#x); \
+if ((SYSTEM_CALL) == -1) { \
+perror(ERROR_STRING); \
 exit(1); \
+} \
+} while (0)
+
+#define TRY_SYS(SYSTEM_CALL, ERROR_STRING) \
+do { \
+if ((SYSTEM_CALL) == -1) { \
+perror(ERROR_STRING); \
 } \
 } while (0)
 
@@ -106,6 +115,8 @@ const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invali
 const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
 const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
 const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+const char* SIGKILL_STRING_MESSAGE_1 = "smash: process ";
+const char* SIGKILL_STRING_MESSAGE_2 = " was killed";
 
 //TODO: declarations for easier use here V
 

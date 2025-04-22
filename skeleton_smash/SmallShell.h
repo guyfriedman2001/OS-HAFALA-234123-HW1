@@ -17,7 +17,8 @@ private:
     SmallShell();
     JobsList jobs;
     AliasManager aliases;
-
+    pid_t foreground_pid;
+    inline char* loadShellPath(char* buffer_location, size_t buffer_size);
 public:
     Command *CreateCommand(const char *cmd_line);
 
@@ -34,15 +35,13 @@ public:
 
     void executeCommand(const char *cmd_line);
 
-    void executeCommand(Command *command);
+    //void executeCommand(Command *command);
 
     inline static std::string getDefaultPrompt();
 
     inline void changePrompt(std::string nextPrompt);
 
     inline int getPID();
-
-    inline char* loadShellPath(char* buffer_location, size_t buffer_size);
 
     inline void tryLoadShellPath(char* buffer_location, size_t buffer_size);
 
@@ -68,15 +67,17 @@ public:
 
     inline int waitPID(pid_t pid);
 
-    JobsList::JobEntry *getJobById(int jobId);
+    inline JobsList::JobEntry *getJobById(int jobId);
 
-    int get_max_current_jobID();
+    inline int get_max_current_jobID();
 
-    pid_t get_foreground_pid();
+    inline pid_t get_foreground_pid();
 
-    int kill_foreground_process(int status);
+    inline int kill_foreground_process(int status);
 
-    int kill_process(pid_t pid, int sig_num);
+    inline int kill_process(pid_t pid, int sig_num);
+
+    inline void update_foreground_pid(pid_t pid);
 
 };
 

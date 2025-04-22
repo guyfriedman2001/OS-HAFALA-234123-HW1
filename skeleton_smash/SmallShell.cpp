@@ -15,8 +15,12 @@
 
 void ctrlCHandler(int sig_num) {
   printf("smash: got ctrl-C\n");
-
-  DO_SYS(SmallShell::getInstance().kill_foreground_process(sig_num));
+  pid_t foreground_task =  SmallShell::getInstance().get_foreground_pid();
+  if (foreground_task == ERR_ARG) {
+    return;
+  }
+  TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
+  printf("%s%d%s",SIGKILL_STRING_MESSAGE_1, foreground_task, SIGKILL_STRING_MESSAGE_2);
 
 }
 
@@ -41,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 
 SmallShell::SmallShell()
-    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false)
+    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false), foreground_pid(-1)
 {
 }
 
@@ -83,8 +87,7 @@ JobsList::JobEntry *SmallShell::getJobById(int jobId)
 
 pid_t SmallShell::get_foreground_pid()
 {
-  //TODO: how to get the pid of the job runing in the foreground???
-  return ERR_ARG;
+  return this->foreground_pid;
 }
 
 int SmallShell::kill_foreground_process(int sig_num)
@@ -136,7 +139,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   if (num_args == 0)
   {
-    returnCommand = new EmptyCommand(args, cmd_line); // TODO: maybe make 'empty command'
+    returnCommand = new EmptyCommand(args, cmd_line);
   }
 
   if (returnCommand == nullptr)
@@ -178,27 +181,15 @@ void SmallShell::executeCommand(const char *cmd_line)
   // cmd->execute();
   // Please note that you must fork smash process for some commands (e.g., external commands....)
 
-  /**
-  // TODO: command pre - proccesing
-  bool backGroundCommand = _isBackgroundComamnd(cmd_line);
-  char *non_const_cmd = cmd_line; // TODO: find out how tf to duplicate a char*, only do it for trimming and to get rid of this fkin const
-  if (backGroundCommand){
-    _removeBackgroundSign(cmd_line);
-  }
-  _trim(non_const_cmd); // TODO: same here
-  // TODO: command pre - proccesing
-  */
 
-  /*
-  Command* cmd = this->createCommand(cmd_line);
+
+
+  Command* cmd = this->CreateCommand(cmd_line);
   cmd->execute();
-   */
+
 }
 
-void SmallShell::executeCommand(Command *command)
-{
-  command->execute();
-}
+//void SmallShell::executeCommand(Command *command){command->execute();}
 
 std::string SmallShell::getDefaultPrompt()
 {
@@ -217,7 +208,7 @@ int SmallShell::getPID()
 
 char *SmallShell::loadShellPath(char *buffer_location, size_t buffer_size)
 {
-  return getcwd(buffer_location, buffer_size);
+  return getcwd(buffer_location, buffer_size); //no need for TRY_SYS, tryLoadShellPath handles failures.
 }
 
 void SmallShell::tryLoadShellPath(char *buffer_location, size_t buffer_size)
@@ -225,6 +216,7 @@ void SmallShell::tryLoadShellPath(char *buffer_location, size_t buffer_size)
   if (loadShellPath(buffer_location, buffer_size) == nullptr)
   {
     perror("smash error: getcwd failed");
+    //exit(1);
     FOR_DEBUG_MODE(perror("void SmallShell::tryLoadShellPath(char *buffer_location, size_t buffer_size)\n");)
   }
 }
@@ -240,7 +232,7 @@ bool SmallShell::changeShellDirectory(const char *next_dir)
   updateOldPath();
   if (chdir(next_dir) != 0)
   {
-    // perror("chdir failed");
+    perror("smash error: chdir failed");
     FOR_DEBUG_MODE(perror("failure in 'bool SmallShell::changeShellDirectory(const char *next_dir)'\n");)
     return false;
   }
@@ -264,8 +256,15 @@ std::string SmallShell::getEndStr()
 int SmallShell::waitPID(pid_t pid)
 {
   int status;
-  waitpid(pid, &status, Block_until_the_child_terminates);
+  this->update_foreground_pid(pid);
+  TRY_SYS(waitpid(pid, &status, Block_until_the_child_terminates),"smash error: waitpid failed");
+  this->update_foreground_pid(ERR_ARG);
   return status;
+}
+
+void SmallShell::update_foreground_pid(pid_t pid)
+{
+  this->foreground_pid = pid;
 }
 
 int SmallShell::get_max_current_jobID()
