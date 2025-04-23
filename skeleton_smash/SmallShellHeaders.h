@@ -37,6 +37,7 @@ class Command;
 #include <set>
 #include <cstdlib> // for getenv
 #include <sys/syscall.h>
+#include <pwd.h>
 
 //TODO: add macros here V
 

@@ -94,6 +94,8 @@ public:
 };
 
 class WhoAmICommand : public SpecialCommand {
+    string username;
+    string homeDirectory;
 public:
     WhoAmICommand(argv args, const char* cmd_line);
 

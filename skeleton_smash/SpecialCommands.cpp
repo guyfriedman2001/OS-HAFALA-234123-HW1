@@ -375,12 +375,14 @@ int getFileSize(const string& path)
 
 WhoAmICommand::WhoAmICommand(argv args, const char *cmd_line)
 {
-  
+  struct passwd* pwd = getpwuid(id);
+  username = pwd->pw_name;
+  homeDirectory = pwd->pw_dir;
 }
 
 void WhoAmICommand::execute()
 {
-  
+  cout << username << "/" << homeDirectory << endl;
 }
 
 NetInfo::NetInfo(argv args, const char *cmd_line)
