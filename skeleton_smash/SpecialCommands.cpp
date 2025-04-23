@@ -331,35 +331,40 @@ bool DiskUsageCommand::directoryExists(const string &path)
 
 int DiskUsageCommand::calculateDiskUsage(const string &path)
 {
-    int totalSize = 0;
+   int totalSize = getFileSize(path);  // נוסיף את הגודל של התיקייה עצמה
 
     int fd = open(path.c_str(), O_RDONLY | O_DIRECTORY);
     if (fd == -1) {
-        cerr << "smash error: open failed";
+        cerr << "smash error: open failed\n";
         return 0;
     }
+
     char buffer[4000] = {0};
-    int bytesRead;
     struct linux_dirent64* entry;
     int bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
     while (bytesRead > 0) {
         int offset = 0;
         while (offset < bytesRead) {
             entry = (struct linux_dirent64*)(buffer + offset);  
-            string itemName = entry->d_name;  
-            string fullPath = path + "/" + itemName;
-            if (directoryExists(fullPath))
-            {
-              totalSize += calculateDiskUsage(fullPath);
-            } else {
-              totalSize += getFileSize(fullPath);
+            string itemName = entry->d_name;
+            if (itemName == "." || itemName == "..") {
+                offset += entry->d_reclen;
+                continue;
             }
-            offset += entry->d_reclen; 
+            string fullPath = path + "/" + itemName;
+            if (directoryExists(fullPath)) {
+                totalSize += calculateDiskUsage(fullPath); 
+            } else {
+                totalSize += getFileSize(fullPath);
+            }
+            offset += entry->d_reclen;
         }
         bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
     }
+
     close(fd);
     return totalSize;
+
 }
 
 string DiskUsageCommand::getCurrentDirectory()
@@ -371,8 +376,8 @@ string DiskUsageCommand::getCurrentDirectory()
 int getFileSize(const string& path) 
 {
     struct stat st;
-    if (lstat(path.c_str(), &st) == 0 && S_ISREG(st.st_mode)) {
-        return st.st_size;
+    if (lstat(path.c_str(), &st) == 0) {
+        return st.st_blocks * 512;
     }
     return 0;
 }
