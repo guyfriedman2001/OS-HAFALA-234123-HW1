@@ -17,10 +17,16 @@ ExternalCommand::ExternalCommand(const char *cmd_line)
   this->jobPID = getpid();
 }
 
+ExternalCommand::ExternalCommand(const char *cmd_line, pid_t pid) : ExternalCommand(cmd_line)
+{
+  this->jobPID = pid;
+}
+
+
 ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : ExternalCommand(cmd_line)
 {
   // Inhereting classes can call Ctor():ExternalCommand(){} to take care of command copying;
-  assert_not_empty(this->given_args);
+  assert_not_empty(args);
   this->given_args = args;
 }
 
@@ -29,68 +35,11 @@ void ExternalCommand::printYourself()
   printf("%s", this->command);
 }
 
-// int ExternalCommand::getPID(){return getpid();}
-
-/*
-void ExternalCommand::execute() {
-  argv args& = this->given_args;
-
-
-    pid_t pid = fork();
-
-    if (pid == -1) {
-      perror("fork failed");
-      return;
-    }
-
-    if (pid == 0) {
-      // Child process
-
-      // Build argv array (char* array)
-      char* argv[args.size() + 1];  // +1 for the nullptr at the end
-      for (size_t i = 0; i < args.size(); ++i) {
-        argv[i] = strdup(args[i].c_str());  // copy the string
-      }
-      argv[args.size()] = nullptr;  // exec expects null-terminated array
-
-      // Execute the external command
-      execvp(argv[0], argv);
-
-      // If execvp returns, it must have failed
-      perror("execvp failed");
-      // Free memory before exiting
-      for (size_t i = 0; i < args.size(); ++i) {
-        free(argv[i]);
-      }
-      exit(1);  // important: child must exit if exec fails
-    } else {
-      // Parent process
-      int status;
-      if (_isBackgroundComamnd(this->command)) {
-        if (waitpid(pid, &status, 0) == -1) {
-          perror("waitpid failed");
-        }
-      } else {
-        //TODO: add child to JobList
-      }
-    }
-}
-
-void ExternalCommand::executeHelper() {}
-*/
-
 void ExternalCommand::execute()
 {
-  argv &args = this->given_args;
-
   pid_t pid = fork();
+  TRY_SYS2(pid, "fork");
   this->jobPID = pid;
-
-  if (pid == -1)
-  {
-    perror("fork failed");
-    return;
-  }
 
   if (pid == 0)
   {                        // Child
@@ -102,19 +51,11 @@ void ExternalCommand::execute()
     int status;
     if (!_isBackgroundComamnd(this->command)) //we need to wait for this command
     {
-      do
-      {
-        FOR_DEBUG_MODE(printf("now going to wait for child in %s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
-        if (waitpid(pid, &status, Block_until_the_child_terminates) == -1)
-        {
-          FOR_DEBUG_MODE(fprintf(stderr, "%s:%d: 'void ExternalCommand::execute()' after forking and waiting for child\n", __FILE__, __LINE__);)
-          std::cerr << "waitpid failed";
-        }
-      } while (false); // close waitpid->'if' expression like was shown in lecture for 'DO_SYS' macro
+      TRY_SYS2(waitpid(pid, &status, Block_until_the_child_terminates),"waitpid");
     }
     else
     {
-      // TODO: add job with child to JobList
+      SHELL_INSTANCE.addJob(this);
     }
   }
 }
@@ -124,33 +65,41 @@ void ExternalCommand::executeHelper()
   argv &args = this->given_args;
 
   // Build argv array (char* array)
-  char *argv[args.size() + 1]; // +1 for the nullptr at the end
+  char *char_argv[args.size() + 1]; // +1 for the nullptr at the end
   for (size_t i = 0; i < args.size(); ++i)
   {
-    argv[i] = strdup(args[i].c_str()); // copy the string
+    char_argv[i] = strdup(args[i].c_str()); // copy the string
   }
-  argv[args.size()] = nullptr; // exec expects null-terminated array
+  char_argv[args.size()] = nullptr; // exec expects null-terminated array
 
   // Execute the external command
-  execvp(argv[0], argv);
+  execvp(char_argv[0], char_argv);
 
   // If execvp returns, it must have failed
-  std::cerr << ("execvp failed");
+  TRY_SYS2(ERR_ARG, "execvp");
 
   // Free memory before exiting
   for (size_t i = 0; i < args.size(); ++i)
   {
-    free(argv[i]);
+    free(char_argv[i]);
   }
 }
 
 void ComplexExternalCommand::executeHelper() override
 {
   const char *bash_path = "/bin/bash";
-  const char *bash_args[] = {"bash", "-c", this->command, nullptr};
+  char *bash_args[COMMAND_MAX_ARGS];
+  _parseCommandLine(this->command,bash_args);
 
-  execv(bash_path, (char *const *)bash_args);
+  execv(bash_path, bash_args);
+
+  for (size_t i = 0; i < this->given_args.size(); ++i)
+  {
+    free(bash_args[i]);
+  }
 
   FOR_DEBUG_MODE(std::fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
-  std::cerr << "execv (bash) failed";
+
+  //same here from "void ExternalCommand::executeHelper()"
+  TRY_SYS2(ERR_ARG, "execvp");
 }

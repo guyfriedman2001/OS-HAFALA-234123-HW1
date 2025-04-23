@@ -96,6 +96,12 @@ perror(ERROR_STRING); \
 } \
 } while (0)
 
+//I want the functionality of TRY_SYS without changing existing code and with easier use for smash calls
+#define TRY_SYS2(SYSTEM_CALL, SYS_CALL_NAME) \
+TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
+
+
+
 
 //TODO: add here project files headers V
 

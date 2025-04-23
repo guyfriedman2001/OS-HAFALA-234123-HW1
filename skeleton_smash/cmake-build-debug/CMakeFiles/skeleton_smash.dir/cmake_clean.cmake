@@ -7,8 +7,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/Commands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/Commands.cpp.o.d"
-  "CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o"
-  "CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/JobList.cpp.o"

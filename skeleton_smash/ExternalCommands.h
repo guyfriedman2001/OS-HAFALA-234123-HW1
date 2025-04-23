@@ -16,6 +16,8 @@ private:
 public:
     ExternalCommand(const char *cmd_line);
 
+    ExternalCommand(const char *cmd_line, pid_t pid);
+
     ExternalCommand(const argv& args,const char *cmd_line);
 
     virtual ~ExternalCommand() {

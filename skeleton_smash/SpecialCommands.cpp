@@ -152,7 +152,11 @@ void RedirectionCommand::execute()
   }
 
   // Now execute
-  ExternalCommand(real_cmd_line.c_str()).execute(); // or whatever you use for external/builtin commands
+  argv args = argv(); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
+  ExternalCommandFactory factory;
+  ExternalCommand* command_to_execute = factory.makeCommand(move(args), this->cmd_line); //fixme: need to create argv from cmd_line and send both arguments to the factory
+  command_to_execute->execute();
+  delete command_to_execute;
 
   // Step 5: Restore original stdin or stdout
   if (m_open_flag == O_RDONLY) {

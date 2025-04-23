@@ -79,6 +79,10 @@ public:
 
     inline void update_foreground_pid(pid_t pid);
 
+    inline void addJob(ExternalCommand *cmd, bool isStopped = false);
+
+    inline void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
+
 };
 
 

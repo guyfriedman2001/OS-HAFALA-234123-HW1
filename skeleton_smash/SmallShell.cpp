@@ -257,7 +257,7 @@ int SmallShell::waitPID(pid_t pid)
 {
   int status;
   this->update_foreground_pid(pid);
-  TRY_SYS(waitpid(pid, &status, Block_until_the_child_terminates),"smash error: waitpid failed");
+  TRY_SYS2(waitpid(pid, &status, Block_until_the_child_terminates),"waitpid");
   this->update_foreground_pid(ERR_ARG);
   return status;
 }
@@ -271,3 +271,15 @@ int SmallShell::get_max_current_jobID()
 {
   return this->jobs.get_max_current_jobID();
 }
+
+void SmallShell::addJob(ExternalCommand *cmd, bool isStopped)
+{
+  this->jobs.addJob(cmd, isStopped);
+}
+
+void SmallShell::addJob(const char *cmd_line, pid_t pid, bool isStopped)
+{
+  this->addJob(new ExternalCommand(cmd_line, pid), isStopped);
+}
+
+
