@@ -79,6 +79,10 @@ class DiskUsageCommand : public SpecialCommand {
     bool tooManyArgs;
     string path;
     char buffer[MAX_DIR_LENGTH];
+    const static char* TOO_MANY_ARGS;
+    const static char* DIRECTORY_DOESNT_EXIST_1;
+    const static char* DIRECTORY_DOESNT_EXIST_2;
+    const static char* TOTAL_DISK_USAGE;
 
 public:
     DiskUsageCommand(argv args, const char* cmd_line);

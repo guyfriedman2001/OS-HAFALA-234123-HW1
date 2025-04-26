@@ -236,7 +236,7 @@ void QuitCommand::execute()
   if (killSpecified)
   {
     SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-    cout << "smash: sending SIGKILL signal to " << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl; //TODO add to small shell headers
+    cout << this->SENDING_SIGKILL << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl;
     SHELL_INSTANCE.getJobsList().killAllJobs();
   }
   exit(0);
@@ -246,15 +246,15 @@ KillCommand::KillCommand(argv args, const char *cmd_line)
 {
   if (args.size() > 3)
   {
-    std::cerr << "smash error: invalid arguments" << endl; //TODO add to small shell headers
+    cerr << this->INVALID_ARGUMENTS;
   }
 
   signalToSend = stoi(args[1]);
-  pidToSendTo = stoi(args[2]);
+  idToSendTo = stoi(args[2]);
 
-  if (pidToSendTo == 0)
+  if (idToSendTo == 0)
   {
-    std::cerr << "smash error: kill: job-id <job-id> does not exist" << endl; //TODO add to small shell headers
+    cerr << this->JOB_DOESNT_EXIST_1 << idToSendTo << this->JOB_DOESNT_EXIST_2;
   }
 }
 
@@ -281,7 +281,7 @@ void AliasCommand::execute()
 {
   if (aliasName == "" || actualCommand.empty())
   {
-    std::cerr << "smash error: alias: invalid alias format" << endl; //TODO add to small shell headers
+    cerr << this->INVALID_FORMAT; 
   }
   else if (aliasList)
   {
@@ -289,11 +289,11 @@ void AliasCommand::execute()
   }
   else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
-    std::cerr << "smash error: alias: <name> already exists or is a reserved command " << endl; //TODO add to small shell headers
+    cerr << this->ALIAS_EXISTS_1 << aliasName << this->ALIAS_EXISTS_2;
   }
   else if (SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName))
   {
-    std::cerr << "smash error: alias: invalid alias format" << endl; //TODO add to small shell headers
+    cerr << this->INVALID_FORMAT;
   }
   else
   {
@@ -342,7 +342,7 @@ void UnAliasCommand::execute()
 {
   if (noArgs)
   {
-    std::cerr << "smash error: unalias: not enough arguments" << endl; //TODO add to small shell headers
+    cerr << this->NOT_ENOUGH_ARGUMENTS;
   }
   else
   {
@@ -354,7 +354,7 @@ void UnAliasCommand::execute()
       }
       else
       {
-        std::cerr << "smash error: unalias: " << aliasesToRemove[i] << " alias does not exist" << endl; //TODO add to small shell headers
+        cerr << this->ALIAS_DOESNT_EXIST_1 << aliasesToRemove[i] << this->ALIAS_DOESNT_EXIST_2;
         break;
       }
     }
@@ -370,7 +370,7 @@ void UnSetEnvCommand::execute()
 {
   if (variablesToRemove.size() == 0)
   {
-    cerr << "smash error: unsetenv: not enough arguments"; //TODO add to small shell headers
+    cerr << this->NOT_ENOUGH_ARGUMENTS;
   }
   else
   {
@@ -378,7 +378,7 @@ void UnSetEnvCommand::execute()
     {
       if (!(doesVariableExist(var)))
       {
-        cerr << "smash error: unsetenv: " << var << " does not exist"; //TODO add to small shell headers
+        cerr << this->VARIABLE_DOESNT_EXIST_1 << var << this->VARIABLE_DOESNT_EXIST_2;
         break;
       }
       else {
@@ -419,13 +419,15 @@ void UnSetEnvCommand::removeVariable(const string &var)
 
 bool UnSetEnvCommand::doesVariableExist(const string &var)
 {
-  int fd = open("/proc/self/environ", O_RDONLY);
+    int fd;
+    TRY_SYS2(fd = open("/proc/self/environ", O_RDONLY), "open");
     if (fd == -1)
-        return false; 
+        return false;
 
     char buffer[8192] = {0};
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
+    ssize_t bytesRead;
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(close(fd),"close");
 
     if (bytesRead <= 0)
         return false; 
@@ -463,12 +465,12 @@ void WatchProcCommand::execute()
     }
     else
     {
-      cerr << "smash error: watchproc: pid " << pid << " does not exist";
+      cerr << this->PID_DOESNT_EXIST_1 << pid << this->PID_DOESNT_EXIST_2;
     }
   }
   else
   {
-    cerr << "smash error: watchproc: invalid arguments";
+    cerr << this->INVALID_ARGUMENTS;
   }
 }
 
@@ -488,13 +490,14 @@ bool WatchProcCommand::doesPidExist()
 float WatchProcCommand::calculateCpuUsage()
 {
     string path = "/proc/" + std::to_string(pid) + "/stat";
-    int fd = open(path.c_str(), O_RDONLY);
+    int fd; 
+    TRY_SYS2(fd = open(path.c_str(), O_RDONLY), "open");
     if (fd == -1)
         return -1;
-
     char buffer1[4096] = {0};
-    ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
-    close(fd);
+    ssize_t bytesRead;
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0)
         return -1;
 
@@ -502,13 +505,13 @@ float WatchProcCommand::calculateCpuUsage()
     if (processTime == 0)
         return -1;
 
-    fd = open("/proc/stat", O_RDONLY);
+    TRY_SYS2(fd = open("/proc/stat", O_RDONLY), "open");
     if (fd == -1)
         return -1;
 
     char buffer2[4096] = {0};
-    bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
-    close(fd);
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0)
         return -1;
 
@@ -523,13 +526,15 @@ float WatchProcCommand::calculateCpuUsage()
 float WatchProcCommand::calculateMemoryUsage()
 {
     string path = "/proc/" + std::to_string(pid) + "/status";
-    int fd = open(path.c_str(), O_RDONLY);
+    int fd; 
+    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
     if (fd == -1)
         return -1;
 
     char buffer[4096] = {0};
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
+    ssize_t bytesRead;
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0)
         return -1;
 

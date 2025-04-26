@@ -302,16 +302,16 @@ void DiskUsageCommand::execute()
 {
   if (tooManyArgs)
   {
-    cerr << "smash error: du: too many arguments" << endl; //TODO add to small shell headers
+    cerr << this->TOO_MANY_ARGS;
     return;
   } else if (!pathGiven)
   {
-    cout << "Total disk usage: " << calculateDiskUsage(getCurrentDirectory()) << " KB";
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB";
   } else if (directoryExist(path))
   {
-    cout << "Total disk usage: " << calculateDiskUsage(path) << " KB";
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB";
   } else {
-    cerr << "smash error: du: directory " << path << " does not exist"; //TODO add to small shell headers
+    cerr << this->DIRECTORY_DOESNT_EXIST_1 << path << this->DIRECTORY_DOESNT_EXIST_2;
   }
   
     
@@ -320,28 +320,26 @@ void DiskUsageCommand::execute()
 
 bool DiskUsageCommand::directoryExists(const string &path)
 {
-    int fd = open(path.c_str(), O_RDONLY | O_DIRECTORY);
+    int fd; 
+    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
     if (fd == -1) {
-        cerr << "smash error: open failed";
         return false;  
     }
-    close(fd);      
+    TRY_SYS2(close(fd),"close");    
     return true;     
 }
 
 int DiskUsageCommand::calculateDiskUsage(const string &path)
 {
-   int totalSize = getFileSize(path);  // נוסיף את הגודל של התיקייה עצמה
+   int totalSize = getFileSize(path);  
 
-    int fd = open(path.c_str(), O_RDONLY | O_DIRECTORY);
-    if (fd == -1) {
-        cerr << "smash error: open failed\n";
-        return 0;
-    }
+    int fd; 
+    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
 
     char buffer[4000] = {0};
     struct linux_dirent64* entry;
-    int bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
+    int bytesRead;
+    TRY_SYS2(bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
     while (bytesRead > 0) {
         int offset = 0;
         while (offset < bytesRead) {
@@ -359,10 +357,10 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
             }
             offset += entry->d_reclen;
         }
-        bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer));
+        TRY_SYS2(bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
     }
 
-    close(fd);
+    TRY_SYS2(close(fd),"close");
     return totalSize;
 }
 

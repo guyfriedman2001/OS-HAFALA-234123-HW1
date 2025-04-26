@@ -118,12 +118,41 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 
 const char *ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
 const char *ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
+
 const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
 const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_1 = "smash error: fg: job-id ";
 const char *ForegroundCommand::JOB_DOESNT_EXIST_MESSAGE_2 = " does not exist";
 const char *ForegroundCommand::NO_JOBS_MESSAGE = "smash error: fg: jobs list is empty";
+
 const char* SIGKILL_STRING_MESSAGE_1 = "smash: process ";
 const char* SIGKILL_STRING_MESSAGE_2 = " was killed";
+
+const char* DiskUsageCommand::TOO_MANY_ARGS = "smash error: du: too many arguments";
+const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_1 = "smash error: du: directory ";
+const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_2 = " does not exist";
+const char* DiskUsageCommand::TOTAL_DISK_USAGE = "Total disk usage: ";
+
+const char* WatchProcCommand::INVALID_ARGUMENTS = "smash error: watchproc: invalid arguments";
+const char* WatchProcCommand::PID_DOESNT_EXIST_1 = "smash error: watchproc: pid ";
+const char* WatchProcCommand::PID_DOESNT_EXIST_2 = "does not exist";
+
+const char* UnSetEnvCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unsetenv: not enough arguments";
+const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_1 = "smash error: unsetenv: ";
+const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_2 = "does not exist";
+
+const char* UnAliasCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unalias: not enough arguments";
+const char* UnAliasCommand::ALIAS_DOESNT_EXIST_1 = "smash error: unalias: ";
+const char* UnAliasCommand::ALIAS_DOESNT_EXIST_2 = "does not exist";
+
+const char* AliasCommand::INVALID_FORMAT = "smash error: alias: invalid alias format";
+const char* AliasCommand::ALIAS_EXISTS_1 = "smash error: alias: ";
+const char* AliasCommand::ALIAS_EXISTS_2 = " already exists or is a reserved command";
+
+const char* KillCommand::INVALID_ARGUMENTS = "smash error: kill: invalid arguments";
+const char* KillCommand::JOB_DOESNT_EXIST_1 = "smash error: kill: job-id ";
+const char* KillCommand::JOB_DOESNT_EXIST_2 = " does not exist";
+
+const char* QuitCommand::SENDING_SIGKILL = "smash: sending SIGKILL signal to ";
 
 //TODO: declarations for easier use here V
 

@@ -164,6 +164,7 @@ public:
 class QuitCommand : public BuiltInCommand { // AKA "quit"
     // TODO: Add your data members
     bool killSpecified;
+    const static char* SENDING_SIGKILL;
 public:
     QuitCommand(char **args);
 
@@ -179,7 +180,10 @@ public:
 class KillCommand : public BuiltInCommand { // AKA "kill"
     // TODO: Add your data members
     int signalToSend;
-    int pidToSendTo;
+    int idToSendTo;
+    const static char* INVALID_ARGUMENTS;
+    const static char* JOB_DOESNT_EXIST_1;
+    const static char* JOB_DOESNT_EXIST_2;
 public:
     KillCommand(char **args);
 
@@ -196,6 +200,9 @@ class AliasCommand : public BuiltInCommand { // AKA "alias"
     bool aliasList;
     string actualCommand;
     string aliasName;
+    const static char* INVALID_FORMAT;
+    const static char* ALIAS_DOESNT_EXIST_1;
+    const static char* ALIAS_DOESNT_EXIST_2;
 public:
     AliasCommand(char **args);
 
@@ -212,6 +219,9 @@ public:
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
     bool noArgs;
     argv aliasesToRemove;
+    const static char* NOT_ENOUGH_ARGUMENTS;
+    const static char* ALIAS_DOESNT_EXIST_1;
+    const static char* ALIAS_DOESNT_EXIST_2;
 public:
     UnAliasCommand(char **args);
 
@@ -225,6 +235,9 @@ public:
 
 class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
     argv variablesToRemove;
+    const static char* NOT_ENOUGH_ARGUMENTS;
+    const static char* VARIABLE_DOESNT_EXIST_1;
+    const static char* VARIABLE_DOESNT_EXIST_2;
     public:
         UnSetEnvCommand(char **args);
 
@@ -244,6 +257,9 @@ class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
     bool argsFormat;
     float cpuUsage;
     float memoryUsage;
+    const static char* INVALID_ARGUMENTS;
+    const static char* PID_DOESNT_EXIST_1;
+    const static char* PID_DOESNT_EXIST_2;
 public:
     WatchProcCommand(char **args);
 
