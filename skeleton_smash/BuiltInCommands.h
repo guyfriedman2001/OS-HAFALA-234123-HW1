@@ -255,6 +255,8 @@ public:
     bool doesPidExist();
     float calculateCpuUsage();
     float calculateMemoryUsage();
+    float systemTotalTime();
+    float proceessTotalTime(const string& buffer);
 };
 
 

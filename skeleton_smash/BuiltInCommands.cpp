@@ -462,114 +462,103 @@ bool WatchProcCommand::doesPidExist()
 
 float WatchProcCommand::calculateCpuUsage()
 {
-  // Read process cpu time (utime + stime)
-  string path = "/proc/" + std::to_string(pid) + "/stat";
+    string path = "/proc/" + std::to_string(pid) + "/stat";
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1)
+        return -1;
 
-  // Open /proc/<pid>/stat for reading
-  int fd = open(path.c_str(), O_RDONLY);
-  if (fd == -1) 
-  {
-    return -1; // failed to open
-  }
+    char buffer1[4096] = {0};
+    ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
+    close(fd);
+    if (bytesRead <= 0)
+        return -1;
 
-  char buffer1[4096] = {0}; // initalize a char array
-  ssize_t bytesRead = read(fd, buffer1, sizeof(buffer1) - 1);
-  close(fd);
-  if (bytesRead <= 0)
-  {
-    return -1; // failed to read
-  }
+    long processTime = proceessTotalTime(buffer1);
+    if (processTime == 0)
+        return -1;
 
-  char *ptr = strchr(buffer1, ')'); // Skip to after the process name which is inside ()
-  if (!ptr)
-  {
-    return -1; // failed to find one of the ()
-  }
-  ++ptr; // Move past the closing )
+    fd = open("/proc/stat", O_RDONLY);
+    if (fd == -1)
+        return -1;
 
-  long utime = 0, stime = 0;
-  int field = 1;
-  char *token = strtok(ptr, " "); // divides the string acording to the space
-  while (token && field <= 15)
-  { // Extract the 14th and 15th fields: utime and stime
-    if (field == 13)
-    { // field 14
-      utime = atol(token);
-    }
-    if (field == 14)
-    { // field 15
-      stime = atol(token);
-    }
-    token = strtok(nullptr, " "); // resume the search from the same place
-    ++field;                      // advance to the next field
-  }
+    char buffer2[4096] = {0};
+    bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
+    close(fd);
+    if (bytesRead <= 0)
+        return -1;
 
-  long processTime = utime + stime;
+    long totalTime = systemTotalTime(buffer2)
+    if (totalTime == 0)
+        return -1;
 
-  fd = open("/proc/stat", O_RDONLY); // read total system CPU time from /proc/stat
-  if (fd == -1)
-  {
-    return -1; // failed to open
-  }
-
-  char buffer2[4096] = {0}; // initalize a char array
-  bytesRead = read(fd, buffer2, sizeof(buffer2) - 1);
-  close(fd);
-  if (bytesRead <= 0)
-  {
-    return -1; // failed to read
-  }
-
-  long user, nice, system, idle, iowait, irq, softirq, steal;
-  if (std::sscanf(buffer2, "cpu %ld %ld %ld %ld %ld %ld %ld %ld",
-                  &user, &nice, &system, &idle, &iowait, &irq, &softirq, &steal) < 8)
-  { // failed to read
-    return -1;
-  }
-
-  long totalTime = user + nice + system + idle + iowait + irq + softirq + steal; // calculate total system CPU time from /proc/stat
-
-  if (totalTime == 0)
-  { // in order not to divide in 0
-    return -1;
-  }
-
-  float usage = ((float)processTime / totalTime) * 100.0f; // Calculate usage percentage
-  return usage;
+    float usage = ((float)processTime / totalTime) * 100.0f;
+    return usage;
 }
 
 float WatchProcCommand::calculateMemoryUsage()
 {
-  string path = "/proc/" + std::to_string(pid) + "/status";
-  int fd = open(path.c_str(), O_RDONLY);
-  if (fd == -1)
-  {
-    return -1; // failed to open
-  }
+    string path = "/proc/" + std::to_string(pid) + "/status";
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1)
+        return -1;
 
-  char buffer[4096] = {0};
-  ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-  close(fd);
-  if (bytesRead <= 0)
-  {
-    return -1; // failed to read
-  }
+    char buffer[4096] = {0};
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    close(fd);
+    if (bytesRead <= 0)
+        return -1;
 
-  const char *keyword = "VmRSS:";
-  char *line = strstr(buffer, keyword); // Search for the line starting with "VmRSS:"
-  if (!line)
-  {
-    return -1; // line not found
-  }
+    istringstream iss(buffer);
+    string line;
+    while (getline(iss, line)) {
+        if (line.rfind("VmRSS:", 0) == 0) {
+            istringstream linestream(line);
+            string label;
+            float memKb;
+            linestream >> label >> memKb;
+            return memKb / 1024.0f;
+        }
+    }
 
-  // Move past everything that it is not a number
-  while (*line && (*line < '0' || *line > '9'))
-  {
-    ++line;
-  }
+    return -1;
+}
 
-  float mem = 0;
-  sscanf(line, "%d", &mem); // Extract the value in kB
+float WatchProcCommand::systemTotalTime()
+{
+    long userTime = 0, lowPriorityTime = 0, kernelTime = 0, idleTime = 0, 
+      iowaitTime = 0, hardwareInterruptTime = 0, softwareInterruptTime = 0, stolenTime = 0;
+    string cpuLabel;
+    istringstream iss(statContent);
+    iss >> cpuLabel >> userTime >> lowPriorityTime >> kernelTime
+        >> idleTime >> iowaitTime >> hardwareInterruptTime
+        >> softwareInterruptTime >> stolenTime;
 
-  return (mem / 1024.0f); // Convert to MB
+    if (iss.fail() || cpuLabel.substr(0,3) != "cpu") {
+        return 0;
+    }
+
+    return userTime + lowPriorityTime + kernelTime + idleTime +
+      iowaitTime + hardwareInterruptTime + softwareInterruptTime + stolenTime;
+}
+
+float WatchProcCommand::proceessTotalTime(const char* buffer)
+{
+    string field;
+    int fieldNumber = 1;
+    long utime = 0, stime = 0;
+    istringstream iss(buffer);
+    while (iss >> field) {
+        if (field.find(')') != string::npos)
+            break;
+    }
+
+    while (iss >> token) {
+        if (fieldNumber == 13)
+            utime = stol(field);
+        else if (fieldNumber == 14)
+            stime = stol(field);
+        ++fieldNumber;
+    }
+
+    return utime + stime;
 }
