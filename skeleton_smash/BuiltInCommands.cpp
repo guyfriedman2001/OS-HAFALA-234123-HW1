@@ -304,22 +304,22 @@ void AliasCommand::execute()
 string extractAlias(argv args)
 {
   int equal = args[1].find('=');
-  if (equal = -1) // = not found
+  if (equal = -1) 
   {
     return "";
   }
-  return args[1].substr(0, equal); // return the string until the =
+  return args[1].substr(0, equal); 
 }
 
 string extractActualCommand(argv args)
 {
   int firstQuote = args[1].find('\'');
   int secondQuote = args[1].find('\'', firstQuote + 1);
-  if (firstQuote == -1 || secondQuote == -1) // ' ' not found
+  if (firstQuote == -1 || secondQuote == -1) 
   {
     return "";
   }
-  return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1); // return the string between the ' ' in a string form
+  return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1);
 }
 
 UnAliasCommand::UnAliasCommand(argv args, const char *cmd_line)
@@ -376,10 +376,13 @@ void UnSetEnvCommand::execute()
   {
     for (const auto &var : variablesToRemove)
     {
-      if (!(removeVariable(var)))
+      if (!(doesVariableExist(var)))
       {
         cerr << "smash error: unsetenv: " << var << " does not exist"; //TODO add to small shell headers
         break;
+      }
+      else {
+        removeVariable(var);
       }
     }
   }
@@ -397,7 +400,7 @@ argv &UnSetEnvCommand::extractVariables(argv args)
   }
 }
 
-bool UnSetEnvCommand::removeVariable(const string &var)
+void UnSetEnvCommand::removeVariable(const string &var)
 {
   for (char **env = __environ; *env != nullptr; ++env)
   { 
@@ -410,10 +413,32 @@ bool UnSetEnvCommand::removeVariable(const string &var)
         ++cur;
       }
       *cur = nullptr; 
-      return true;
     }
   }
-  return false;
+}
+
+bool UnSetEnvCommand::doesVariableExist(const string &var)
+{
+  int fd = open("/proc/self/environ", O_RDONLY);
+    if (fd == -1)
+        return false; 
+
+    char buffer[8192] = {0};
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    close(fd);
+
+    if (bytesRead <= 0)
+        return false; 
+
+    const char* ptr = buffer;
+    while (ptr < buffer + bytesRead) {
+        size_t len = strlen(ptr);
+        if (strncmp(ptr, var.c_str(), var.length()) == 0 && ptr[var.length()] == '=') {
+            return true;
+        }
+        ptr += len + 1; 
+    }
+    return false;
 }
 
 WatchProcCommand::WatchProcCommand(argv args, const char *cmd_line)

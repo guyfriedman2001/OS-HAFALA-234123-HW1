@@ -364,7 +364,6 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
 
     close(fd);
     return totalSize;
-
 }
 
 string DiskUsageCommand::getCurrentDirectory()
