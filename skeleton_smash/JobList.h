@@ -57,9 +57,9 @@ public:
 
     int numberOfJobs();
 
-    void sendSignalToJobById(int pidToSendTo, int signalToSend); //TODO need to handle signal errors inside - comes later in the HW
+    void sendSignalToJobById(int pidToSendTo, int signalToSend);
 
-    inline pid_t getJobPID(int jobID); //get the PID of the running command of the job with a specifiec ID
+    inline pid_t getJobPID(int jobID); 
 
     // TODO: Add extra methods or modify exisitng ones as needed
 };

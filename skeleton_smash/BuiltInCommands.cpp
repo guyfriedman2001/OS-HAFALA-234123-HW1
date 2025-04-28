@@ -132,18 +132,23 @@ void ChangeDirCommand::execute()
 
 JobsCommand::JobsCommand(const argv &args)
 {
-  // TODO:
+
 }
 
 JobsCommand::JobsCommand(const argv &args, const char *cmd_line)
     : JobsCommand(args)
 {
-  // TODO: finish dis
+  SHELL_INSTANCE.getJobsList().removeFinishedJobs();
 }
 
 void JobsCommand::execute()
 {
-  // TODO:
+  if (SHELL_INSTANCE.getJobsList().numberOfJobs() == 0)
+  {
+    cerr << "smash error: jobs: jobs list is empty";
+  } else {
+    SHELL_INSTANCE.getJobsList().printJobsList();
+  }
 }
 
 ForegroundCommand::ForegroundCommand(const argv &args)

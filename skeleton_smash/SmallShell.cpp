@@ -75,6 +75,11 @@ JobsList &SmallShell::getJobsList()
   return this->jobs;
 }
 
+inline AliasManager &SmallShell::getAliases()
+{
+    return this->aliases;
+}
+
 void SmallShell::print_jobs()
 {
   this->jobs.printJobsList();
