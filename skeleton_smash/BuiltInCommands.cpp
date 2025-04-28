@@ -226,7 +226,7 @@ void ForegroundCommand::execute()
   FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)
 }
 
-QuitCommand::QuitCommand(argv args, const char *cmd_line)
+QuitCommand::QuitCommand(const argv& args, const char *cmd_line)
 {
   killSpecified = (args[1] == "kill");
 }
@@ -242,7 +242,7 @@ void QuitCommand::execute()
   exit(0);
 }
 
-KillCommand::KillCommand(argv args, const char *cmd_line)
+KillCommand::KillCommand(const argv& args, const char *cmd_line)
 {
   if (args.size() > 3)
   {
@@ -263,7 +263,7 @@ void KillCommand::execute()
   SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo, signalToSend);
 }
 
-AliasCommand::AliasCommand(argv args, const char *cmd_line)
+AliasCommand::AliasCommand(const argv& args, const char *cmd_line)
 {
   if (args.size() == 1)
   {
@@ -301,7 +301,7 @@ void AliasCommand::execute()
   }
 }
 
-string extractAlias(argv args)
+string extractAlias(const argv& args)
 {
   int equal = args[1].find('=');
   if (equal = -1) 
@@ -311,7 +311,7 @@ string extractAlias(argv args)
   return args[1].substr(0, equal); 
 }
 
-string extractActualCommand(argv args)
+string extractActualCommand(const argv& args)
 {
   int firstQuote = args[1].find('\'');
   int secondQuote = args[1].find('\'', firstQuote + 1);
@@ -322,7 +322,7 @@ string extractActualCommand(argv args)
   return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1);
 }
 
-UnAliasCommand::UnAliasCommand(argv args, const char *cmd_line)
+UnAliasCommand::UnAliasCommand(const argv& args, const char *cmd_line)
 {
   for (int i = 1; i < args.size(); i++)
   {
@@ -361,7 +361,7 @@ void UnAliasCommand::execute()
   }
 }
 
-UnSetEnvCommand::UnSetEnvCommand(argv args, const char *cmd_line)
+UnSetEnvCommand::UnSetEnvCommand(const argv& args, const char *cmd_line)
 {
   variablesToRemove = extractVariables(args);
 }
@@ -387,8 +387,7 @@ void UnSetEnvCommand::execute()
     }
   }
 }
-
-argv &UnSetEnvCommand::extractVariables(argv args)
+ argv& &UnSetEnvCommand::extractVariables(const argv& args)
 {
   argv varsToRemove;
   for (int i = 1; i < args.size(); i++)
@@ -443,7 +442,7 @@ bool UnSetEnvCommand::doesVariableExist(const string &var)
     return false;
 }
 
-WatchProcCommand::WatchProcCommand(argv args, const char *cmd_line)
+WatchProcCommand::WatchProcCommand(const argv& args, const char *cmd_line)
 {
   if (args.size() == 2)
   {

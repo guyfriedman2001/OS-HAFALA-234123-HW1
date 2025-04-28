@@ -168,7 +168,7 @@ class QuitCommand : public BuiltInCommand { // AKA "quit"
 public:
     QuitCommand(char **args);
 
-    QuitCommand(argv args, const char* cmd_line);
+    QuitCommand(const argv& args, const char* cmd_line);
 
 
     virtual ~QuitCommand() {
@@ -187,7 +187,7 @@ class KillCommand : public BuiltInCommand { // AKA "kill"
 public:
     KillCommand(char **args);
 
-    KillCommand(argv args, const char* cmd_line);
+    KillCommand(const argv& args, const char* cmd_line);
 
     virtual ~KillCommand() {
     }
@@ -206,14 +206,14 @@ class AliasCommand : public BuiltInCommand { // AKA "alias"
 public:
     AliasCommand(char **args);
 
-    AliasCommand(argv args, const char* cmd_line);
+    AliasCommand(const argv& args, const char* cmd_line);
 
     virtual ~AliasCommand() {
     }
 
     void execute() override;
-    string extractAlias(argv args);
-    string extractActualCommand(argv args);
+    string extractAlias(const argv& args);
+    string extractActualCommand(const argv& args);
 };
 
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
@@ -225,7 +225,7 @@ class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
 public:
     UnAliasCommand(char **args);
 
-    UnAliasCommand(argv args, const char* cmd_line);
+    UnAliasCommand(const argv& args, const char* cmd_line);
 
     virtual ~UnAliasCommand() {
     }
@@ -241,13 +241,13 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
     public:
         UnSetEnvCommand(char **args);
 
-        UnSetEnvCommand(argv args, const char* cmd_line);
+        UnSetEnvCommand(const argv& args, const char* cmd_line);
 
         virtual ~UnSetEnvCommand() {
         }
 
         void execute() override;
-        argv& extractVariables(argv args);
+        argv& extractVariables(const argv& args);
         void removeVariable(const string& var);
         bool doesVariableExist(const string& var);
 };
@@ -263,7 +263,7 @@ class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
 public:
     WatchProcCommand(char **args);
 
-    WatchProcCommand(argv args, const char* cmd_line);
+    WatchProcCommand(const argv& args, const char* cmd_line);
 
     virtual ~WatchProcCommand() {
     }

@@ -281,7 +281,7 @@ void PipeCommand::execute()
 }
 
 
-DiskUsageCommand::DiskUsageCommand(argv args, const char *cmd_line)
+DiskUsageCommand::DiskUsageCommand(const argv& args, const char *cmd_line)
 {
   if (args.size() == 1)
   {
@@ -379,7 +379,7 @@ int getFileSize(const string& path)
     return 0;
 }
 
-WhoAmICommand::WhoAmICommand(argv args, const char *cmd_line)
+WhoAmICommand::WhoAmICommand(const argv& args, const char *cmd_line)
 {
   struct passwd* pwd = getpwuid(id);
   username = pwd->pw_name;

@@ -85,7 +85,7 @@ class DiskUsageCommand : public SpecialCommand {
     const static char* TOTAL_DISK_USAGE;
 
 public:
-    DiskUsageCommand(argv args, const char* cmd_line);
+    DiskUsageCommand(const argv& args, const char* cmd_line);
 
     virtual ~DiskUsageCommand() {
     }
@@ -101,7 +101,7 @@ class WhoAmICommand : public SpecialCommand {
     string username;
     string homeDirectory;
 public:
-    WhoAmICommand(argv args, const char* cmd_line);
+    WhoAmICommand(const argv& args, const char* cmd_line);
 
     virtual ~WhoAmICommand() {
     }
@@ -112,7 +112,7 @@ public:
 class NetInfo : public SpecialCommand {
     // TODO: Add your data members **BONUS: 10 Points**
 public:
-    NetInfo(argv args, const char* cmd_line);
+    NetInfo(const argv& args, const char* cmd_line);
 
     virtual ~NetInfo() {
     }
