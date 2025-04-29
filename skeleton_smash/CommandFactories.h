@@ -5,6 +5,7 @@
 #ifndef COMMANDFACTORIES_H
 #define COMMANDFACTORIES_H
 #include "SmallShellHeaders.h"
+#include "Commands.h"
 
 
 
@@ -37,8 +38,12 @@ public:
      * @param args A null-terminated array of C-style strings representing the command and its arguments.
      * @return A pointer to the created DerivedClass command object.
      */
-    inline DerivedClass* makeCommand(argv args, const char* cmd_line){//, SmallShell& shell){
+    /*inline DerivedClass* makeCommand(argv args, const char* cmd_line){//, SmallShell& shell){
         return dynamic_cast<DerivedClass*>(this->factoryHelper(args,cmd_line));//, shell));
+    }*/
+
+    inline Command* makeCommand(argv args, const char* cmd_line) {
+    return this->factoryHelper(args, cmd_line);
     }
 
 protected:
@@ -75,7 +80,8 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new BuiltInCommand object.
      */
-    inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+    //inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+    virtual Command* factoryHelper(argv args, const char* cmd_line) override;
 };
 
 /**

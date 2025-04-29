@@ -5,6 +5,14 @@
 #include "SpecialCommands.h"
 #include "SmallShellHeaders.h"
 
+struct linux_dirent64 {
+    ino64_t        d_ino;
+    off64_t        d_off;
+    unsigned short d_reclen;
+    unsigned char  d_type;
+    char           d_name[];
+};
+
 IORedirection::IORedirection(const argv& args, const char *cmd_line) : pid(getpid()), args(args)
 {
   assert_not_empty(args);
@@ -154,7 +162,9 @@ void RedirectionCommand::execute()
   // Now execute
   argv args = argv(); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
   ExternalCommandFactory factory;
-  ExternalCommand* command_to_execute = factory.makeCommand(move(args), this->cmd_line); //fixme: need to create argv from cmd_line and send both arguments to the factory
+  //ExternalCommand* command_to_execute = factory.makeCommand(move(args), this->cmd_line); //fixme: need to create argv from cmd_line and send both arguments to the factory
+  Command* base = factory.makeCommand(move(args), this->cmd_line);
+  ExternalCommand* command_to_execute = dynamic_cast<ExternalCommand*>(base);
   command_to_execute->execute();
   delete command_to_execute;
 
@@ -307,7 +317,7 @@ void DiskUsageCommand::execute()
   } else if (!pathGiven)
   {
     cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB";
-  } else if (directoryExist(path))
+  } else if (directoryExists(path))
   {
     cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB";
   } else {
@@ -366,7 +376,7 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
 
 string DiskUsageCommand::getCurrentDirectory()
 {
-    SmallShell::getInstance().tryloadShellPath(this->buffer, sizeof(this->buffer));
+    SmallShell::getInstance().tryLoadShellPath(this->buffer, sizeof(this->buffer));
     return this->buffer;
 }
 
@@ -381,9 +391,9 @@ int getFileSize(const string& path)
 
 WhoAmICommand::WhoAmICommand(const argv& args, const char *cmd_line)
 {
-  struct passwd* pwd = getpwuid(id);
-  username = pwd->pw_name;
-  homeDirectory = pwd->pw_dir;
+  //struct passwd* pwd = getpwuid(id);
+  //username = pwd->pw_name;
+  //homeDirectory = pwd->pw_dir;
 }
 
 void WhoAmICommand::execute()
@@ -391,7 +401,7 @@ void WhoAmICommand::execute()
   cout << username << "/" << homeDirectory << endl;
 }
 
-NetInfo::NetInfo(argv args, const char *cmd_line)
+NetInfo::NetInfo(const argv& args, const char *cmd_line)
 {
   //BONUS
 }

@@ -24,7 +24,7 @@ public:
 
         inline void printYourself();
 
-        inline pid_t getJobPID(); //get the PID of the running command
+        inline pid_t getJobPID() const ; //get the PID of the running command
 
     };
     typedef std::map<int, JobEntry> Jobs;

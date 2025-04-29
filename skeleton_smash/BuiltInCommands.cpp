@@ -265,7 +265,7 @@ KillCommand::KillCommand(const argv& args, const char *cmd_line)
 
 void KillCommand::execute()
 {
-  SHELL_INSTANCE.getJobsList().sendSignalToJobById(pidToSendTo, signalToSend);
+  SHELL_INSTANCE.getJobsList().sendSignalToJobById(idToSendTo, signalToSend);
 }
 
 AliasCommand::AliasCommand(const argv& args, const char *cmd_line)
@@ -392,7 +392,7 @@ void UnSetEnvCommand::execute()
     }
   }
 }
- argv& &UnSetEnvCommand::extractVariables(const argv& args)
+ argv& UnSetEnvCommand::extractVariables(const argv& args)
 {
   argv varsToRemove;
   for (int i = 1; i < args.size(); i++)
@@ -500,7 +500,7 @@ float WatchProcCommand::calculateCpuUsage()
         return -1;
     char buffer1[4096] = {0};
     ssize_t bytesRead;
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(bytesRead = read(fd, buffer1, sizeof(buffer1) - 1), "read");
     TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0)
         return -1;
@@ -514,12 +514,12 @@ float WatchProcCommand::calculateCpuUsage()
         return -1;
 
     char buffer2[4096] = {0};
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS2(bytesRead = read(fd, buffer2, sizeof(buffer2) - 1), "read");
     TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0)
         return -1;
 
-    long totalTime = systemTotalTime(buffer2)
+    long totalTime = systemTotalTime(buffer2);
     if (totalTime == 0)
         return -1;
 
@@ -557,12 +557,12 @@ float WatchProcCommand::calculateMemoryUsage()
     return -1;
 }
 
-float WatchProcCommand::systemTotalTime()
+float WatchProcCommand::systemTotalTime(const char* buffer)
 {
     long userTime = 0, lowPriorityTime = 0, kernelTime = 0, idleTime = 0, 
       iowaitTime = 0, hardwareInterruptTime = 0, softwareInterruptTime = 0, stolenTime = 0;
     string cpuLabel;
-    istringstream iss(statContent);
+    istringstream iss(buffer);
     iss >> cpuLabel >> userTime >> lowPriorityTime >> kernelTime
         >> idleTime >> iowaitTime >> hardwareInterruptTime
         >> softwareInterruptTime >> stolenTime;
@@ -586,7 +586,7 @@ float WatchProcCommand::proceessTotalTime(const char* buffer)
             break;
     }
 
-    while (iss >> token) {
+    while (iss >> field) {
         if (fieldNumber == 13)
             utime = stol(field);
         else if (fieldNumber == 14)

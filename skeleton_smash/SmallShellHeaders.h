@@ -22,7 +22,7 @@ class Command;
 #include <unordered_map>
 #include <string>
 #include <cassert>
-#include <charconv>  // for std::from_chars
+// for std::from_chars
 #include <fcntl.h>  // for open()
 #include <unistd.h> //for close()
 #include <string.h>
@@ -37,6 +37,7 @@ class Command;
 #include <set>
 #include <cstdlib> // for getenv
 #include <sys/syscall.h>
+#include <sys/stat.h>
 #include <pwd.h>
 
 //TODO: add macros here V
@@ -107,7 +108,7 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 
 #include "Commands.h"
 #include "BuiltInCommands.h"
-#include "EXternalCommands.h"
+#include "ExternalCommands.h"
 #include "SpecialCommands.h"
 #include "CommandFactories.h"
 #include "JobList.h"

@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <string>
 #include <cassert>
-#include <charconv>  // for std::from_chars
+ // for std::from_chars
 #include <fcntl.h>  // for open()
 #include <unistd.h> //for close()
 #include <string.h>
@@ -203,6 +203,8 @@ class AliasCommand : public BuiltInCommand { // AKA "alias"
     const static char* INVALID_FORMAT;
     const static char* ALIAS_DOESNT_EXIST_1;
     const static char* ALIAS_DOESNT_EXIST_2;
+    const static char* ALIAS_EXISTS_1;
+    const static char* ALIAS_EXISTS_2;
 public:
     AliasCommand(char **args);
 
@@ -222,6 +224,7 @@ class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
     const static char* NOT_ENOUGH_ARGUMENTS;
     const static char* ALIAS_DOESNT_EXIST_1;
     const static char* ALIAS_DOESNT_EXIST_2;
+
 public:
     UnAliasCommand(char **args);
 
@@ -272,8 +275,8 @@ public:
     bool doesPidExist();
     float calculateCpuUsage();
     float calculateMemoryUsage();
-    float systemTotalTime();
-    float proceessTotalTime(const string& buffer);
+    float systemTotalTime(const char* buffer);
+    float proceessTotalTime(const char* buffer);
 };
 
 

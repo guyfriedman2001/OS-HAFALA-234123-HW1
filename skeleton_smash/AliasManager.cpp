@@ -40,7 +40,7 @@ bool AliasManager::isReserved(const string &newAliasName) const
 #if !ignore_for_now
 bool AliasManager::doesExist(const string &newAliasName) const
 {
-  if (aliases.find(newAliasName) != nullptr)
+  if (aliases.find(newAliasName) != aliases.end())
   {
     return true;
   }
@@ -72,7 +72,7 @@ argv AliasManager::uncoverAlias(argv original)
   }
   for (int i = 0; i < original.size(); i++)
   {
-    if (aliases.find(original[i]) != nullptr)
+    if (aliases.find(original[i]) != aliases.end())
     {
       istringstream iss(aliases[original[i]]);
       string word;

@@ -56,7 +56,7 @@ void JobsList::killAllJobs()
       if (SYSTEM_CALL_FAILED(kill(pid, SIGKILL)))
       {
         cerr << "smash error: kill failed" << endl;
-        this->jobs.erase(jobId);
+        this->jobs.erase(pid);
       }
     }
   }
@@ -68,7 +68,7 @@ void JobsList::removeFinishedJobs()
   {
     if (waitpid(job.second.getJobPID(), nullptr, check_if_process_finished_without_blocking) != 0)
     {
-      jobs.earse(job.first);
+      jobs.erase(job.first);
     }
   }
 }
@@ -120,7 +120,7 @@ int JobsList::numberOfJobs()
   return this->jobs.size();
 }
 
-pid_t JobsList::JobEntry::getJobPID()
+pid_t JobsList::JobEntry::getJobPID() const
 {
   return this->command->getPID();
 }
