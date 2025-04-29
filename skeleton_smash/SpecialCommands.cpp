@@ -4,7 +4,9 @@
 
 #include "SpecialCommands.h"
 #include "SmallShellHeaders.h"
+#include <sys/syscall.h>
 
+//#include <linux/dirent.h>
 struct linux_dirent64 {
     ino64_t        d_ino;
     off64_t        d_off;
