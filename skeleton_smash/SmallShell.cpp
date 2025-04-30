@@ -12,6 +12,12 @@
 #include "SmallShell.h"
 #include "SmallShellHeaders.h"
 #include "ExternalCommands.h"
+#include "JobList.h"
+
+SmallShell& SHELL_INSTANCE = SmallShell::getInstance();
+
+const char* SmallShell::SIGKILL_STRING_MESSAGE_1 = "smash: process ";
+const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed";
 
 void ctrlCHandler(int sig_num) {
   printf("smash: got ctrl-C\n");

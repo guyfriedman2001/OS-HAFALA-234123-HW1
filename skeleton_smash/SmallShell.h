@@ -5,7 +5,10 @@
 #ifndef SMALLSHELL_H
 #define SMALLSHELL_H
 #include "SmallShellHeaders.h"
-
+#include "JobList.h"
+#include "ExternalCommands.h"
+#include "BuiltInCommands.h"
+#include "AliasManager.h"
 
 class SmallShell {
 private:
@@ -18,7 +21,9 @@ private:
     JobsList jobs;
     AliasManager aliases;
     pid_t foreground_pid;
-    inline char* loadShellPath(char* buffer_location, size_t buffer_size);
+    char* loadShellPath(char* buffer_location, size_t buffer_size);
+    static const char* SIGKILL_STRING_MESSAGE_1;
+    static const char* SIGKILL_STRING_MESSAGE_2;
 public:
     Command *CreateCommand(const char *cmd_line);
 
@@ -37,54 +42,54 @@ public:
 
     //void executeCommand(Command *command);
 
-    inline static std::string getDefaultPrompt();
+    static std::string getDefaultPrompt();
 
-    inline void changePrompt(std::string nextPrompt);
+    void changePrompt(std::string nextPrompt);
 
-    inline int getPID();
+    int getPID();
 
-    inline void tryLoadShellPath(char* buffer_location, size_t buffer_size);
+    void tryLoadShellPath(char* buffer_location, size_t buffer_size);
 
-    inline void updateOldPath();
+    void updateOldPath();
 
-    inline bool hasOldPath();
+    bool hasOldPath();
 
-    inline string getPreviousPath();
+    string getPreviousPath();
 
-    inline bool changeShellDirectory(const char* next_dir);
+    bool changeShellDirectory(const char* next_dir);
 
-    inline std::string getPrompt();
+    string getPrompt();
 
-    inline std::string getEndStr();
+    string getEndStr();
 
     inline void print_current_path() const;
 
-    inline JobsList& getJobsList();
+    JobsList& getJobsList();
 
-    inline AliasManager& getAliases();
+    AliasManager& getAliases();
 
-    inline void print_jobs();
+    void print_jobs();
 
-    inline int waitPID(pid_t pid);
+    int waitPID(pid_t pid);
 
-    inline JobsList::JobEntry *getJobById(int jobId);
+    JobsList::JobEntry *getJobById(int jobId);
 
-    inline int get_max_current_jobID();
+    int get_max_current_jobID();
 
-    inline pid_t get_foreground_pid();
+    pid_t get_foreground_pid();
 
-    inline int kill_foreground_process(int status);
+    int kill_foreground_process(int status);
 
-    inline int kill_process(pid_t pid, int sig_num);
+    int kill_process(pid_t pid, int sig_num);
 
-    inline void update_foreground_pid(pid_t pid);
+    void update_foreground_pid(pid_t pid);
 
-    inline void addJob(ExternalCommand *cmd, bool isStopped = false);
+    void addJob(ExternalCommand *cmd, bool isStopped = false);
 
-    inline void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
+    void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
 
 };
 
-
+extern SmallShell& SHELL_INSTANCE;
 
 #endif //SMALLSHELL_H

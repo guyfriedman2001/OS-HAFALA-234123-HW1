@@ -292,6 +292,10 @@ void PipeCommand::execute()
     }
 }
 
+const char* DiskUsageCommand::TOO_MANY_ARGS = "smash error: du: too many arguments";
+const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_1 = "smash error: du: directory ";
+const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_2 = " does not exist";
+const char* DiskUsageCommand::TOTAL_DISK_USAGE = "Total disk usage: ";
 
 DiskUsageCommand::DiskUsageCommand(const argv& args, const char *cmd_line)
 {

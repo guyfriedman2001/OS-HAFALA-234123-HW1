@@ -5,7 +5,9 @@
 #ifndef JOBLIST_H
 #define JOBLIST_H
 #include "SmallShellHeaders.h"
+//#include "ExternalCommands.h" 
 
+class ExternalCommand;
 
 class JobsList {
 public:

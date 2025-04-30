@@ -7,7 +7,7 @@
 #include "SmallShellHeaders.h"
 #include "Commands.h"
 
-
+class SpecialCommand;  
 
 /**
  * @brief A generic abstract factory class for creating Command objects from parsed arguments.
@@ -56,7 +56,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    inline virtual Command* factoryHelper(argv args, const char* cmd_line) = 0;
+    virtual Command* factoryHelper(argv args, const char* cmd_line) = 0;
 };
 
 /**
@@ -81,7 +81,7 @@ protected:
      * @return A pointer to a new BuiltInCommand object.
      */
     //inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
-    virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+    virtual Command* factoryHelper(argv args, const char* cmd_line);
 };
 
 /**
@@ -107,7 +107,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+    virtual Command* factoryHelper(argv args, const char* cmd_line);
 };
 
 /**
@@ -134,7 +134,7 @@ class SpecialCommandFactory : public CommandFactory<SpecialCommand> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+        virtual Command* factoryHelper(argv args, const char* cmd_line);
 };
 
 /**
@@ -161,7 +161,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
+        virtual Command* factoryHelper(argv args, const char* cmd_line);
 };
 
 

@@ -5,7 +5,7 @@
 #ifndef SPECIALCOMMANDS_H
 #define SPECIALCOMMANDS_H
 #include "SmallShellHeaders.h"
-
+#include "Commands.h"
 
 class SpecialCommand : public Command {
 private:
@@ -41,7 +41,7 @@ public:
 
     //open_flag getOpenFlag(const string& arg);
 
-    virtual inline pid_t create_fork();
+    //virtual inline pid_t create_fork();
 
     virtual inline int get_first_redirection_index(const argv& args) = 0;
 };

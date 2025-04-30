@@ -127,7 +127,7 @@ void test2(){
 
     std::string c;
     std::cin >> c;
-    std::cout << "isBuiltInCommand: " << isBuiltInCommand(c.c_str()) << std::endl;
+    std::cout << "isBuiltInCommand: " << SmashUtil::isBuiltInCommand(c.c_str()) << std::endl;
     std::cout << "isComplexCommand: " << isComplexCommand(c.c_str()) << std::endl;
 
       

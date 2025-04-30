@@ -5,7 +5,7 @@
 #ifndef EXTERNALCOMMANDS_H
 #define EXTERNALCOMMANDS_H
 #include "SmallShellHeaders.h"
-
+#include "Commands.h"
 
 
 class ExternalCommand : public Command {
@@ -29,7 +29,7 @@ public:
 
     //inline int getPID();
 
-    virtual inline void executeHelper();
+    virtual void executeHelper();
 
     inline pid_t getPID();
 
@@ -47,7 +47,7 @@ public:
     virtual ~ComplexExternalCommand() {
     }
 
-    virtual inline void executeHelper() override;
+    virtual void executeHelper() override;
 };
 
 

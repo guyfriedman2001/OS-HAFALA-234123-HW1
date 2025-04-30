@@ -7,6 +7,7 @@
 #include <signal.h>
 
 #include "SmallShellHeaders.h"
+#include "ExternalCommands.h"
 
 JobsList::JobEntry::JobEntry(ExternalCommand *command, int jobID) : command(command), jobID(jobID) {}
 

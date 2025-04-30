@@ -8,6 +8,8 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <cstring>
+
 
 
 const std::string WHITESPACE = " \n\r\t\f\v";
@@ -81,8 +83,8 @@ int _parseCommandLine(const char *cmd_line, char **args)
   for (std::string s; iss >> s;)
   {
     args[i] = (char *)malloc(s.length() + 1);
-    memset(args[i], 0, s.length() + 1);
-    strcpy(args[i], s.c_str());
+    std::memset(args[i], 0, s.length() + 1);
+    std::strcpy(args[i], s.c_str());
     args[++i] = NULL;
   }
   return i;
@@ -155,27 +157,27 @@ inline bool isExternalComamnd(const char *cmd_line)
 
 inline bool isWildCard(const char *cmd_line)
 {
-  return strchr(cmd_line, '?');
+  return std::strchr(cmd_line, '?');
 }
 
 inline bool isCompleExternalCommand(const char *cmd_line)
 {
-  return (isWildCard(cmd_line) || strchr(cmd_line, '*'));
+  return (isWildCard(cmd_line) || std::strchr(cmd_line, '*'));
 }
 
 inline bool isPipeCommand(const char *cmd_line)
 {
-  return (strchr(cmd_line, '|'));
+  return (std::strchr(cmd_line, '|'));
 }
 
 inline bool isInputRedirectionCommand(const char *cmd_line)
 {
-  return (strchr(cmd_line, '<'));
+  return (std::strchr(cmd_line, '<'));
 }
 
 inline bool isOutputRedirectionCommand(const char *cmd_line)
 {
-  return (strchr(cmd_line, '>'));
+  return (std::strchr(cmd_line, '>'));
 }
 
 inline bool isIORedirectionCommand(const char *cmd_line)
@@ -183,6 +185,7 @@ inline bool isIORedirectionCommand(const char *cmd_line)
   return (isInputRedirectionCommand(cmd_line) || isOutputRedirectionCommand(cmd_line));
 }
 
+#include <cassert>
 template <typename T>
 inline void assert_not_empty(const T &container)
 {

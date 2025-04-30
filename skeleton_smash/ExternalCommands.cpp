@@ -85,7 +85,7 @@ void ExternalCommand::executeHelper()
   }
 }
 
-void ComplexExternalCommand::executeHelper() override
+void ComplexExternalCommand::executeHelper()
 {
   const char *bash_path = "/bin/bash";
   char *bash_args[COMMAND_MAX_ARGS];

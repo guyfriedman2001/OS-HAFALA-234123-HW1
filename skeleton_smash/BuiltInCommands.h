@@ -5,7 +5,8 @@
 #ifndef BUILTINCOMMANDS_H
 #define BUILTINCOMMANDS_H
 #include "SmallShellHeaders.h"
-
+#include "JobList.h"
+#include "Commands.h"
 
 #if 1 //other headers //TODO: try and find a way to remove these inclusions and move them to "SmallShellHeaders.h"
 #include <vector>
