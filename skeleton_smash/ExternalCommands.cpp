@@ -4,6 +4,8 @@
 
 #include "ExternalCommands.h"
 #include "SmallShellHeaders.h"
+#include "SmallShell.h"
+SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
 
 pid_t ExternalCommand::getPID()

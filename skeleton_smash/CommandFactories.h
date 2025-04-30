@@ -6,6 +6,7 @@
 #define COMMANDFACTORIES_H
 #include "SmallShellHeaders.h"
 #include "Commands.h"
+#include "BuiltInCommands.h"
 
 class SpecialCommand;  
 

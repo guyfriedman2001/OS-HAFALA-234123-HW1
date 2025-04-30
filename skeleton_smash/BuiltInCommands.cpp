@@ -11,6 +11,8 @@
 #include <unistd.h>
 
 #include <unistd.h>
+
+#include "SmallShell.h"
 extern char** __environ;
 
 ChangePromptCommand::ChangePromptCommand(const argv &args) : nextPrompt((args.size() == 1) ? SmallShell::getDefaultPrompt() : string(args[1]))

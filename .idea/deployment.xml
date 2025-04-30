@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="hafala2blyat (b631280d-9002-461d-a6c6-07f3faf6e24f)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.PEojR1gXKU" local="$PROJECT_DIR$/skeleton_smash" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-local_debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-hafala2blyat" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

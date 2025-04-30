@@ -5,6 +5,9 @@
 #include "SpecialCommands.h"
 #include "SmallShellHeaders.h"
 #include <sys/syscall.h>
+#include "CommandFactories.h"
+#include "ExternalCommands.h"
+#include "SmallShell.h"
 
 //#include <linux/dirent.h>
 struct linux_dirent64 {

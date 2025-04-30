@@ -3,6 +3,8 @@
 //
 
 //#include "AliasManager.h"
+#include "AliasManager.h"
+
 #include "SmallShellHeaders.h"
 
 void AliasManager::addAlias(const string &newAliasName, string args)

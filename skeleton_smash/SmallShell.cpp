@@ -13,11 +13,14 @@
 #include "SmallShellHeaders.h"
 #include "ExternalCommands.h"
 #include "JobList.h"
+#include "CommandFactories.h"
 
 SmallShell& SHELL_INSTANCE = SmallShell::getInstance();
 
 const char* SmallShell::SIGKILL_STRING_MESSAGE_1 = "smash: process ";
 const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed";
+
+
 
 void ctrlCHandler(int sig_num) {
   printf("smash: got ctrl-C\n");
@@ -26,8 +29,7 @@ void ctrlCHandler(int sig_num) {
     return;
   }
   TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
-  printf("%s%d%s",SIGKILL_STRING_MESSAGE_1, foreground_task, SIGKILL_STRING_MESSAGE_2);
-
+  printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, foreground_task, SmallShell::SIGKILL_STRING_MESSAGE_2);
 }
 
 int main(int argc, char *argv[]) {

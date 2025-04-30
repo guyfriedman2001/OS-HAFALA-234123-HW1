@@ -22,8 +22,7 @@ private:
     AliasManager aliases;
     pid_t foreground_pid;
     char* loadShellPath(char* buffer_location, size_t buffer_size);
-    static const char* SIGKILL_STRING_MESSAGE_1;
-    static const char* SIGKILL_STRING_MESSAGE_2;
+
 public:
     Command *CreateCommand(const char *cmd_line);
 
@@ -87,6 +86,10 @@ public:
     void addJob(ExternalCommand *cmd, bool isStopped = false);
 
     void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
+
+    static const char* SIGKILL_STRING_MESSAGE_1;
+
+    static const char* SIGKILL_STRING_MESSAGE_2;
 
 };
 
