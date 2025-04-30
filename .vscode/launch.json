@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "by-gdb",
+            "type": "cppdbg",
             "request": "launch",
             "name": "Launch(gdb)",
             "program": "${fileBasenameNoExtension}",

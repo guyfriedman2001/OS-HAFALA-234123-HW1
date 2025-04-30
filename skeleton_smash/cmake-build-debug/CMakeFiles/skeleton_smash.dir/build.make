@@ -153,24 +153,10 @@ CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ExternalCommands.cpp -o CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s
 
-CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
-CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ComplexExternalCommands.cpp
-CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o -MF CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o.d -o CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ComplexExternalCommands.cpp
-
-CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.i"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ComplexExternalCommands.cpp > CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.i
-
-CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.s"
-	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ComplexExternalCommands.cpp -o CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.s
-
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/CommandFactories.cpp
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o -MF CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o.d -o CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/CommandFactories.cpp
 
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.i: cmake_force
@@ -184,7 +170,7 @@ CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.s: cmake_force
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/JobList.cpp
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/skeleton_smash.dir/JobList.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/skeleton_smash.dir/JobList.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/JobList.cpp.o -MF CMakeFiles/skeleton_smash.dir/JobList.cpp.o.d -o CMakeFiles/skeleton_smash.dir/JobList.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/JobList.cpp
 
 CMakeFiles/skeleton_smash.dir/JobList.cpp.i: cmake_force
@@ -198,7 +184,7 @@ CMakeFiles/skeleton_smash.dir/JobList.cpp.s: cmake_force
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/AliasManager.cpp
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o -MF CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o.d -o CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/AliasManager.cpp
 
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.i: cmake_force
@@ -212,7 +198,7 @@ CMakeFiles/skeleton_smash.dir/AliasManager.cpp.s: cmake_force
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SmallShell.cpp
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o -MF CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o.d -o CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SmallShell.cpp
 
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.i: cmake_force
@@ -223,6 +209,20 @@ CMakeFiles/skeleton_smash.dir/SmallShell.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/SmallShell.cpp.s"
 	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SmallShell.cpp -o CMakeFiles/skeleton_smash.dir/SmallShell.cpp.s
 
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SpecialCommands.cpp
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: CMakeFiles/skeleton_smash.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o -MF CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.d -o CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o -c /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SpecialCommands.cpp
+
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.i"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SpecialCommands.cpp > CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.i
+
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s"
+	/Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SpecialCommands.cpp -o CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s
+
 # Object files for target skeleton_smash
 skeleton_smash_OBJECTS = \
 "CMakeFiles/skeleton_smash.dir/smash.cpp.o" \
@@ -231,11 +231,11 @@ skeleton_smash_OBJECTS = \
 "CMakeFiles/skeleton_smash.dir/main.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o" \
-"CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/JobList.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o" \
-"CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
+"CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o" \
+"CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
 
 # External object files for target skeleton_smash
 skeleton_smash_EXTERNAL_OBJECTS =
@@ -246,11 +246,11 @@ skeleton_smash: CMakeFiles/skeleton_smash.dir/signals.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/main.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o
-skeleton_smash: CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/JobList.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o
+skeleton_smash: CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/build.make
 skeleton_smash: CMakeFiles/skeleton_smash.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable skeleton_smash"
