@@ -1,0 +1,305 @@
+====================[ Build | skeleton_smash | hafala2blyat ]===================
+/usr/bin/cmake --build /tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat --target skeleton_smash -- -j 6
+Scanning dependencies of target skeleton_smash
+[  8%] Building CXX object CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
+[ 16%] Linking CXX executable skeleton_smash
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+Commands.cpp:(.text+0x10): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+Commands.cpp:(.text+0x160): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+Commands.cpp:(.text+0x280): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+Commands.cpp:(.text+0x520): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+Commands.cpp:(.text+0xba0): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+Commands.cpp:(.text+0xcc0): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+Commands.cpp:(.text+0xe20): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/Commands.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+Commands.cpp:(.text+0xee0): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+signals.cpp:(.text+0x0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+signals.cpp:(.text+0x150): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+signals.cpp:(.text+0x270): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+signals.cpp:(.text+0x510): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+signals.cpp:(.text+0xb90): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+signals.cpp:(.text+0xcb0): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+signals.cpp:(.text+0xe10): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/signals.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+signals.cpp:(.text+0xec0): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+main.cpp:(.text+0x0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+main.cpp:(.text+0x150): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+main.cpp:(.text+0x270): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+main.cpp:(.text+0x510): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+main.cpp:(.text+0xb90): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+main.cpp:(.text+0xcb0): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+main.cpp:(.text+0xe10): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+main.cpp:(.text+0x16a0): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/main.cpp.o: In function `main':
+main.cpp:(.text.startup+0x0): multiple definition of `main'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text.startup+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+BuiltInCommands.cpp:(.text+0xa30): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+BuiltInCommands.cpp:(.text+0xb80): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+BuiltInCommands.cpp:(.text+0xca0): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+BuiltInCommands.cpp:(.text+0xf40): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+BuiltInCommands.cpp:(.text+0x1060): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+BuiltInCommands.cpp:(.text+0x11c0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+BuiltInCommands.cpp:(.text+0x2b90): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+BuiltInCommands.cpp:(.text+0x4ed0): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+ExternalCommands.cpp:(.text+0x300): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+ExternalCommands.cpp:(.text+0x450): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+ExternalCommands.cpp:(.text+0x570): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+ExternalCommands.cpp:(.text+0x810): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+ExternalCommands.cpp:(.text+0xf70): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+ExternalCommands.cpp:(.text+0x1090): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+ExternalCommands.cpp:(.text+0x11f0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+ExternalCommands.cpp:(.text+0x18b0): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+CommandFactories.cpp:(.text+0x3e0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+CommandFactories.cpp:(.text+0x530): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+CommandFactories.cpp:(.text+0x650): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+CommandFactories.cpp:(.text+0x8f0): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+CommandFactories.cpp:(.text+0xf70): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+CommandFactories.cpp:(.text+0x1090): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+CommandFactories.cpp:(.text+0x11f0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+CommandFactories.cpp:(.text+0x1290): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+JobList.cpp:(.text+0x0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+JobList.cpp:(.text+0x150): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+JobList.cpp:(.text+0x270): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+JobList.cpp:(.text+0x510): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+JobList.cpp:(.text+0xb90): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+JobList.cpp:(.text+0xcb0): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+JobList.cpp:(.text+0xe10): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+JobList.cpp:(.text+0x1550): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+AliasManager.cpp:(.text+0x110): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+AliasManager.cpp:(.text+0x1d0): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+AliasManager.cpp:(.text+0x250): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+AliasManager.cpp:(.text+0x3c0): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+AliasManager.cpp:(.text+0x660): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+AliasManager.cpp:(.text+0x700): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+AliasManager.cpp:(.text+0x7e0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+AliasManager.cpp:(.text+0x1190): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `ctrlCHandler(int)':
+SmallShell.cpp:(.text+0xf0): multiple definition of `ctrlCHandler(int)'
+CMakeFiles/skeleton_smash.dir/signals.cpp.o:signals.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SmallShell.cpp:(.text+0x2b0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SmallShell.cpp:(.text+0x400): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SmallShell.cpp:(.text+0x520): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+SmallShell.cpp:(.text+0x7c0): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+SmallShell.cpp:(.text+0xe40): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+SmallShell.cpp:(.text+0xf60): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+SmallShell.cpp:(.text+0x10c0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `main':
+SmallShell.cpp:(.text.startup+0x0): multiple definition of `main'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text.startup+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SmallShell.cpp:(.text+0x1e40): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o:(.bss+0x0): multiple definition of `SHELL_INSTANCE'
+CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o:(.bss+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SpecialCommands.cpp:(.text+0xc0): multiple definition of `SmashUtil::_ltrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x0): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SpecialCommands.cpp:(.text+0x210): multiple definition of `SmashUtil::_rtrim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x150): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SpecialCommands.cpp:(.text+0x330): multiple definition of `SmashUtil::_trim(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x270): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_parseCommandLine(char const*, char**)':
+SpecialCommands.cpp:(.text+0x5d0): multiple definition of `SmashUtil::_parseCommandLine(char const*, char**)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0x510): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_isBackgroundComamnd(char const*)':
+SpecialCommands.cpp:(.text+0xc50): multiple definition of `SmashUtil::_isBackgroundComamnd(char const*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xb90): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::_removeBackgroundSign(char*)':
+SpecialCommands.cpp:(.text+0xd70): multiple definition of `SmashUtil::_removeBackgroundSign(char*)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xcb0): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)':
+SpecialCommands.cpp:(.text+0xed0): multiple definition of `SmashUtil::stringToInt(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xe10): first defined here
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SpecialCommands.cpp:(.text+0x3b50): multiple definition of `SmashUtil::isBuiltInCommand(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/smash.cpp.o:smash.cpp:(.text+0xeb0): first defined here
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `ForegroundCommand::execute()':
+BuiltInCommands.cpp:(.text+0x1ba): undefined reference to `JobsList::JobEntry::getJobPID() const'
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `UnAliasCommand::execute()':
+BuiltInCommands.cpp:(.text+0x2f8): undefined reference to `SmallShell::getAliases()'
+BuiltInCommands.cpp:(.text+0x327): undefined reference to `SmallShell::getAliases()'
+BuiltInCommands.cpp:(.text+0x345): undefined reference to `UnAliasCommand::ALIAS_DOESNT_EXIST_1'
+BuiltInCommands.cpp:(.text+0x387): undefined reference to `UnAliasCommand::ALIAS_DOESNT_EXIST_2'
+BuiltInCommands.cpp:(.text+0x3cb): undefined reference to `UnAliasCommand::NOT_ENOUGH_ARGUMENTS'
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `AliasCommand::execute()':
+BuiltInCommands.cpp:(.text+0x4ba): undefined reference to `SmallShell::getAliases()'
+BuiltInCommands.cpp:(.text+0x4d5): undefined reference to `SmallShell::getAliases()'
+BuiltInCommands.cpp:(.text+0x4f1): undefined reference to `SmallShell::getAliases()'
+BuiltInCommands.cpp:(.text+0x671): undefined reference to `SmallShell::getAliases()'
+CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: In function `ChangeDirCommand::execute()':
+BuiltInCommands.cpp:(.text+0x15d): undefined reference to `SmallShell::print_current_path() const'
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `JobsList::printJobsList()':
+JobList.cpp:(.text+0x1017): undefined reference to `ExternalCommand::printYourself()'
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `JobsList::sendSignalToJobById(int, int)':
+JobList.cpp:(.text+0x1129): undefined reference to `ExternalCommand::getPID()'
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `JobsList::killAllJobs()':
+JobList.cpp:(.text+0x13bd): undefined reference to `ExternalCommand::getPID()'
+CMakeFiles/skeleton_smash.dir/JobList.cpp.o: In function `JobsList::removeFinishedJobs()':
+JobList.cpp:(.text+0x14cd): undefined reference to `ExternalCommand::getPID()'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `IORedirection::IORedirection(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const*)':
+SpecialCommands.cpp:(.text+0xf97): undefined reference to `vtable for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `DiskUsageCommand::calculateDiskUsage(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)':
+SpecialCommands.cpp:(.text+0x1662): undefined reference to `DiskUsageCommand::getFileSize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+SpecialCommands.cpp:(.text+0x1a9d): undefined reference to `DiskUsageCommand::getFileSize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `PipeCommand::PipeCommand(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&, char const*)':
+SpecialCommands.cpp:(.text+0x2f28): undefined reference to `vtable for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `RedirectionCommand::~RedirectionCommand()':
+SpecialCommands.cpp:(.text._ZN18RedirectionCommandD2Ev[_ZN18RedirectionCommandD5Ev]+0x6): undefined reference to `vtable for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: In function `RedirectionCommand::~RedirectionCommand()':
+SpecialCommands.cpp:(.text._ZN18RedirectionCommandD0Ev[_ZN18RedirectionCommandD5Ev]+0x6): undefined reference to `vtable for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o:(.data.rel.ro._ZTI18RedirectionCommand[_ZTI18RedirectionCommand]+0x10): undefined reference to `typeinfo for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o:(.data.rel.ro._ZTI11PipeCommand[_ZTI11PipeCommand]+0x10): undefined reference to `typeinfo for IORedirection'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o:(.data.rel.ro._ZTI16DiskUsageCommand[_ZTI16DiskUsageCommand]+0x10): undefined reference to `typeinfo for SpecialCommand'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o:(.data.rel.ro._ZTI13WhoAmICommand[_ZTI13WhoAmICommand]+0x10): undefined reference to `typeinfo for SpecialCommand'
+CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o:(.data.rel.ro._ZTI7NetInfo[_ZTI7NetInfo]+0x10): undefined reference to `typeinfo for SpecialCommand'
+collect2: error: ld returned 1 exit status
+CMakeFiles/skeleton_smash.dir/build.make:354: recipe for target 'skeleton_smash' failed
+make[3]: *** [skeleton_smash] Error 1
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/skeleton_smash.dir/all' failed
+make[2]: *** [CMakeFiles/skeleton_smash.dir/all] Error 2
+CMakeFiles/Makefile2:79: recipe for target 'CMakeFiles/skeleton_smash.dir/rule' failed
+make[1]: *** [CMakeFiles/skeleton_smash.dir/rule] Error 2
+Makefile:118: recipe for target 'skeleton_smash' failed
+make: *** [skeleton_smash] Error 2
+
