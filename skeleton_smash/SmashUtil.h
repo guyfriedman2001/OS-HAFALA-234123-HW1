@@ -28,19 +28,19 @@ namespace  SmashUtil {
 #define FUNC_EXIT()
 #endif
 
-string _ltrim(const std::string &s)
+inline string _ltrim(const std::string &s)
 {
   size_t start = s.find_first_not_of(WHITESPACE);
   return (start == std::string::npos) ? "" : s.substr(start);
 }
 
-string _rtrim(const std::string &s)
+inline string _rtrim(const std::string &s)
 {
   size_t end = s.find_last_not_of(WHITESPACE);
   return (end == std::string::npos) ? "" : s.substr(0, end + 1);
 }
 
-string _trim(const std::string &s)
+inline string _trim(const std::string &s)
 {
   return _rtrim(_ltrim(s));
 }
@@ -75,7 +75,7 @@ string _trim(const std::string &s)
  * - The caller is responsible for freeing the memory allocated for each entry in `args`.
  * - The function assumes that `args` has enough space to hold all tokens and the terminating `NULL`.
  */
-int _parseCommandLine(const char *cmd_line, char **args)
+inline int _parseCommandLine(const char *cmd_line, char **args)
 {
   FUNC_ENTRY()
   int i = 0;
@@ -115,13 +115,13 @@ inline void commandDestructor(char **args, int args_num)
   }
 }
 
-bool _isBackgroundComamnd(const char *cmd_line)
+inline bool _isBackgroundComamnd(const char *cmd_line)
 {
   const string str(cmd_line);
   return str[str.find_last_not_of(WHITESPACE)] == '&';
 }
 
-void _removeBackgroundSign(char *cmd_line)
+inline void _removeBackgroundSign(char *cmd_line)
 {
   const string str(cmd_line);
   // find last character other than spaces
@@ -142,7 +142,7 @@ void _removeBackgroundSign(char *cmd_line)
   cmd_line[str.find_last_not_of(WHITESPACE, idx) + 1] = 0;
 }
 
-bool isBuiltInCommand(const std::string &cmd)
+inline bool isBuiltInCommand(const std::string &cmd)
 {
   static const std::set<std::string> builtins = {
       "cd", "pwd", "jobs", "fg", "bg", "kill", "quit", "chprompt", "showpid", "set", "unset", "alias", "unalias"};
@@ -198,7 +198,7 @@ inline void assert_not_empty(const T &container)
  * @param out location to store int convertion
  * @return true if conversion succesfull, false otherwise
  */
-bool stringToInt(const std::string &s, int &out) // function from StackOverflow, nned to make sure that it works
+inline bool stringToInt(const std::string &s, int &out) // function from StackOverflow, nned to make sure that it works
 {
   char *end = nullptr;
   errno = 0; // reset errno before call

@@ -59,6 +59,8 @@ void test8();
 void test9();
 void test10();
 
+#define RUN_DIS_MAIN false
+#if RUN_DIS_MAIN
 
 int main(int argc, char *argv[]) {
     int test = -1;
@@ -88,7 +90,7 @@ int main(int argc, char *argv[]) {
 
 
 }
-
+#endif //RUN_DIS_MAIN
 
 
 
