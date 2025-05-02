@@ -8,7 +8,7 @@
             "type": "cppdbg",
             "request": "launch",
             "name": "Launch(gdb)",
-            "program": "${fileBasenameNoExtension}",
+            "program": "${workspaceFolder}/skeleton_smash/smash",
             "cwd": "${workspaceRoot}"
         }
     ]
