@@ -61,7 +61,8 @@ public:
 
     string getEndStr();
 
-    inline void print_current_path() const;
+    //inline void print_current_path() const;
+    void print_current_path() const;
 
     JobsList& getJobsList();
 

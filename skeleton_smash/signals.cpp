@@ -2,19 +2,27 @@
 #include <signal.h>
 #include "signals.h"
 #include "Commands.h"
+#include "SmallShell.h"
 
 using namespace std;
 
 void ctrlCHandler(int sig_num) {
-    // TODO: Add your implementation
+    pid_t foreground_task;
     switch (sig_num)
     {
     case SIGHUP:
         //code
         break;
-    case SIGINT:
-        //code
+    case SIGINT: {
+        printf("smash: got ctrl-C\n");
+        foreground_task = SHELL_INSTANCE.get_foreground_pid();
+        if (foreground_task == ERR_ARG) {
+            return;
+        }
+        TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
+        printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, foreground_task, SmallShell::SIGKILL_STRING_MESSAGE_2);
         break;
+    }
     case SIGQUIT:
         //code
         break;

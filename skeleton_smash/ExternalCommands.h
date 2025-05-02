@@ -25,13 +25,15 @@ public:
 
     virtual void execute() override;
 
-    inline void printYourself();
+    //inline void printYourself();
+    void printYourself();
 
     //inline int getPID();
 
     virtual void executeHelper();
 
-    inline pid_t getPID();
+    //inline pid_t getPID();
+    pid_t getPID();
 
 };
 

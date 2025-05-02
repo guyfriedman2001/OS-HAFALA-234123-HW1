@@ -350,9 +350,9 @@ string AliasCommand::extractActualCommand(const argv& args)
   return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1);
 }
 
-const char* UnSetEnvCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unsetenv: not enough arguments";
-const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_1 = "smash error: unsetenv: ";
-const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_2 = "does not exist";
+const char* UnAliasCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unalias: not enough arguments";
+const char* UnAliasCommand::ALIAS_DOESNT_EXIST_1 = "smash error: unalias: ";
+const char* UnAliasCommand::ALIAS_DOESNT_EXIST_2 = "does not exist";
 
 UnAliasCommand::UnAliasCommand(const argv& args, const char *cmd_line)
 {
@@ -393,6 +393,10 @@ void UnAliasCommand::execute()
   }
 }
 
+const char* UnSetEnvCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unsetenv: not enough arguments";
+const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_1 = "smash error: unsetenv: ";
+const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_2 = "does not exist";
+
 UnSetEnvCommand::UnSetEnvCommand(const argv& args, const char *cmd_line)
 {
   variablesToRemove = extractVariables(args);
@@ -419,7 +423,7 @@ void UnSetEnvCommand::execute()
     }
   }
 }
- argv& UnSetEnvCommand::extractVariables(const argv& args)
+argv UnSetEnvCommand::extractVariables(const argv& args)
 {
   argv varsToRemove;
   for (int i = 1; i < args.size(); i++)

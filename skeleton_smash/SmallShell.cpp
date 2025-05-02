@@ -22,7 +22,7 @@ const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed";
 
 
 
-void ctrlCHandler(int sig_num) {
+/*void ctrlCHandler(int sig_num) {
   printf("smash: got ctrl-C\n");
   pid_t foreground_task =  SmallShell::getInstance().get_foreground_pid();
   if (foreground_task == ERR_ARG) {
@@ -30,8 +30,10 @@ void ctrlCHandler(int sig_num) {
   }
   TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
   printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, foreground_task, SmallShell::SIGKILL_STRING_MESSAGE_2);
-}
+}*/
 
+#define RUN_DIS_MAIN false
+#if RUN_DIS_MAIN
 int main(int argc, char *argv[]) {
     if (signal(SIGINT, ctrlCHandler) == SIG_ERR) {
         perror("smash error: failed to set ctrl-C handler");
@@ -48,7 +50,7 @@ int main(int argc, char *argv[]) {
     }
     return 0;
 }
-
+#endif
 
 
 
@@ -72,7 +74,8 @@ string SmallShell::getPreviousPath()
   return oldPWD;
 }
 
-inline void SmallShell::print_current_path() const
+//inline void SmallShell::print_current_path() const
+void SmallShell::print_current_path() const
 {
   GetCurrDirCommand temp;
   temp.execute();
@@ -83,7 +86,7 @@ JobsList &SmallShell::getJobsList()
   return this->jobs;
 }
 
-inline AliasManager &SmallShell::getAliases()
+AliasManager &SmallShell::getAliases()
 {
     return this->aliases;
 }

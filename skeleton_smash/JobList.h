@@ -24,9 +24,11 @@ public:
 
         ~JobEntry() = default;
 
-        inline void printYourself();
+        //inline void printYourself();
+        void printYourself();
 
-        inline pid_t getJobPID() const ; //get the PID of the running command
+        //inline pid_t getJobPID() const ;
+        pid_t getJobPID() const ; //get the PID of the running command
 
     };
     typedef std::map<int, JobEntry> Jobs;

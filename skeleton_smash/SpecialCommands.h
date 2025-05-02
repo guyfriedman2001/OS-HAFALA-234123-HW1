@@ -18,11 +18,11 @@ public:
 
     SpecialCommand(const argv& args, const char *cmd_line);
 
-    virtual ~SpecialCommand() = default;
+    virtual ~SpecialCommand();
 
-    virtual void execute();
+    virtual void execute() = 0;
 
-    inline pid_t getPID();
+    pid_t getPID();
 
 };
 
@@ -35,15 +35,16 @@ protected:
 public:
     explicit IORedirection(const argv& args, const char* cmd_line);
 
-    virtual ~IORedirection() {}
+    virtual ~IORedirection();
 
-    void execute() override;
+    void execute() override = 0;
 
     //open_flag getOpenFlag(const string& arg);
 
     //virtual inline pid_t create_fork();
 
-    virtual inline int get_first_redirection_index(const argv& args) = 0;
+    //virtual inline int get_first_redirection_index(const argv& args) = 0;
+    virtual int get_first_redirection_index(const argv& args) = 0;
 };
 
 class RedirectionCommand : public IORedirection {
@@ -55,9 +56,11 @@ public:
 
     void execute() override;
 
-    inline static open_flag getOpenFlag(const string& arg);
+    //inline static open_flag getOpenFlag(const string& arg);
+    static open_flag getOpenFlag(const string& arg);
 
-    virtual inline int get_first_redirection_index(const argv& args) override;
+    //virtual inline int get_first_redirection_index(const argv& args) override;
+    virtual int get_first_redirection_index(const argv& args) override;
 };
 
 class PipeCommand : public IORedirection {
@@ -72,6 +75,7 @@ public:
     }
 
     void execute() override;
+    virtual int get_first_redirection_index(const argv& args) override;
 };
 
 class DiskUsageCommand : public SpecialCommand {

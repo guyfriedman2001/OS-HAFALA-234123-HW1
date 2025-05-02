@@ -251,7 +251,7 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
         }
 
         void execute() override;
-        argv& extractVariables(const argv& args);
+        argv extractVariables(const argv& args);
         void removeVariable(const string& var);
         bool doesVariableExist(const string& var);
 };

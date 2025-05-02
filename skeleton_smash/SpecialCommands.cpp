@@ -18,12 +18,17 @@ struct linux_dirent64 {
     char           d_name[];
 };
 
+SpecialCommand::~SpecialCommand() {}
+
+
 IORedirection::IORedirection(const argv& args, const char *cmd_line) : pid(getpid()), args(args)
 {
   assert_not_empty(args);
   strcpy(this->cmd_line, cmd_line);
   m_open_flag = ERR_ARG; //assign default value
 }
+
+IORedirection::~IORedirection(){}
 
 int RedirectionCommand::get_first_redirection_index(const argv& args) {
   int returnindex = 0;
@@ -205,6 +210,9 @@ PipeCommand::PipeCommand(const argv& args, const char *cmd_line)
   right_args = argv(args.begin() + pipe_index + 1, args.end());
 }
 
+int PipeCommand::get_first_redirection_index(const argv& args) {
+  return -1;
+}
 
 void PipeCommand::execute()
 {
@@ -389,7 +397,7 @@ string DiskUsageCommand::getCurrentDirectory()
     return this->buffer;
 }
 
-int getFileSize(const string& path) 
+int DiskUsageCommand::getFileSize(const string& path) 
 {
     struct stat st;
     if (lstat(path.c_str(), &st) == 0) {

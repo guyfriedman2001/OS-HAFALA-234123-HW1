@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-    SmallShell &smash = SmallShell::getInstance();
+    SmallShell &smash = SHELL_INSTANCE;
     while (true) { //FIXME: check if its ok to use fstream here or if we need to use C utils for this
         std::cout << smash.getPrompt() << smash.getEndStr();
         std::string cmd_line;
