@@ -9,11 +9,15 @@
 #include <sstream>
 #include <string>
 #include <cstring>
+#include <vector>
+
 
 
 
 const std::string WHITESPACE = " \n\r\t\f\v";
 using std::string;
+typedef std::vector<std::string> argv;
+
 
 namespace  SmashUtil {
 
@@ -43,6 +47,16 @@ inline string _rtrim(const std::string &s)
 inline string _trim(const std::string &s)
 {
   return _rtrim(_ltrim(s));
+}
+
+inline argv parseCommandLine(const string& cmd_s) {
+    std::istringstream iss(cmd_s);
+    argv result;
+    string token;
+    while (iss >> token) {
+        result.push_back(token);
+    }
+    return result;
 }
 
 /**
@@ -91,6 +105,7 @@ inline int _parseCommandLine(const char *cmd_line, char **args)
 
   FUNC_EXIT()
 }
+
 
 /**
  * @brief free memory malloc'ed by _parseCommandLine

@@ -187,8 +187,73 @@ void RedirectionCommand::execute()
   close(backup_fd);
 
 
+  /*//The chat said that this function should be implemented like this, using fork() and such:
 
+  // Step 1: Find redirection operator index (e.g. >, >>, <)
+  int redirection_index = get_first_redirection_index(args);
+  assert(redirection_index >= 1); // redirection cannot be the first arg
 
+  // Step 2: Extract filename after redirection
+  const std::string& filename = args[redirection_index + 1];
+
+  // Step 3: Build argv for the real command (before the redirection operator)
+  argv command_args(args.begin(), args.begin() + redirection_index);
+
+  // Step 4: Reconstruct command line string
+  std::string real_cmd_line;
+  for (const auto& arg : command_args) {
+    real_cmd_line += arg + " ";
+  }
+
+  // Step 5: Fork a child to handle redirection and execution
+  pid_t pid = fork();
+  if (pid == -1) {
+    perror("smash error: fork failed");
+    return;
+  }
+
+  if (pid == 0) {
+    // === Child process ===
+
+    // Step 6: Separate process group (avoid signals from smash shell)
+    setpgrp();
+
+    // Step 7: Open the file for input/output redirection
+    int file_fd = open(filename.c_str(), m_open_flag, 0644);
+    if (file_fd == -1) {
+      perror("smash error: open failed");
+      exit(1);
+    }
+
+    // Step 8: Perform the actual redirection using dup2
+    if (m_open_flag == O_RDONLY) {
+      if (dup2(file_fd, STDIN_FILENO) == -1) {
+        perror("smash error: dup2 failed");
+        close(file_fd);
+        exit(1);
+      }
+    } else { // Output redirection
+      if (dup2(file_fd, STDOUT_FILENO) == -1) {
+        perror("smash error: dup2 failed");
+        close(file_fd);
+        exit(1);
+      }
+    }
+    close(file_fd); // Step 9: File descriptor no longer needed after dup2
+
+    // Step 10: Create and execute the real command
+    ExternalCommandFactory factory;
+    Command* base = factory.makeCommand(command_args, this->cmd_line);
+    ExternalCommand* command_to_execute = dynamic_cast<ExternalCommand*>(base);
+    command_to_execute->execute();
+
+    // Step 11: If we got here, exec failed inside execute()
+    perror("smash error: exec failed");
+    exit(1);
+  }
+
+  // Step 12: Parent process waits for child to finish
+  waitpid(pid, nullptr, 0);*/
 }
 
 PipeCommand::PipeCommand(const argv& args, const char *cmd_line)
