@@ -4,6 +4,8 @@
 
 #include "CommandFactories.h"
 
+#include "ExternalCommands.h"
+
 Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
   string &command = args[0];
@@ -63,8 +65,11 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
 
 Command *ExternalCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
-  // TODO: your implementation here
-  string &command = args[0];
+  if (SmashUtil::isCompleExternalCommand(cmd_line)) {
+    return new ComplexExternalCommand(args, cmd_line);
+  } else {
+    return new ExternalCommand(args, cmd_line);
+  }
 }
 
 /*
