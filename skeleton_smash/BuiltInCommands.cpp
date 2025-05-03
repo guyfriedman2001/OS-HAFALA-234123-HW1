@@ -248,7 +248,14 @@ const char* QuitCommand::SENDING_SIGKILL = "smash: sending SIGKILL signal to ";
 
 QuitCommand::QuitCommand(const argv& args, const char *cmd_line)
 {
-  killSpecified = (args[1] == "kill");
+  if (args.size() >= 2)
+  {
+    killSpecified = (args[1] == "kill");
+  }
+  else
+  {
+    killSpecified = false;
+  }
 }
 
 void QuitCommand::execute()
