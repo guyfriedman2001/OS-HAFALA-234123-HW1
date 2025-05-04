@@ -278,7 +278,10 @@ bool SmallShell::changeShellDirectory(const char *next_dir)
   if (chdir(next_dir) != 0)
   {
     perror("smash error: chdir failed");
-    FOR_DEBUG_MODE(perror("failure in 'bool SmallShell::changeShellDirectory(const char *next_dir)'\n");)
+    FOR_DEBUG_MODE(
+      perror("failure in 'bool SmallShell::changeShellDirectory(const char *next_dir)'\n");
+      cerr << "line : " << __LINE__ << "file: " << __FILE__ << endl;
+      )
     return false;
   }
   else

@@ -909,4 +909,6 @@ CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: \
   /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/JobList.h \
   /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/ExternalCommands.h \
   /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/SmallShell.h \
-  /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/AliasManager.h
+  /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/AliasManager.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/dirent.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX14.4.sdk/usr/include/sys/dirent.h

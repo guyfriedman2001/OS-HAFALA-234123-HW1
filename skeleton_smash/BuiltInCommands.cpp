@@ -59,8 +59,8 @@ GetCurrDirCommand::GetCurrDirCommand(const argv &args, const char *cmd_line) : G
 
 void GetCurrDirCommand::execute()
 {
-  FOR_DEBUG_MODE(printf("void GetCurrDirCommand::execute()\n");)
-  printf("%s", this->current_path);
+  FOR_DEBUG_MODE(printf("file: %s , line: %d, function: void GetCurrDirCommand::execute() %s\n",__FILE__, __LINE__, __FUNCTION__);)
+  printf("%s\n", this->current_path);
 }
 
 ChangeDirCommand::ChangeDirCommand(const argv &args)
