@@ -13,14 +13,21 @@ JobsList::JobEntry::JobEntry(std::shared_ptr<ExternalCommand> command, int jobID
 
 void JobsList::JobEntry::printYourselfWithID()
 {
-  printf("[%d] ",this->jobID);
+  cout << "[" << this->jobID << "] ";
   this->command->printYourself();
 }
 
-void JobsList::JobEntry::printYourselfWithPID()
+void JobsList::JobEntry::printYourselfWithPID(bool backwards)
 {
-  printf("%d: ",this->getJobPID());
-  this->command->printYourself();
+  if (backwards)
+  {
+    this->command->printYourself();
+    cout << " " << this->getJobPID();
+  } else
+  {
+    cout << this->getJobPID() << ": ";
+    this->command->printYourself();
+  }
 }
 
 JobsList::JobsList()

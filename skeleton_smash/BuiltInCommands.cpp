@@ -237,6 +237,8 @@ void ForegroundCommand::execute()
     this->print_job_list_is_empty();
     return;
   }
+  this->job->printYourselfWithPID(true);
+  cout.flush();
   int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
   // now what?? need to print something? maybe print @exit_status????
   FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)

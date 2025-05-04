@@ -27,7 +27,7 @@ public:
         //inline void printYourself();
         //void printYourself();
         void printYourselfWithID();
-        void printYourselfWithPID();
+        void printYourselfWithPID(bool backwards = false);
 
         //inline pid_t getJobPID() const ;
         pid_t getJobPID() const ; //get the PID of the running command

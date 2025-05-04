@@ -34,7 +34,7 @@ ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : Exter
 
 void ExternalCommand::printYourself()
 {
-  printf("%s", this->command_original);
+  cout << this->command_original;
 }
 
 void ExternalCommand::execute()
