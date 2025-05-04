@@ -13,12 +13,12 @@ class JobsList {
 public:
     class JobEntry {
     private:
-        ExternalCommand* command;
+        std::shared_ptr<ExternalCommand> command;
         //char* cmd_line;
         int jobID;
         //int jobPID;
     public:
-        JobEntry(ExternalCommand* command, int jobID);
+        JobEntry(std::shared_ptr<ExternalCommand> command, int jobID);
 
         //JobEntry(ExternalCommand* command, int jobID, int JobPID) : JobEntry(command, jobID) { this->jobPID = jobPID; }
 

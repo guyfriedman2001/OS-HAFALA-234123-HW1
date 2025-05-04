@@ -9,7 +9,7 @@
 #include "SmallShellHeaders.h"
 #include "ExternalCommands.h"
 
-JobsList::JobEntry::JobEntry(ExternalCommand *command, int jobID) : command(command), jobID(jobID) {}
+JobsList::JobEntry::JobEntry(std::shared_ptr<ExternalCommand> command, int jobID) : command(command), jobID(jobID) {}
 
 void JobsList::JobEntry::printYourself()
 {
@@ -29,11 +29,15 @@ JobsList::~JobsList()
 
 void JobsList::addJob(ExternalCommand *cmd, bool isStopped)
 {
-  Jobs &jbs = this->jobs;
+  /*Jobs &jbs = this->jobs;
   int max_curr_job_id = this->get_max_current_jobID();
   int next_id = ++max_curr_job_id;
   JobEntry toInsert = JobEntry(cmd, next_id);
-  jbs.insert(std::make_pair(next_id, toInsert));
+  jbs.insert(std::make_pair(next_id, toInsert));*/
+
+  int next_id = this->get_max_current_jobID() + 1;
+  std::shared_ptr<ExternalCommand> shared_cmd(cmd);
+  jobs.insert(std::make_pair(next_id, JobEntry(shared_cmd, next_id)));
 }
 
 void JobsList::printJobsList()
@@ -49,7 +53,7 @@ void JobsList::printJobsList()
 
 #if temporairly_disable_kill_all_jobs
 void JobsList::killAllJobs(){}
-#elif //if temporairly_disable_kill_all_jobs
+#else //if temporairly_disable_kill_all_jobs
 void JobsList::killAllJobs()
 {
   for (const auto& job : jobs)
@@ -69,14 +73,28 @@ void JobsList::killAllJobs()
 
 #if temporairly_disable_removeFinishedJobs
 void JobsList::removeFinishedJobs(){}
-#elif //if temporairly_disable_removeFinishedJobs
+#else //if temporairly_disable_removeFinishedJobs
 void JobsList::removeFinishedJobs()
 {
-  for (const auto& job: jobs)
+ /* for (const auto& job: jobs)
   {
     if (waitpid(job.second.getJobPID(), nullptr, check_if_process_finished_without_blocking) != 0)
     {
       jobs.erase(job.first);
+    }
+  }*/
+
+  for (auto it = jobs.begin(); it != jobs.end(); )
+  {
+    //pid_t pid = it->second.getJobPID();
+    //if (pid != -1 && waitpid(pid, nullptr, WNOHANG) != 0)
+    if (waitpid(it->second.getJobPID(), nullptr, check_if_process_finished_without_blocking) != 0)
+    {
+      it = jobs.erase(it);
+    }
+    else
+    {
+      ++it;
     }
   }
 }

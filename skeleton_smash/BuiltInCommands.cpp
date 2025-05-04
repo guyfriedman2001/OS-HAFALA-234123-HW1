@@ -151,7 +151,7 @@ void JobsCommand::execute()
 {
   if (SHELL_INSTANCE.getJobsList().numberOfJobs() == 0)
   {
-    cerr << "smash error: jobs: jobs list is empty";
+    cerr << "smash error: jobs: jobs list is empty" << endl;
   } else {
     SHELL_INSTANCE.getJobsList().printJobsList();
   }
