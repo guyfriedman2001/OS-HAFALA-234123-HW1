@@ -47,6 +47,9 @@ void JobsList::printJobsList()
   }
 }
 
+#if temporairly_disable_kill_all_jobs
+void JobsList::killAllJobs(){}
+#elif //if temporairly_disable_kill_all_jobs
 void JobsList::killAllJobs()
 {
   for (const auto& job : jobs)
@@ -62,6 +65,7 @@ void JobsList::killAllJobs()
     }
   }
 }
+#endif//elif temporairly_disable_kill_all_jobs
 
 void JobsList::removeFinishedJobs()
 {

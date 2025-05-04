@@ -80,6 +80,8 @@ typedef int open_flag;
 
 #define SYSTEM_CALL_ERROR (-1)
 #define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR)
+#define temporairly_disable_kill_all_jobs true
+
 
 //TODO: maybe remove DO_SYS
 #define DO_SYS(SYSTEM_CALL, ERROR_STRING) \
