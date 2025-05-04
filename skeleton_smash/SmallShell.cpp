@@ -52,7 +52,18 @@ int main(int argc, char *argv[]) {
 }
 #endif
 
+#define background_flag_sign_blyat ('&')
 
+void remove_background_flag_from_da_argv_blyat(argv& args) {
+  assert_not_empty(args);
+  std::string& last = args.back();
+  if (!last.empty() && last.back() == background_flag_sign_blyat) {
+    last.pop_back();
+    if (last.empty()) {
+      args.pop_back();
+    }
+  }
+}
 
 SmallShell::SmallShell()
     : currentPrompt("smash"), promptEndChar(">"), old_path_set(false), foreground_pid(-1)
@@ -162,7 +173,7 @@ strcpy(command_no_background, cmd_line);
 _removeBackgroundSign(command_no_background);
 argv args = parseCommandLine(string(command_no_background));
  */
-  
+
   // char *args_[COMMAND_MAX_ARGS];
   size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
   // commandDestructor(args_, num_args);
@@ -171,6 +182,8 @@ argv args = parseCommandLine(string(command_no_background));
   {
     returnCommand = new EmptyCommand(args, cmd_line);
   }
+
+  remove_background_flag_from_da_argv_blyat(args);
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
