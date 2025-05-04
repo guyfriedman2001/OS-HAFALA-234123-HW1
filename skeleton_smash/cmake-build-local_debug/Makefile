@@ -321,30 +321,6 @@ SpecialCommands.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s
 .PHONY : SpecialCommands.cpp.s
 
-main.o: main.cpp.o
-.PHONY : main.o
-
-# target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/main.cpp.o
-.PHONY : main.cpp.o
-
-main.i: main.cpp.i
-.PHONY : main.i
-
-# target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/main.cpp.i
-.PHONY : main.cpp.i
-
-main.s: main.cpp.s
-.PHONY : main.s
-
-# target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/main.cpp.s
-.PHONY : main.cpp.s
-
 signals.o: signals.cpp.o
 .PHONY : signals.o
 
@@ -426,9 +402,6 @@ help:
 	@echo "... SpecialCommands.o"
 	@echo "... SpecialCommands.i"
 	@echo "... SpecialCommands.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
 	@echo "... signals.o"
 	@echo "... signals.i"
 	@echo "... signals.s"

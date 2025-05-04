@@ -81,12 +81,12 @@ clean: CMakeFiles/skeleton_smash.dir/clean
 CMakeFiles/skeleton_smash.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-local_debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12 "Built target skeleton_smash"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-local_debug/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11 "Built target skeleton_smash"
 .PHONY : CMakeFiles/skeleton_smash.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/skeleton_smash.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-local_debug/CMakeFiles 12
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-local_debug/CMakeFiles 11
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/skeleton_smash.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-local_debug/CMakeFiles 0
 .PHONY : CMakeFiles/skeleton_smash.dir/rule

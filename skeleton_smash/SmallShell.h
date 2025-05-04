@@ -88,6 +88,8 @@ public:
 
     void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
 
+    void printPrompt();
+
     static const char* SIGKILL_STRING_MESSAGE_1;
 
     static const char* SIGKILL_STRING_MESSAGE_2;

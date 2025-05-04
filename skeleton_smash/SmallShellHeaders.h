@@ -69,7 +69,7 @@ typedef int open_flag;
 
 #define Block_until_the_child_terminates 0
 #define check_if_process_finished_without_blocking WNOHANG
-
+#define wait_but_can_still_get_ctrl_c WUNTRACED
 //#define O_RDONLY (0x0000)
 //#define O_WRONLY (0x0001)
 //#define O_RDWR   (0x0002)

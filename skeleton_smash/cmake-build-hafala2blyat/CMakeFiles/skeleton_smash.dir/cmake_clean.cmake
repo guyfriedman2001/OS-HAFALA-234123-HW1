@@ -2,7 +2,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/skeleton_smash.dir/smash.cpp.o"
   "CMakeFiles/skeleton_smash.dir/Commands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/signals.cpp.o"
-  "CMakeFiles/skeleton_smash.dir/main.cpp.o"
   "CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o"

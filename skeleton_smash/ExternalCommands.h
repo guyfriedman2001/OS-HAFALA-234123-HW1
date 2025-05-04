@@ -10,7 +10,7 @@
 
 class ExternalCommand : public Command {
 private:
-    char command[COMMAND_MAX_LENGTH];
+    char command_original[COMMAND_MAX_LENGTH];
     argv given_args;
     pid_t jobPID = 0;
 public:

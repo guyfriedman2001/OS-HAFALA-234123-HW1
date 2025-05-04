@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp
         signals.h
-        main.cpp
         BuiltInCommands.h
         BuiltInCommands.cpp
         SmallShellHeaders.h

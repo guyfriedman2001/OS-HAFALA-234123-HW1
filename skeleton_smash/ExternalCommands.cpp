@@ -15,7 +15,7 @@ pid_t ExternalCommand::getPID()
 
 ExternalCommand::ExternalCommand(const char *cmd_line)
 {
-  strcpy(this->command, cmd_line);
+  strcpy(this->command_original, cmd_line);
   this->jobPID = getpid();
 }
 
@@ -34,7 +34,7 @@ ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : Exter
 
 void ExternalCommand::printYourself()
 {
-  printf("%s", this->command);
+  printf("%s", this->command_original);
 }
 
 void ExternalCommand::execute()
@@ -51,9 +51,9 @@ void ExternalCommand::execute()
   else
   { // Parent
     int status;
-    if (!_isBackgroundComamnd(this->command)) //we need to wait for this command
+    if (!_isBackgroundComamnd(this->command_original)) //we need to wait for this command
     {
-      TRY_SYS2(waitpid(pid, &status, Block_until_the_child_terminates),"waitpid");
+      TRY_SYS2(waitpid(pid, &status, wait_but_can_still_get_ctrl_c),"waitpid");
     }
     else
     {

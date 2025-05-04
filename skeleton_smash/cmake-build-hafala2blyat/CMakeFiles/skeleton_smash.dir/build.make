@@ -129,33 +129,9 @@ CMakeFiles/skeleton_smash.dir/signals.cpp.o.provides: CMakeFiles/skeleton_smash.
 CMakeFiles/skeleton_smash.dir/signals.cpp.o.provides.build: CMakeFiles/skeleton_smash.dir/signals.cpp.o
 
 
-CMakeFiles/skeleton_smash.dir/main.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
-CMakeFiles/skeleton_smash.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/skeleton_smash.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/main.cpp.o -c /tmp/tmp.PEojR1gXKU/main.cpp
-
-CMakeFiles/skeleton_smash.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.PEojR1gXKU/main.cpp > CMakeFiles/skeleton_smash.dir/main.cpp.i
-
-CMakeFiles/skeleton_smash.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.PEojR1gXKU/main.cpp -o CMakeFiles/skeleton_smash.dir/main.cpp.s
-
-CMakeFiles/skeleton_smash.dir/main.cpp.o.requires:
-
-.PHONY : CMakeFiles/skeleton_smash.dir/main.cpp.o.requires
-
-CMakeFiles/skeleton_smash.dir/main.cpp.o.provides: CMakeFiles/skeleton_smash.dir/main.cpp.o.requires
-	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/main.cpp.o.provides.build
-.PHONY : CMakeFiles/skeleton_smash.dir/main.cpp.o.provides
-
-CMakeFiles/skeleton_smash.dir/main.cpp.o.provides.build: CMakeFiles/skeleton_smash.dir/main.cpp.o
-
-
 CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o: ../BuiltInCommands.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o -c /tmp/tmp.PEojR1gXKU/BuiltInCommands.cpp
 
 CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.i: cmake_force
@@ -179,7 +155,7 @@ CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o.provides.build: CMakeFiles/s
 
 CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o: ../ExternalCommands.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o -c /tmp/tmp.PEojR1gXKU/ExternalCommands.cpp
 
 CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.i: cmake_force
@@ -203,7 +179,7 @@ CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o: ../CommandFactories.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o -c /tmp/tmp.PEojR1gXKU/CommandFactories.cpp
 
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.i: cmake_force
@@ -227,7 +203,7 @@ CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o.provides.build: CMakeFiles/
 
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o: ../JobList.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/skeleton_smash.dir/JobList.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/skeleton_smash.dir/JobList.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/JobList.cpp.o -c /tmp/tmp.PEojR1gXKU/JobList.cpp
 
 CMakeFiles/skeleton_smash.dir/JobList.cpp.i: cmake_force
@@ -251,7 +227,7 @@ CMakeFiles/skeleton_smash.dir/JobList.cpp.o.provides.build: CMakeFiles/skeleton_
 
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o: ../AliasManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o -c /tmp/tmp.PEojR1gXKU/AliasManager.cpp
 
 CMakeFiles/skeleton_smash.dir/AliasManager.cpp.i: cmake_force
@@ -275,7 +251,7 @@ CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o.provides.build: CMakeFiles/skel
 
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o: ../SmallShell.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o -c /tmp/tmp.PEojR1gXKU/SmallShell.cpp
 
 CMakeFiles/skeleton_smash.dir/SmallShell.cpp.i: cmake_force
@@ -299,7 +275,7 @@ CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o.provides.build: CMakeFiles/skelet
 
 CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
 CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o: ../SpecialCommands.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o -c /tmp/tmp.PEojR1gXKU/SpecialCommands.cpp
 
 CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.i: cmake_force
@@ -326,7 +302,6 @@ skeleton_smash_OBJECTS = \
 "CMakeFiles/skeleton_smash.dir/smash.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/Commands.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/signals.cpp.o" \
-"CMakeFiles/skeleton_smash.dir/main.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o" \
@@ -341,7 +316,6 @@ skeleton_smash_EXTERNAL_OBJECTS =
 skeleton_smash: CMakeFiles/skeleton_smash.dir/smash.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/Commands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/signals.cpp.o
-skeleton_smash: CMakeFiles/skeleton_smash.dir/main.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o
@@ -351,7 +325,7 @@ skeleton_smash: CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/build.make
 skeleton_smash: CMakeFiles/skeleton_smash.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Linking CXX executable skeleton_smash"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable skeleton_smash"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/skeleton_smash.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -362,7 +336,6 @@ CMakeFiles/skeleton_smash.dir/build: skeleton_smash
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/smash.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/Commands.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/signals.cpp.o.requires
-CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/main.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o.requires

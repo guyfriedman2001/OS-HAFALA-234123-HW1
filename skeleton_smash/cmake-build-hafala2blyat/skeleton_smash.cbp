@@ -138,9 +138,6 @@
 		<Unit filename="/tmp/tmp.PEojR1gXKU/SpecialCommands.h">
 			<Option target="skeleton_smash"/>
 		</Unit>
-		<Unit filename="/tmp/tmp.PEojR1gXKU/main.cpp">
-			<Option target="skeleton_smash"/>
-		</Unit>
 		<Unit filename="/tmp/tmp.PEojR1gXKU/signals.cpp">
 			<Option target="skeleton_smash"/>
 		</Unit>

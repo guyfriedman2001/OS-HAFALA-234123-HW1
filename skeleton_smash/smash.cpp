@@ -14,11 +14,12 @@ int main(int argc, char *argv[]) {
 
     SmallShell &smash = SHELL_INSTANCE;
     while (true) {
-        cout << smash.getPrompt() << smash.getEndStr();
+        //cout << smash.getPrompt() << smash.getEndStr();
+        smash.printPrompt();
         string cmd_line;
         getline(cin, cmd_line);
         smash.executeCommand(cmd_line.c_str());
-        cout << endl;
+        //cout << endl;
     }
     return 0;
 }

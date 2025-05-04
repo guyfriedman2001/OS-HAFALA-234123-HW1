@@ -40,7 +40,7 @@ public:
 
     virtual ~EmptyCommand() = default;
 
-    virtual void execute() override {printf("\n");};
+    virtual void execute() override {};//printf("\n");};
 
 };
 

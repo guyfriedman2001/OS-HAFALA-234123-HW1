@@ -15,8 +15,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.d"
-  "CMakeFiles/skeleton_smash.dir/main.cpp.o"
-  "CMakeFiles/skeleton_smash.dir/main.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/signals.cpp.o"
   "CMakeFiles/skeleton_smash.dir/signals.cpp.o.d"
   "CMakeFiles/skeleton_smash.dir/smash.cpp.o"

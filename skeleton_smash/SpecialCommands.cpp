@@ -173,7 +173,7 @@ void RedirectionCommand::execute()
   argv args = argv(); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
   ExternalCommandFactory factory;
   //ExternalCommand* command_to_execute = factory.makeCommand(move(args), this->cmd_line); //fixme: need to create argv from cmd_line and send both arguments to the factory
-  Command* base = factory.makeCommand(move(args), this->cmd_line);
+  Command* base = factory.makeCommand(std::move(args), this->cmd_line);
   ExternalCommand* command_to_execute = dynamic_cast<ExternalCommand*>(base);
   command_to_execute->execute();
   delete command_to_execute;
