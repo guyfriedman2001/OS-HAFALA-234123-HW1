@@ -181,9 +181,10 @@ argv args = parseCommandLine(string(command_no_background));
   if (num_args == 0)
   {
     returnCommand = new EmptyCommand(args, cmd_line);
+  } else {
+  remove_background_flag_from_da_argv_blyat(args);
   }
 
-  remove_background_flag_from_da_argv_blyat(args);
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
