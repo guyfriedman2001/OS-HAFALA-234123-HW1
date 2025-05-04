@@ -311,7 +311,9 @@ AliasCommand::AliasCommand(const argv& args, const char *cmd_line)
   {
     aliasList = false;
     aliasName = extractAlias(args);
+    cout << "aliasName: " << aliasName << endl;
     actualCommand = extractActualCommand(args);
+    cout << "actualCommand: " << actualCommand << endl;
   }
 }
 
@@ -319,7 +321,7 @@ void AliasCommand::execute()
 {
   if (aliasName == "" || actualCommand.empty())
   {
-    cerr << this->INVALID_FORMAT; 
+    cerr << this->INVALID_FORMAT << endl; 
   }
   else if (aliasList)
   {
@@ -327,11 +329,11 @@ void AliasCommand::execute()
   }
   else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
-    cerr << this->ALIAS_EXISTS_1 << aliasName << this->ALIAS_EXISTS_2;
+    cerr << this->ALIAS_EXISTS_1 << aliasName << this->ALIAS_EXISTS_2 << endl;
   }
   else if (SHELL_INSTANCE.getAliases().isSyntaxValid(aliasName))
   {
-    cerr << this->INVALID_FORMAT;
+    cerr << this->INVALID_FORMAT << endl;
   }
   else
   {
@@ -342,7 +344,7 @@ void AliasCommand::execute()
 string AliasCommand::extractAlias(const argv& args)
 {
   int equal = args[1].find('=');
-  if (equal = -1) 
+  if (equal == -1) 
   {
     return "";
   }
@@ -351,13 +353,26 @@ string AliasCommand::extractAlias(const argv& args)
 
 string AliasCommand::extractActualCommand(const argv& args)
 {
-  int firstQuote = args[1].find('\'');
-  int secondQuote = args[1].find('\'', firstQuote + 1);
-  if (firstQuote == -1 || secondQuote == -1) 
-  {
-    return "";
-  }
-  return args[1].substr(firstQuote + 1, secondQuote - firstQuote + 1);
+    string full = uniteArgs(args, 1);
+    int firstQuote = full.find('\'');
+    int secondQuote = full.find('\'', firstQuote + 1);
+    if (firstQuote == -1 || secondQuote == -1) {
+        return "";
+    }
+
+    return full.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+}
+
+string AliasCommand::uniteArgs(const argv& args, int start)
+{
+    string full;
+    for (int i = start; i < args.size(); ++i) {
+        full += args[i];
+        if (i != args.size() - 1) {
+            full += " ";
+        }
+    }
+    return full;
 }
 
 const char* UnAliasCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unalias: not enough arguments";

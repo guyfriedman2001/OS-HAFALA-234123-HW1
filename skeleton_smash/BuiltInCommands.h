@@ -217,6 +217,7 @@ public:
     void execute() override;
     string extractAlias(const argv& args);
     string extractActualCommand(const argv& args);
+    string uniteArgs(const argv& args, int start);
 };
 
 class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
