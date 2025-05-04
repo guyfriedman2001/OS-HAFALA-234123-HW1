@@ -153,11 +153,16 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
-  char command_no_background[COMMAND_MAX_LENGTH];
-  strcpy(command_no_background, cmd_line);
-  _removeBackgroundSign(command_no_background);
-  argv args = parseCommandLine(string(command_no_background)); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
 
+  argv args = parseCommandLine(cmd_s); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
+
+  /*
+char command_no_background[COMMAND_MAX_LENGTH];
+strcpy(command_no_background, cmd_line);
+_removeBackgroundSign(command_no_background);
+argv args = parseCommandLine(string(command_no_background));
+ */
+  
   // char *args_[COMMAND_MAX_ARGS];
   size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
   // commandDestructor(args_, num_args);
