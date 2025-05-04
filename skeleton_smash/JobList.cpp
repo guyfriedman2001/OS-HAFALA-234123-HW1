@@ -182,9 +182,11 @@ void JobsList::sendSignalToJobById(int jobIDtoSendTo, int signalToSend)
   if (pid == -1) {
     cerr << "JobsList::sendSignalToJobById: PID not found" << endl;
     FOR_DEBUG_MODE(cerr << "Looked for pid: " << jobIDtoSendTo << endl;)
-  }
-  if(SYSTEM_CALL_FAILED(kill(pid, signalToSend))) {
+  } 
+  else if(SYSTEM_CALL_FAILED(kill(pid, signalToSend))) {
     cerr << "JobsList::sendSignalToJobById: kill failed" << endl;
+  } else {
+    cout << "signal number " << signalToSend << " was sent to pid " << pid << endl;
   }
 }
 

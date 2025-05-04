@@ -10,7 +10,6 @@
 
 #include <unistd.h>
 
-#include <unistd.h>
 
 #include "SmallShell.h"
 extern char** __environ;
@@ -282,8 +281,9 @@ KillCommand::KillCommand(const argv& args, const char *cmd_line)
   {
     cerr << this->INVALID_ARGUMENTS;
   }
-
-  signalToSend = stoi(args[1]);
+  string temp = args[1];
+  temp.erase(0, 1);
+  signalToSend = stoi(temp);
   idToSendTo = stoi(args[2]);
 
   if (idToSendTo == 0)
