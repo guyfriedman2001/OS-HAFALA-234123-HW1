@@ -25,7 +25,9 @@ public:
         ~JobEntry() = default;
 
         //inline void printYourself();
-        void printYourself();
+        //void printYourself();
+        void printYourselfWithID();
+        void printYourselfWithPID();
 
         //inline pid_t getJobPID() const ;
         pid_t getJobPID() const ; //get the PID of the running command
@@ -43,7 +45,9 @@ public:
 
     void addJob(ExternalCommand *cmd, bool isStopped = false);
 
-    void printJobsList();
+    void printJobsListWithID();
+
+    void printJobsListWithPID();
 
     void killAllJobs();
 

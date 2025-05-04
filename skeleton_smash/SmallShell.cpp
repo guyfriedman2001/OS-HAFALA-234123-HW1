@@ -104,7 +104,7 @@ AliasManager &SmallShell::getAliases()
 
 void SmallShell::print_jobs()
 {
-  this->jobs.printJobsList();
+  this->jobs.printJobsListWithID();
 }
 
 JobsList::JobEntry *SmallShell::getJobById(int jobId)

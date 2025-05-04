@@ -153,7 +153,7 @@ void JobsCommand::execute()
   {
     cerr << "smash error: jobs: jobs list is empty" << endl;
   } else {
-    SHELL_INSTANCE.getJobsList().printJobsList();
+    SHELL_INSTANCE.getJobsList().printJobsListWithID();
   }
 }
 
@@ -263,7 +263,8 @@ void QuitCommand::execute()
   if (killSpecified)
   {
     SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-    cout << this->SENDING_SIGKILL << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs" << endl;
+    cout << this->SENDING_SIGKILL << SHELL_INSTANCE.getJobsList().numberOfJobs() << " jobs:" << endl;
+    SHELL_INSTANCE.getJobsList().printJobsListWithPID();
     SHELL_INSTANCE.getJobsList().killAllJobs();
   }
   exit(0);

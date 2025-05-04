@@ -11,9 +11,15 @@
 
 JobsList::JobEntry::JobEntry(std::shared_ptr<ExternalCommand> command, int jobID) : command(command), jobID(jobID) {}
 
-void JobsList::JobEntry::printYourself()
+void JobsList::JobEntry::printYourselfWithID()
 {
   printf("[%d] ",this->jobID);
+  this->command->printYourself();
+}
+
+void JobsList::JobEntry::printYourselfWithPID()
+{
+  printf("%d: ",this->getJobPID());
   this->command->printYourself();
 }
 
@@ -40,13 +46,24 @@ void JobsList::addJob(ExternalCommand *cmd, bool isStopped)
   jobs.insert(std::make_pair(next_id, JobEntry(shared_cmd, next_id)));
 }
 
-void JobsList::printJobsList()
+void JobsList::printJobsListWithID()
 {
   for (auto &pair : jobs)
   {
     // int jobId = pair.first;
     JobEntry &job = pair.second;
-    job.printYourself();
+    job.printYourselfWithID();
+    printf("\n");
+  }
+}
+
+void JobsList::printJobsListWithPID()
+{
+  for (auto &pair : jobs)
+  {
+    // int jobId = pair.first;
+    JobEntry &job = pair.second;
+    job.printYourselfWithPID();
     printf("\n");
   }
 }
