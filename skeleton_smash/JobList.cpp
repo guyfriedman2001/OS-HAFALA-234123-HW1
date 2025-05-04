@@ -67,6 +67,9 @@ void JobsList::killAllJobs()
 }
 #endif//elif temporairly_disable_kill_all_jobs
 
+#if temporairly_disable_removeFinishedJobs
+void JobsList::removeFinishedJobs(){}
+#elif //if temporairly_disable_removeFinishedJobs
 void JobsList::removeFinishedJobs()
 {
   for (const auto& job: jobs)
@@ -77,6 +80,7 @@ void JobsList::removeFinishedJobs()
     }
   }
 }
+#endif //elif temporairly_disable_removeFinishedJobs
 
 JobsList::JobEntry *JobsList::getJobById(int jobId)
 {
