@@ -239,13 +239,6 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
-
-/*
-#define STDIN_FILE_NUM 0
-#define STDOUT_FILE_NUM 1
-#define STDERR_FILE_NUM 2
-*/
-
 void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
 {
   assert(isRedirectionCommand(cmd_line));
@@ -365,6 +358,9 @@ argv args = parseCommandLine(string(command_no_background));
 
   bool isRedirectionCmd = isRedirectionCommand(cmd_line); //TODO: create a function that would read cmd_line and return appropriate bool
 
+  char afterAliases[COMMAND_MAX_LENGTH];
+  //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT
+  
   if (isRedirectionCmd)
   {
     // mask signals and apply changes to FD
