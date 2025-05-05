@@ -67,6 +67,8 @@ typedef std::shared_ptr<Command> cmdp;
 
 #define MAX(A,B) ((A) > (B) ? (A) : (B))
 
+#define OPEN_IN_GOD_MODE (0777)
+
 //FIXME: flip flag and test before submission!
 #define DEBUG_MODE true
 #if DEBUG_MODE
