@@ -25,8 +25,6 @@ SmallShellHeaders.h
 /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
 unistd.h
 -
-unistd.h
--
 SmallShell.h
 /tmp/tmp.PEojR1gXKU/SmallShell.h
 
@@ -277,32 +275,6 @@ SmallShellHeaders.h
 /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
 Commands.h
 /tmp/tmp.PEojR1gXKU/Commands.h
-
-/tmp/tmp.PEojR1gXKU/main.cpp
-Commands.h
-/tmp/tmp.PEojR1gXKU/Commands.h
-signals.h
-/tmp/tmp.PEojR1gXKU/signals.h
-stdlib.h
--
-stdio.h
--
-ostream
-/tmp/tmp.PEojR1gXKU/ostream
-iostream
--
-typeinfo
--
-chrono
--
-string
--
-set
--
-cstdlib
--
-unistd.h
--
 
 /tmp/tmp.PEojR1gXKU/signals.cpp
 iostream

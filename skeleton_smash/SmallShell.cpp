@@ -332,6 +332,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   sigset_t original_mask, new_mask;
   sigemptyset(&new_mask);
   sigaddset(&new_mask, SIGINT);
+  bool isRedirectionCmd = false;
 
   //fd_location temp1, temp2; //here FD changes would be stored and used for reversion proccess
   fd_location std_in, std_out, std_err; //here FD changes would be stored and used for reversion proccess
@@ -354,17 +355,19 @@ argv args = parseCommandLine(string(command_no_background));
   size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
   // commandDestructor(args_, num_args);
 
+  char afterAliases[COMMAND_MAX_LENGTH];
+
   if (num_args == 0)
   {
     returnCommand = new EmptyCommand(args, cmd_line);
   } else {
     remove_background_flag_from_da_argv_blyat(args);
+    strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
+    isRedirectionCmd = isRedirectionCommand(afterAliases);
   }
 
-  bool isRedirectionCmd = isRedirectionCommand(cmd_line); //TODO: create a function that would read cmd_line and return appropriate bool
 
-  char afterAliases[COMMAND_MAX_LENGTH];
-  //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT
+
 
   if (isRedirectionCmd)
   {
