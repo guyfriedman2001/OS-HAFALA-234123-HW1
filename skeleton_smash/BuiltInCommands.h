@@ -279,7 +279,10 @@ public:
     float calculateCpuUsage();
     float calculateMemoryUsage();
     float systemTotalTime(const char* buffer);
-    float proceessTotalTime(const char* buffer);
+    float processTotalTime(const char* buffer);
+    long readProcessTime(pid_t pid);
+    long readSystemTime();
+
 };
 
 

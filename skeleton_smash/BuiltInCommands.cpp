@@ -518,10 +518,11 @@ WatchProcCommand::WatchProcCommand(const argv& args, const char *cmd_line)
 {
   if (args.size() == 2)
   {
-    pid = static_cast<pid_t>(args[1].c_str(), nullptr, 10);
+    pid = static_cast<pid_t>(stoi(args[1]));
     argsFormat = true;
-  }
+  } else {
   argsFormat = false;
+  }
 }
 
 void WatchProcCommand::execute()
@@ -536,12 +537,12 @@ void WatchProcCommand::execute()
     }
     else
     {
-      cerr << this->PID_DOESNT_EXIST_1 << pid << this->PID_DOESNT_EXIST_2;
+      cerr << this->PID_DOESNT_EXIST_1 << pid << " " << this->PID_DOESNT_EXIST_2 << endl;
     }
   }
   else
   {
-    cerr << this->INVALID_ARGUMENTS;
+    cerr << this->INVALID_ARGUMENTS << endl;
   }
 }
 
@@ -560,37 +561,26 @@ bool WatchProcCommand::doesPidExist()
 
 float WatchProcCommand::calculateCpuUsage()
 {
-    string path = "/proc/" + std::to_string(pid) + "/stat";
-    int fd; 
-    TRY_SYS2(fd = open(path.c_str(), O_RDONLY), "open");
-    if (fd == -1)
-        return -1;
-    char buffer1[4096] = {0};
-    ssize_t bytesRead;
-    TRY_SYS2(bytesRead = read(fd, buffer1, sizeof(buffer1) - 1), "read");
-    TRY_SYS2(close(fd),"close");
-    if (bytesRead <= 0)
-        return -1;
+    long processTime1 = readProcessTime(pid);
+    long systemTime1 = readSystemTime();
 
-    long processTime = proceessTotalTime(buffer1);
-    if (processTime == 0)
-        return -1;
+    sleep(1); 
 
-    TRY_SYS2(fd = open("/proc/stat", O_RDONLY), "open");
-    if (fd == -1)
-        return -1;
+    long processTime2 = readProcessTime(pid);
+    long systemTime2 = readSystemTime();
 
-    char buffer2[4096] = {0};
-    TRY_SYS2(bytesRead = read(fd, buffer2, sizeof(buffer2) - 1), "read");
-    TRY_SYS2(close(fd),"close");
-    if (bytesRead <= 0)
-        return -1;
+    if (processTime1 < 0 || systemTime1 < 0 ||
+        processTime2 < 0 || systemTime2 < 0)
+    {
+        return -1; 
+    }
 
-    long totalTime = systemTotalTime(buffer2);
-    if (totalTime == 0)
-        return -1;
+    long deltaProcess = processTime2 - processTime1;
+    long deltaSystem = systemTime2 - systemTime1;
 
-    float usage = ((float)processTime / totalTime) * 100.0f;
+    if (deltaSystem == 0) return 0.0f;
+
+    float usage = (static_cast<float>(deltaProcess) / deltaSystem) * 100.0f;
     return usage;
 }
 
@@ -598,7 +588,7 @@ float WatchProcCommand::calculateMemoryUsage()
 {
     string path = "/proc/" + std::to_string(pid) + "/status";
     int fd; 
-    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
+    TRY_SYS2(fd = open(path.c_str(), O_RDONLY), "open");
     if (fd == -1)
         return -1;
 
@@ -620,7 +610,6 @@ float WatchProcCommand::calculateMemoryUsage()
             return memKb / 1024.0f;
         }
     }
-
     return -1;
 }
 
@@ -642,7 +631,7 @@ float WatchProcCommand::systemTotalTime(const char* buffer)
       iowaitTime + hardwareInterruptTime + softwareInterruptTime + stolenTime;
 }
 
-float WatchProcCommand::proceessTotalTime(const char* buffer)
+float WatchProcCommand::processTotalTime(const char* buffer)
 {
     string field;
     int fieldNumber = 1;
@@ -662,4 +651,37 @@ float WatchProcCommand::proceessTotalTime(const char* buffer)
     }
 
     return utime + stime;
+}
+
+long WatchProcCommand::readProcessTime(pid_t pid) {
+    string path = "/proc/" + std::to_string(pid) + "/stat";
+    char buffer[4096] = {0};
+
+    int fd = open(path.c_str(), O_RDONLY);
+    if (fd < 0) { 
+      return -1;
+    }
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    close(fd);
+
+    if (bytesRead <= 0) {
+       return -1;
+    }
+    return processTotalTime(buffer);
+}
+
+long WatchProcCommand::readSystemTime() {
+    char buffer[4096] = {0};
+
+    int fd = open("/proc/stat", O_RDONLY);
+    if (fd < 0) { 
+      return -1;
+    }
+    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
+    close(fd);
+
+    if (bytesRead <= 0) {
+       return -1;
+    }
+    return systemTotalTime(buffer);
 }
