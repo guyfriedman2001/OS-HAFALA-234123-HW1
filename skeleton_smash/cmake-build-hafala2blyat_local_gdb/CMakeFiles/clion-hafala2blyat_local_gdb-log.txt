@@ -1,4 +1,4 @@
-/usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" /tmp/tmp.PEojR1gXKU
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug /tmp/tmp.TYjBIARtOH
 -- The C compiler identification is GNU 7.5.0
 -- The CXX compiler identification is GNU 7.5.0
 -- Check for working C compiler: /usr/bin/cc
@@ -15,4 +15,5 @@
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /tmp/tmp.PEojR1gXKU/cmake-build-hafala2blyat
+-- Build files have been written to: /tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb
+CMake File API: /Users/guyfriedman/Documents/Technion/Semester_D_30.03.2025-13.7.2025/234123/HW1/skeleton_smash/cmake-build-hafala2blyat_local_gdb: no reply dir found

@@ -55,9 +55,17 @@ using std::istringstream;
 
 typedef std::vector<std::string> argv;
 typedef int open_flag;
+typedef int fd_location;
+typedef std::shared_ptr<Command> cmdp;
 
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
+
+#define STDIN_FILE_NUM 0
+#define STDOUT_FILE_NUM 1
+#define STDERR_FILE_NUM 2
+
+#define MAX(A,B) ((A) > (B) ? (A) : (B))
 
 //FIXME: flip flag and test before submission!
 #define DEBUG_MODE true
