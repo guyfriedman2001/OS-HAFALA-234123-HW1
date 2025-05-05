@@ -255,6 +255,7 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
         argv extractVariables(const argv& args);
         void removeVariable(const string& var);
         bool doesVariableExist(const string& var);
+        bool foundEnvVar(const char* entry, const string& var);
 };
 
 class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"

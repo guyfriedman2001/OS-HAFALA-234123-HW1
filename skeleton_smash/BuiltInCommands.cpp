@@ -452,28 +452,36 @@ argv UnSetEnvCommand::extractVariables(const argv& args)
   argv varsToRemove;
   for (int i = 1; i < args.size(); i++)
   {
-    {
-      varsToRemove.push_back(args[i]);
-    }
-    return varsToRemove;
+    varsToRemove.push_back(args[i]);
   }
+  return varsToRemove;
 }
 
 void UnSetEnvCommand::removeVariable(const string &var)
 {
-  for (char **env = __environ; *env != nullptr; ++env)
+  for (char** current = __environ; *current != nullptr; ++current)
   { 
-    if (strncmp(*env, var.c_str(), var.length()) == 0 && (*env)[var.length()] == '=')
+    if (foundEnvVar(*current, var))
     { 
-      char **cur = env;
-      while (*(cur + 1) != nullptr)
-      { 
-        *cur = *(cur + 1);
-        ++cur;
-      }
-      *cur = nullptr; 
+      char** nextEnv = current + 1;
+            char** targetSlot = current;
+
+            while (*nextEnv != nullptr)
+            {
+                *targetSlot = *nextEnv;
+                ++nextEnv;
+                ++targetSlot;
+            }
+
+            *targetSlot = nullptr;
+            break;
     }
   }
+}
+
+bool UnSetEnvCommand::foundEnvVar(const char* entry, const string& var) {
+    int nameLen = var.length();
+    return strncmp(entry, var.c_str(), nameLen) == 0 && entry[nameLen] == '=';
 }
 
 bool UnSetEnvCommand::doesVariableExist(const string &var)
@@ -483,7 +491,7 @@ bool UnSetEnvCommand::doesVariableExist(const string &var)
     if (fd == -1)
         return false;
 
-    char buffer[8192] = {0};
+    char buffer[4096] = {0};
     ssize_t bytesRead;
     TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
     TRY_SYS2(close(fd),"close");
