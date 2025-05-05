@@ -162,9 +162,8 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   */
 
   sigset_t original_mask, new_mask;
-  fd_location temp1, temp2;
+  fd_location temp1, temp2; //here FD changes would be stored and used for reversion proccess
 
-  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool
 
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
@@ -187,8 +186,10 @@ argv args = parseCommandLine(string(command_no_background));
   {
     returnCommand = new EmptyCommand(args, cmd_line);
   } else {
-  remove_background_flag_from_da_argv_blyat(args);
+    remove_background_flag_from_da_argv_blyat(args);
   }
+
+  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool, and store change locations in temp1 and temp2
 
   if (isRedirectionCommand)
   {
@@ -197,6 +198,7 @@ argv args = parseCommandLine(string(command_no_background));
     sigemptyset(&new_mask);
     sigaddset(&new_mask, SIGINT);
     TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
+    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS
   }
 
 
@@ -205,7 +207,6 @@ argv args = parseCommandLine(string(command_no_background));
     BuiltInCommandFactory factory;
     returnCommand = factory.makeCommand(args, cmd_line);
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
-    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS
   }
 
   if (returnCommand == nullptr)
