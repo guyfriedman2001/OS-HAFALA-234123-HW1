@@ -68,6 +68,8 @@ public:
 
     AliasManager& getAliases();
 
+    argv uncoverAliases(const argv& original);
+
     void print_jobs();
 
     int waitPID(pid_t pid);

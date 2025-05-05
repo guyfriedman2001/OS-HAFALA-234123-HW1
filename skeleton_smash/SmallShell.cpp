@@ -102,6 +102,11 @@ AliasManager &SmallShell::getAliases()
     return this->aliases;
 }
 
+argv SmallShell::uncoverAliases(const argv &original)
+{
+  return aliases.uncoverAlias(original);
+}
+
 void SmallShell::print_jobs()
 {
   this->jobs.printJobsListWithID();
@@ -336,7 +341,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
 
-  argv args = parseCommandLine(cmd_s); // FIXME: after we make a function to return argv after aliasing, add call to that function @here
+  argv args = uncoverAliases(parseCommandLine(cmd_s));
 
   /*
 char command_no_background[COMMAND_MAX_LENGTH];

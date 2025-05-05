@@ -33,9 +33,9 @@ bool AliasManager::isReserved(const string &newAliasName) const
       newAliasName == "kill" || newAliasName == "unsetenv" || newAliasName == "watchproc" ||
       newAliasName == "lisidr" || newAliasName == "ls") // TODO maybe add more reserved words
   {
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }
 
 #define ignore_for_now false
@@ -64,7 +64,7 @@ void AliasManager::printAll() const
   }
 }
 
-argv AliasManager::uncoverAlias(argv original)
+argv AliasManager::uncoverAlias(const argv& original)
 {
   argv uncoveredArgs;
 

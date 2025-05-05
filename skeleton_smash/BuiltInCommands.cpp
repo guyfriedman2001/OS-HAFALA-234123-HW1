@@ -311,21 +311,20 @@ AliasCommand::AliasCommand(const argv& args, const char *cmd_line)
   {
     aliasList = false;
     aliasName = extractAlias(args);
-    cout << "aliasName: " << aliasName << endl;
     actualCommand = extractActualCommand(args);
-    cout << "actualCommand: " << actualCommand << endl;
+
   }
 }
 
 void AliasCommand::execute()
 {
-  if (aliasName == "" || actualCommand.empty())
-  {
-    cerr << this->INVALID_FORMAT << endl; 
-  }
-  else if (aliasList)
+  if (aliasList)
   {
     SHELL_INSTANCE.getAliases().printAll();
+  }
+  else if (aliasName == "" || actualCommand.empty())
+  {
+    cerr << this->INVALID_FORMAT << endl; 
   }
   else if (SHELL_INSTANCE.getAliases().isReserved(aliasName))
   {
@@ -411,7 +410,7 @@ void UnAliasCommand::execute()
       }
       else
       {
-        cerr << this->ALIAS_DOESNT_EXIST_1 << aliasesToRemove[i] << this->ALIAS_DOESNT_EXIST_2;
+        cerr << this->ALIAS_DOESNT_EXIST_1 << aliasesToRemove[i] << this->ALIAS_DOESNT_EXIST_2 << endl;
         break;
       }
     }
