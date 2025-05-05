@@ -41,7 +41,7 @@ public:
     virtual ~BuiltInCommand() = default;
 };
 
-class ChangePromptCommand : public BuiltInCommand {
+class ChangePromptCommand : public BuiltInCommand { //"chprompt"
 private:
     std::string nextPrompt;
 public:
@@ -57,7 +57,7 @@ public:
 };
 
 
-class ShowPidCommand : public BuiltInCommand {
+class ShowPidCommand : public BuiltInCommand { //"showpid"
     private:
         int smashPID;
     public:
@@ -75,7 +75,7 @@ class ShowPidCommand : public BuiltInCommand {
         void execute() override;
 };
 
-class GetCurrDirCommand : public BuiltInCommand { // AKA "pwd" / "cwd"
+class GetCurrDirCommand : public BuiltInCommand { // AKA "pwd"
 private:
     char current_path[MAX_DIR_LENGTH];
 public:
