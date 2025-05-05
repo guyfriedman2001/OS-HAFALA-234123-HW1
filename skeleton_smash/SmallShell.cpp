@@ -244,6 +244,12 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
+void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
+                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT
+{
+
+}
+
 void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
 {
   assert(isRedirectionCommand(cmd_line));
@@ -253,21 +259,19 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     split_input(args, left_arguments, right_arguments);
     std_in = dup(STDIN_FILE_NUM);
     close(STDIN_FILE_NUM);
-    //TODO: open child procces that would feed here the 'right side' of the given command, using 'open' and stuff
+    int fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDIN_FILE_NUM);
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
     std_in = dup(STDOUT_FILE_NUM);
     close(STDOUT_FILE_NUM);
-    //TODO: open child procces that would eat from here the 'left side' of the given command, using 'open' and stuff
+    int fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDOUT_FILE_NUM);
   } else if (isPipeCommand(cmd_line)) {
     split_pipe(args, left_arguments, right_arguments);
-    //TODO: utilise same functionality from above
-    if (is_stderr_pipe(args))
-    {
-      //create cerr pipe
-    } else {
-      //create cout pipe
-    }
+    create_pipe(args,left_arguments,right_arguments,std_in,std_out,std_err,is_stderr_pipe(args));
   } else {
     FOR_DEBUG_MODE(
     perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'");
@@ -311,30 +315,12 @@ void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,
  */
 Command *SmallShell::CreateCommand(const char *cmd_line)
 {
-  // For example:
-  /*
-  string cmd_s = _trim(string(cmd_line));
-  string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
-
-  if (firstWord.compare("pwd") == 0) {
-    return new GetCurrDirCommand(cmd_line);
-  }
-  else if (firstWord.compare("showpid") == 0) {
-    return new ShowPidCommand(cmd_line);
-  }
-  else if ...
-  .....
-  else {
-    return new ExternalCommand(cmd_line);
-  }
-  */
 
   sigset_t original_mask, new_mask;
   sigemptyset(&new_mask);
   sigaddset(&new_mask, SIGINT);
   bool isRedirectionCmd = false;
 
-  //fd_location temp1, temp2; //here FD changes would be stored and used for reversion proccess
   fd_location std_in, std_out, std_err; //here FD changes would be stored and used for reversion proccess
 
 
@@ -344,13 +330,6 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   argv args = uncoverAliases(parseCommandLine(cmd_s));
 
-  /*
-char command_no_background[COMMAND_MAX_LENGTH];
-strcpy(command_no_background, cmd_line);
-_removeBackgroundSign(command_no_background);
-argv args = parseCommandLine(string(command_no_background));
- */
-
   // char *args_[COMMAND_MAX_ARGS];
   size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
   // commandDestructor(args_, num_args);
@@ -359,12 +338,13 @@ argv args = parseCommandLine(string(command_no_background));
 
   if (num_args == 0)
   {
-    returnCommand = new EmptyCommand(args, cmd_line);
-  } else {
-    remove_background_flag_from_da_argv_blyat(args);
-    strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
-    isRedirectionCmd = isRedirectionCommand(afterAliases);
+    return new EmptyCommand();
   }
+
+  remove_background_flag_from_da_argv_blyat(args);
+  strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
+  isRedirectionCmd = isRedirectionCommand(afterAliases);
+
 
 
 
@@ -372,8 +352,6 @@ argv args = parseCommandLine(string(command_no_background));
   if (isRedirectionCmd)
   {
     // mask signals and apply changes to FD
-    //TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
-    //TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
     TRY_SYS2(sigprocmask(SIG_SETMASK, &new_mask, &original_mask),"sigprocmask");
     applyRedirection(afterAliases, args, std_in, std_out, std_err);
   }
