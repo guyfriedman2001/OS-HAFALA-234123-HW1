@@ -61,6 +61,8 @@ typedef std::shared_ptr<Command> cmdp;
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
 
+#define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true
+
 #define STDIN_FILE_NUM 0
 #define STDOUT_FILE_NUM 1
 #define STDERR_FILE_NUM 2
@@ -69,6 +71,13 @@ typedef std::shared_ptr<Command> cmdp;
 
 #define RWXRWXRWX (0777)
 #define OPEN_IN_GOD_MODE RWXRWXRWX
+
+typedef int BIBE;
+#define BIBE_SIZE (2)
+#define BIBE_READ (0)
+#define BIBE_WRITE (1)
+
+#define PIPE_CHANGES_DADDYS_FD false
 
 //FIXME: flip flag and test before submission!
 #define DEBUG_MODE true

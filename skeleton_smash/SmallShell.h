@@ -96,6 +96,10 @@ public:
 
     static const char* SIGKILL_STRING_MESSAGE_2;
 
+    void executeCommand(const argv& args);
+
+    static void join_argv_to_cstr(const argv& args, char* buffer, size_t max_len);
+
 };
 
 extern SmallShell& SHELL_INSTANCE;
