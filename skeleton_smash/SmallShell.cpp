@@ -419,12 +419,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
     // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
+#if !UNFOUND_COMMAND_HANDLED_AUTOMATICALLY
   if (returnCommand == nullptr)
   {
     Error404CommandNotFound factory;
     returnCommand = factory.makeCommand(args, cmd_line);
     // returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
+#endif//if UNFOUND_COMMAND_HANDLED_AUTOMATICALLY
 
   if (isRedirectionCmd)
   {
