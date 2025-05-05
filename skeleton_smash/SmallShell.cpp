@@ -283,14 +283,23 @@ void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,
   if (isInputRedirectionCommand(cmd_line)) {
     //close(STDIN_FILE_NUM); it appears that dup2 handles this case
     dup2(std_in, STDIN_FILE_NUM);
+    close(std_in);
   } else if (isOutputRedirectionCommand(cmd_line)) {
     dup2(std_out, STDOUT_FILE_NUM);
+    close(std_out);
   } else if (isPipeCommand(cmd_line)) {
+    //revert input back to original
+    dup2(std_in, STDIN_FILE_NUM);
+    close(std_in);
     if (is_stderr_pipe(args))
     {
-      //revert cerr pipe
+      //revert cerr pipe back to original
+      dup2(std_err, STDERR_FILE_NUM);
+      close(std_err);
     } else {
-      //revert cout pipe
+      //revert cout pipe back to original
+      dup2(std_out, STDOUT_FILE_NUM);
+      close(std_out);
     }
   } else {
     FOR_DEBUG_MODE(
