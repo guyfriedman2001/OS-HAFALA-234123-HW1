@@ -87,6 +87,6 @@ argv AliasManager::uncoverAlias(const argv& original)
     {
       uncoveredArgs.push_back(original[i]);
     }
-    return uncoveredArgs;
   }
+  return uncoveredArgs;
 }
