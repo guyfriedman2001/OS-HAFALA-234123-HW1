@@ -259,14 +259,14 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     split_input(args, left_arguments, right_arguments);
     std_in = dup(STDIN_FILE_NUM);
     close(STDIN_FILE_NUM);
-    int fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDIN_FILE_NUM);
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
     std_in = dup(STDOUT_FILE_NUM);
     close(STDOUT_FILE_NUM);
-    int fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDOUT_FILE_NUM);
   } else if (isPipeCommand(cmd_line)) {
