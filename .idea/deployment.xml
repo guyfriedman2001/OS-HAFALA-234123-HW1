@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="hafala2blyat (b631280d-9002-461d-a6c6-07f3faf6e24f)">
         <serverdata>
@@ -10,6 +10,19 @@
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-local_debug" />
             <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-hafala2blyat_local_gdb" />
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-hafala2blyat" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+      <paths name="hafala2blyat_local_gdb (31902ac1-82c1-4253-922b-0fa9887c35ab)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.TYjBIARtOH" local="$PROJECT_DIR$/skeleton_smash" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-local_debug" />
+            <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-hafala2blyat_local_gdb" />
             <excludedPath local="true" path="$PROJECT_DIR$/skeleton_smash/cmake-build-hafala2blyat" />
           </excludedPaths>
         </serverdata>
