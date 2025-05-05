@@ -55,6 +55,7 @@ using std::istringstream;
 
 typedef std::vector<std::string> argv;
 typedef int open_flag;
+typedef int fd_location;
 
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}

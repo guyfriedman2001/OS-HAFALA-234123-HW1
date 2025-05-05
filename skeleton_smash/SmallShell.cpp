@@ -161,6 +161,11 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   }
   */
 
+  sigset_t original_mask, new_mask;
+  fd_location temp1, temp2;
+
+  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool
+
   string cmd_s = _trim(string(cmd_line));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
@@ -185,12 +190,22 @@ argv args = parseCommandLine(string(command_no_background));
   remove_background_flag_from_da_argv_blyat(args);
   }
 
+  if (isRedirectionCommand)
+  {
+    // mask signals and apply changes to FD
+    TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
+    sigemptyset(&new_mask);
+    sigaddset(&new_mask, SIGINT);
+    TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
+  }
+
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
     returnCommand = factory.makeCommand(args, cmd_line);
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
+    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS
   }
 
   if (returnCommand == nullptr)
@@ -212,6 +227,13 @@ argv args = parseCommandLine(string(command_no_background));
     Error404CommandNotFound factory;
     returnCommand = factory.makeCommand(args, cmd_line);
     // returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
+  }
+
+  if (isRedirectionCommand)
+  {
+    // unmask signals and revert changes to FD
+    TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
+    //FIXME: REVERT FD ACCORDING TO REQUIERMENTS
   }
 
   return returnCommand;
