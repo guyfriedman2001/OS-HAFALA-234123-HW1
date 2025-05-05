@@ -264,7 +264,7 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     assert(fd == STDIN_FILE_NUM);
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
-    std_in = dup(STDOUT_FILE_NUM);
+    std_out = dup(STDOUT_FILE_NUM);
     close(STDOUT_FILE_NUM);
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
@@ -274,7 +274,7 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     create_pipe(args,left_arguments,right_arguments,std_in,std_out,std_err,is_stderr_pipe(args));
   } else {
     FOR_DEBUG_MODE(
-    perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'");
+    perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
     )
   }
 }
@@ -305,7 +305,7 @@ void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,
     }
   } else {
     FOR_DEBUG_MODE(
-    perror("unknown redirection command in 'void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'");
+    perror("unknown redirection command in 'void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
     )
   }
 }
