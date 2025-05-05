@@ -126,8 +126,9 @@ int SmallShell::kill_foreground_process(int sig_num)
   return kill(foreground_pid, sig_num);
 }
 
-int SmallShell::kill_process(pid_t pid, int sig_num) {
-
+int SmallShell::kill_process(pid_t pid, int sig_num)
+{
+  //TODO
 }
 
 void SmallShell::printPrompt()
@@ -135,8 +136,168 @@ void SmallShell::printPrompt()
   printf("%s%s", this->getPrompt().c_str(), this->getEndStr().c_str());
 }
 
+bool isRedirectionCommand(const char *cmd_line)
+{
+  if (isIORedirectionCommand(cmd_line))
+  {
+    return true;
+  }
+  if (isPipeCommand(cmd_line))
+  { //TODO: maybe we want to handle the pipe logic on a different scope? YES.
+    return true;
+  }
+  return false;
+}
+
+/*
+1. dup(int oldfd)
+Duplicates oldfd into the lowest available file descriptor number.
+
+Returns the new file descriptor (also an int).
+
+Both FDs refer to the same underlying open file description (same file, same offset, etc.).
+*/
 
 
+
+open_flag getFlagSingleArg(const std::string& arg) {
+  if (STRINGS_EQUAL(arg, "<")) {
+    return O_RDONLY;
+  } else if (STRINGS_EQUAL(arg, ">")) {
+    return O_WRONLY | O_CREAT | O_TRUNC;
+  } else if (STRINGS_EQUAL(arg, ">>")) {
+    return O_WRONLY | O_CREAT | O_APPEND;
+  } else if (STRINGS_EQUAL(arg, "<<")) {
+    return O_RDONLY;
+  } else { //wrong argument given
+    return ERR_ARG;
+  }
+}
+
+open_flag getFlagVectorArg(const argv& args) {
+  open_flag flag = ERR_ARG;
+  for (const auto& arg : args) {
+    if(getFlagSingleArg(arg) != ERR_ARG) {
+      flag = getFlagSingleArg(arg);
+      break;
+    }
+  }
+  return flag;
+}
+
+bool is_stderr_pipe(const argv& args)
+{
+  assert_not_empty(args);
+  for (size_t i = 0; i < args.size(); ++i) {
+    if (args[i] == "|" || args[i] == "|&") {
+      return (args[i] == "|&");
+    }
+  }
+}
+
+int get_arg_split_idx(const argv& args, const string& compare_blyat) {
+  // Find the pipe symbol
+  int pipe_index = -1;
+  for (int i = 0; i < args.size(); ++i) {
+    if (STRINGS_EQUAL(args[i],compare_blyat)){
+      pipe_index = i;
+      break;
+    }
+  }
+  return pipe_index;
+}
+
+void split_args_by_index(const argv& args, argv& left_args, argv& right_args, int split_idx)
+{
+  assert(split_idx != -1); // must have | or |&
+  // Split left and right commands
+  left_args = argv(args.begin(), args.begin() + split_idx);
+  right_args = argv(args.begin() + split_idx + 1, args.end());
+}
+
+void split_output(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, ">");
+  int idx2 = get_arg_split_idx(args, ">>");
+  int actual_idx = MAX(idx,idx2);
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+void split_input(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, "<");
+  int idx2 = get_arg_split_idx(args, "<<");
+  int actual_idx = MAX(idx,idx2);
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+void split_pipe(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, "|");
+  int idx2 = get_arg_split_idx(args, "|&");
+  int actual_idx = MAX(idx,idx2);
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+
+/*
+#define STDIN_FILE_NUM 0
+#define STDOUT_FILE_NUM 1
+#define STDERR_FILE_NUM 2
+*/
+
+void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
+{
+  assert(isRedirectionCommand(cmd_line));
+  open_flag flag = getFlagVectorArg(args);
+  argv left_arguments, right_arguments;
+  if (isInputRedirectionCommand(cmd_line)) {
+    split_input(args, left_arguments, right_arguments);
+    std_in = dup(STDIN_FILE_NUM);
+    close(STDIN_FILE_NUM);
+    //TODO: open child procces that would feed here the 'right side' of the given command, using 'open' and stuff
+  } else if (isOutputRedirectionCommand(cmd_line)) {
+    split_output(args, left_arguments, right_arguments);
+    std_in = dup(STDOUT_FILE_NUM);
+    close(STDOUT_FILE_NUM);
+    //TODO: open child procces that would eat from here the 'left side' of the given command, using 'open' and stuff
+  } else if (isPipeCommand(cmd_line)) {
+    split_pipe(args, left_arguments, right_arguments);
+    //TODO: utilise same functionality from above
+    if (is_stderr_pipe(args))
+    {
+      //create cerr pipe
+    } else {
+      //create cout pipe
+    }
+  } else {
+    FOR_DEBUG_MODE(
+    perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'");
+    )
+  }
+}
+
+void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
+{
+  assert(isRedirectionCommand(cmd_line));
+  if (isInputRedirectionCommand(cmd_line)) {
+    //close(STDIN_FILE_NUM); it appears that dup2 handles this case
+    dup2(std_in, STDIN_FILE_NUM);
+  } else if (isOutputRedirectionCommand(cmd_line)) {
+    dup2(std_out, STDOUT_FILE_NUM);
+  } else if (isPipeCommand(cmd_line)) {
+    if (is_stderr_pipe(args))
+    {
+      //revert cerr pipe
+    } else {
+      //revert cout pipe
+    }
+  } else {
+    FOR_DEBUG_MODE(
+    perror("unknown redirection command in 'void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'");
+    )
+  }
+}
 
 /**
  * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
@@ -193,15 +354,15 @@ argv args = parseCommandLine(string(command_no_background));
     remove_background_flag_from_da_argv_blyat(args);
   }
 
-  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool
+  bool isRedirectionCmd = isRedirectionCommand(cmd_line); //TODO: create a function that would read cmd_line and return appropriate bool
 
-  if (isRedirectionCommand)
+  if (isRedirectionCmd)
   {
     // mask signals and apply changes to FD
     //TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
     //TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
     TRY_SYS2(sigprocmask(SIG_SETMASK, &new_mask, &original_mask),"sigprocmask");
-    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS, and store change locations in temp1 and temp2
+    applyRedirection(cmd_line, args, std_in, std_out, std_err);
   }
 
 
@@ -233,11 +394,11 @@ argv args = parseCommandLine(string(command_no_background));
     // returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 
-  if (isRedirectionCommand)
+  if (isRedirectionCmd)
   {
     // unmask signals and revert changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
-    //FIXME: REVERT FD ACCORDING TO REQUIERMENTS, using stored changes in temp1 and temp2
+    undoRedirection(cmd_line, args, std_in, std_out, std_err);
   }
 
   return returnCommand;
@@ -245,14 +406,6 @@ argv args = parseCommandLine(string(command_no_background));
 
 void SmallShell::executeCommand(const char *cmd_line)
 {
-  // TODO: Add your implementation here
-  // for example:
-  // Command* cmd = CreateCommand(cmd_line);
-  // cmd->execute();
-  // Please note that you must fork smash process for some commands (e.g., external commands....)
-
-
-
 
   Command* cmd = this->CreateCommand(cmd_line);
 
