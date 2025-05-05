@@ -98,7 +98,7 @@ public:
 
     void executeCommand(const argv& args);
 
-    void join_argv_to_cstr(const argv& args, char* buffer, size_t max_len);
+    static void join_argv_to_cstr(const argv& args, char* buffer, size_t max_len);
 
 };
 
