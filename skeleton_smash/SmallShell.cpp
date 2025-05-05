@@ -360,14 +360,14 @@ argv args = parseCommandLine(string(command_no_background));
 
   char afterAliases[COMMAND_MAX_LENGTH];
   //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT
-  
+
   if (isRedirectionCmd)
   {
     // mask signals and apply changes to FD
     //TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
     //TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
     TRY_SYS2(sigprocmask(SIG_SETMASK, &new_mask, &original_mask),"sigprocmask");
-    applyRedirection(cmd_line, args, std_in, std_out, std_err);
+    applyRedirection(afterAliases, args, std_in, std_out, std_err);
   }
 
 
@@ -403,7 +403,7 @@ argv args = parseCommandLine(string(command_no_background));
   {
     // unmask signals and revert changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
-    undoRedirection(cmd_line, args, std_in, std_out, std_err);
+    undoRedirection(afterAliases, args, std_in, std_out, std_err);
   }
 
   return returnCommand;
