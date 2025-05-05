@@ -154,17 +154,6 @@ bool isRedirectionCommand(const char *cmd_line)
   return false;
 }
 
-/*
-1. dup(int oldfd)
-Duplicates oldfd into the lowest available file descriptor number.
-
-Returns the new file descriptor (also an int).
-
-Both FDs refer to the same underlying open file description (same file, same offset, etc.).
-*/
-
-
-
 open_flag getFlagSingleArg(const std::string& arg) {
   if (STRINGS_EQUAL(arg, "<")) {
     return O_RDONLY;
@@ -245,9 +234,59 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
 }
 
 void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
-                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT
+                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
 {
+  pid_t first_born = fork();
+  TRY_SYS2(first_born,"fork");
+  if (first_born != 0){return;} //if im the daddy
 
+  //now im working as the first born (ya'ani ben bechor), this part will use @left_args
+  //start by making a pipe
+  BIBE my_pipe[BIBE_SIZE];
+  TRY_SYS2(pipe(my_pipe), "pipe");
+
+  //now after i made my pipe, i want to make myself a son to read my yapping
+  pid_t second_born = fork();
+  TRY_SYS2(second_born,"fork");
+
+  if (second_born != 0) //todo: decide if i want to make a 'void SmallShell::executeCommand(const argv& args)' wrapper for 'void SmallShell::executeCommand(const char *cmd_line)', or it may cause broblems? YES, YHIHE BESEDER
+  { //meaning i am the firstborn
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    //use given bool to decide if i am changing my cout or cerr into the bibe
+    fd_location bibe_outbut_target = ((isCerrPipe) ? STDERR_FILE_NUM : STDOUT_FILE_NUM);
+
+    //migrate used bibe end to stdout/stderr depending on given bool
+    TRY_SYS2(dup2(my_pipe[BIBE_READ],bibe_outbut_target),"dup2");
+
+    //close redundant bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+    //use existing smash logic for the rest of the process
+    SHELL_INSTANCE.executeCommand(left_args);
+
+    //after process finished no longer need for firsborn
+    exit(0);
+
+  } else { //meaning i am the second born (yaani neched), this part would take @right_args
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+    //migrate used bibe end to std in
+    TRY_SYS2(dup2(my_pipe[BIBE_READ],STDIN_FILE_NUM),"dup2");
+
+    //closed redundant bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    //use existing smash logic for the rest of the process
+    SHELL_INSTANCE.executeCommand(right_args);
+
+    //after process finished no longer need for secondborn
+    exit(0);
+  }
 }
 
 void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
@@ -258,14 +297,14 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
   if (isInputRedirectionCommand(cmd_line)) {
     split_input(args, left_arguments, right_arguments);
     std_in = dup(STDIN_FILE_NUM);
-    close(STDIN_FILE_NUM);
+    TRY_SYS2(close(STDIN_FILE_NUM),"close");
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDIN_FILE_NUM);
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
     std_out = dup(STDOUT_FILE_NUM);
-    close(STDOUT_FILE_NUM);
+    TRY_SYS2(close(STDOUT_FILE_NUM),"close");
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDOUT_FILE_NUM);
@@ -284,25 +323,27 @@ void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,
   assert(isRedirectionCommand(cmd_line));
   if (isInputRedirectionCommand(cmd_line)) {
     //close(STDIN_FILE_NUM); it appears that dup2 handles this case
-    dup2(std_in, STDIN_FILE_NUM);
-    close(std_in);
+    TRY_SYS2(dup2(std_in, STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(std_in),"close");
   } else if (isOutputRedirectionCommand(cmd_line)) {
-    dup2(std_out, STDOUT_FILE_NUM);
-    close(std_out);
+    TRY_SYS2(dup2(std_out, STDOUT_FILE_NUM),"dup2");
+    TRY_SYS2(close(std_out),"close");
+#if PIPE_CHANGES_DADDYS_FD
   } else if (isPipeCommand(cmd_line)) {
     //revert input back to original
-    dup2(std_in, STDIN_FILE_NUM);
-    close(std_in);
+    TRY_SYS2(dup2(std_in, STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(std_in),"close");
     if (is_stderr_pipe(args))
     {
       //revert cerr pipe back to original
-      dup2(std_err, STDERR_FILE_NUM);
-      close(std_err);
+      TRY_SYS2(dup2(std_err, STDERR_FILE_NUM),"dup2");
+      TRY_SYS2(close(std_err),"close");
     } else {
       //revert cout pipe back to original
-      dup2(std_out, STDOUT_FILE_NUM);
-      close(std_out);
+      TRY_SYS2(dup2(std_out, STDOUT_FILE_NUM),"dup2");
+      TRY_SYS2(close(std_out),"close");
     }
+#endif //if PIPE_CHANGES_DADDYS_FD
   } else {
     FOR_DEBUG_MODE(
     perror("unknown redirection command in 'void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
@@ -393,6 +434,27 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   }
 
   return returnCommand;
+}
+
+void SmallShell::join_argv_to_cstr(const argv& args, char* buffer, size_t max_len) {
+  std::string combined;
+
+  for (size_t i = 0; i < args.size(); ++i) {
+    combined += args[i];
+    if (i + 1 < args.size()) {
+      combined += ' ';
+    }
+  }
+  // Make sure to null-terminate and not overflow
+  std::strncpy(buffer, combined.c_str(), max_len - 1);
+  buffer[max_len - 1] = '\0';  // ensure null termination
+}
+
+void SmallShell::executeCommand(const argv& args)
+{
+  char args_in_char_chochavit[COMMAND_MAX_LENGTH];
+  join_argv_to_cstr(args, args_in_char_chochavit, COMMAND_MAX_LENGTH);
+  this->executeCommand(args_in_char_chochavit);
 }
 
 void SmallShell::executeCommand(const char *cmd_line)
