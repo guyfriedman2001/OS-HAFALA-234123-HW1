@@ -162,7 +162,11 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   */
 
   sigset_t original_mask, new_mask;
-  fd_location temp1, temp2; //here FD changes would be stored and used for reversion proccess
+  sigemptyset(&new_mask);
+  sigaddset(&new_mask, SIGINT);
+
+  //fd_location temp1, temp2; //here FD changes would be stored and used for reversion proccess
+  fd_location std_in, std_out, std_err; //here FD changes would be stored and used for reversion proccess
 
 
   string cmd_s = _trim(string(cmd_line));
@@ -189,16 +193,15 @@ argv args = parseCommandLine(string(command_no_background));
     remove_background_flag_from_da_argv_blyat(args);
   }
 
-  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool, and store change locations in temp1 and temp2
+  bool isRedirectionCommand = false; //TODO: create a function that would read cmd_line and return appropriate bool
 
   if (isRedirectionCommand)
   {
     // mask signals and apply changes to FD
-    TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
-    sigemptyset(&new_mask);
-    sigaddset(&new_mask, SIGINT);
-    TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
-    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS
+    //TRY_SYS2(sigprocmask(SIG_SETMASK, nullptr, &original_mask),"sigprocmask"); //sigprocmask - save original
+    //TRY_SYS2(sigprocmask(SIG_BLOCK, &new_mask, nullptr),"sigprocmask"); //sigprocmask - block SIGINT
+    TRY_SYS2(sigprocmask(SIG_SETMASK, &new_mask, &original_mask),"sigprocmask");
+    //FIXME: CHANGE FD ACCORDING TO REQUIERMENTS, and store change locations in temp1 and temp2
   }
 
 
@@ -234,7 +237,7 @@ argv args = parseCommandLine(string(command_no_background));
   {
     // unmask signals and revert changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
-    //FIXME: REVERT FD ACCORDING TO REQUIERMENTS
+    //FIXME: REVERT FD ACCORDING TO REQUIERMENTS, using stored changes in temp1 and temp2
   }
 
   return returnCommand;
