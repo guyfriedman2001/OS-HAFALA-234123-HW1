@@ -12,7 +12,7 @@ class AliasManager {
 
 public:
 
-    argv uncoverAlias(argv original);
+    argv uncoverAlias(const argv& original);
     void addAlias(const string& newAliasName, string args);
     void removeAlias(const string& aliasToRemove);
     bool isReserved(const string& newAliasName) const;

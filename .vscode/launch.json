@@ -9,7 +9,17 @@
             "request": "launch",
             "name": "Launch(gdb)",
             "program": "${workspaceFolder}/skeleton_smash/smash",
-            "cwd": "${workspaceRoot}"
+            "cwd": "${workspaceFolder}",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "text": "-enable-pretty-printing",
+                    "description": "Enable pretty-printing for gdb",
+                    "ignoreFailures": true
+                }
+            ],
+            "stopAtEntry": false,
+            "externalConsole": false
         }
     ]
 }
