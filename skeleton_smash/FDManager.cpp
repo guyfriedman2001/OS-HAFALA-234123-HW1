@@ -292,7 +292,7 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
 
 void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args) //this is the new one
 {
-  assert(isRedirectionCommand(cmd_line));
+  //assert(isRedirectionCommand(cmd_line));
   open_flag flag = getFlagVectorArg(args);
   argv left_arguments, right_arguments;
   if (isInputRedirectionCommand(cmd_line)) {
@@ -351,9 +351,8 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
     //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
     //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
   } else {
-    FOR_DEBUG_MODE(
-    perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
-    )
+    //FOR_DEBUG_MODE(perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");)
+    remaining_args = args; //if it is a redirection, then no arguments were consumed.
   }
   //THE NEXT COMMENTED LINE:
   //remaining_args = left_arguments;
