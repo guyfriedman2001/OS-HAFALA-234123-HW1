@@ -124,7 +124,55 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
-void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
+#if PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
+                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
+{ //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
+  SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+
+  //start by making a pipe
+  BIBE my_pipe[BIBE_SIZE];
+  int pipe_status = pipe(my_pipe);
+  TRY_SYS2(pipe_status, "pipe");
+  if (SYSTEM_CALL_FAILED(pipe_status)) {return;}
+
+  pid_t first_born = fork();
+  TRY_SYS2(first_born,"fork");
+  if (SYSTEM_CALL_FAILED(first_born)) {TRY_SYS2(close(my_pipe[BIBE_READ]), "close");TRY_SYS2(close(my_pipe[BIBE_WRITE]), "close");return;}
+
+  if (first_born != 0) { //do daddys work
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    do {  //now im working as the first process (daddy), this part will continue to later use @left_args
+      if (isCerrPipe) {
+        m_extern_std_error = my_pipe[BIBE_WRITE];
+        switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+      } else {
+        m_current_std_out = my_pipe[BIBE_WRITE];
+        switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+      }
+
+      return;
+    } while (0);
+  } else { //do kids work
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+    //change input to be the pipe
+    m_extern_std_in = my_pipe[BIBE_READ];
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+
+    //use existing smash logic for the rest of the process
+    SHELL_INSTANCE.executeCommand(right_args);
+
+    //after process finished no longer need for kid
+    exit(0);
+  }
+}
+#else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
                   fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
 { //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
   SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
@@ -180,6 +228,7 @@ void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location
     exit(0);
   }
 }
+#endif //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
 
 FdManager::FdManager()
 {
@@ -214,6 +263,14 @@ void FdManager::undoSpecificRedirection(fd_location &saved_location, fd_location
     saved_location = destination_location;
   }
 }
+
+void FdManager::do_close_extern_channel(fd_location &channel_to_close)
+{
+  assert(!CHANNEL_IS_CLOSED(channel_to_close));
+  close(channel_to_close);
+  closed_extern_channel(channel_to_close);
+}
+
 
 
 
@@ -297,6 +354,25 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
   argv left_arguments, right_arguments;
   if (isInputRedirectionCommand(cmd_line)) {
     assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
+    assert(flag == O_RDONLY);
+    split_input(args, left_arguments, right_arguments);
+
+    //get next input channel
+    m_extern_std_in = open(right_arguments[0].c_str(), flag);
+    TRY_SYS2(m_extern_std_in,"open");
+    if (SYSTEM_CALL_FAILED(m_extern_std_in)) {return;}
+
+    //apply input channel switch change
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#if 0
+    assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
     split_input(args, left_arguments, right_arguments);
     m_current_std_in = dup(STDIN_FILE_NUM);
     TRY_SYS2(m_current_std_in,"dup");
@@ -320,7 +396,26 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
 
     //initialise remaining arguments vector
     remaining_args = left_arguments;
+#endif
   } else if (isOutputRedirectionCommand(cmd_line)) {
+    assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
+    split_output(args, left_arguments, right_arguments);
+
+    //get next output channel
+    m_extern_std_out = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(m_extern_std_out,"open");
+    if(SYSTEM_CALL_FAILED(m_extern_std_out)){return;}
+
+    //apply output channel switch change
+    switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#if 0
     assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
     split_output(args, left_arguments, right_arguments);
     m_current_std_out = dup(STDOUT_FILE_NUM);
@@ -345,14 +440,23 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
 
     //initialise remaining arguments vector
     remaining_args = left_arguments;
+#endif
   } else if (isPipeCommand(cmd_line)) {
     split_pipe(args, left_arguments, right_arguments);
     create_pipe(args,left_arguments,right_arguments,m_current_std_in,m_current_std_out,m_extern_std_error,is_stderr_pipe(args));
+#if PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+
+    remaining_args = left_arguments;
+
+#else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+
     //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
     //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
+
+#endif //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
   } else {
     //FOR_DEBUG_MODE(perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");)
-    remaining_args = args; //if it is a redirection, then no arguments were consumed.
+    remaining_args = args; //if it is not a redirection, then no arguments were consumed.
   }
   //THE NEXT COMMENTED LINE:
   //remaining_args = left_arguments;

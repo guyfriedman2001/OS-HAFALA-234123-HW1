@@ -202,7 +202,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   }
 
   if (returnCommand == nullptr)
-  { // TODO: might need a bit more logic to decide if a command is just external or special.
+  {
     SpecialCommandFactory factory;
     returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
     // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);

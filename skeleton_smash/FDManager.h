@@ -52,6 +52,7 @@ private:
     static fd_location m_extern_std_error;
 
     void closed_extern_channel(fd_location &closed_channel);
+    void do_close_extern_channel(fd_location &channel_to_close);
 
     FdManager();
 
@@ -66,6 +67,7 @@ private:
     FdManager& operator=(const FdManager&) = delete;
 
     void switch_two_fd_entries(fd_location &entry1, fd_location &entry2);
+    void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in, fd_location &std_out,fd_location &std_err, bool isCerrPipe);
 
 
 };

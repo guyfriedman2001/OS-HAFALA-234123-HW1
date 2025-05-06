@@ -68,7 +68,7 @@ typedef int BIBE;
 #define DEBUG_MODE true  //FIXME: flip flag and test before submission!
 #define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true //refers to the case that an invalid command was given and smash tried to execute it externally
 #define PIPE_CHANGES_DADDYS_FD false //refers to the case that pipe would change the fd in the original daddy process
-
+#define PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND true
 
 
 // ============= TODO: add here #define debug utilities and functions =============
