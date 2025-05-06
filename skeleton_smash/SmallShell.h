@@ -9,6 +9,7 @@
 #include "ExternalCommands.h"
 #include "BuiltInCommands.h"
 #include "AliasManager.h"
+#include "FDManager.h"
 
 class SmallShell {
 private:
@@ -22,6 +23,7 @@ private:
     AliasManager aliases;
     pid_t foreground_pid;
     char* loadShellPath(char* buffer_location, size_t buffer_size);
+    FdManager& m_fdmanager;
 
 public:
     Command *CreateCommand(const char *cmd_line);
@@ -99,6 +101,11 @@ public:
     void executeCommand(const argv& args);
 
     static void join_argv_to_cstr(const argv& args, char* buffer, size_t max_len);
+
+    void temp_applyRedirection(); //TODO
+
+    void temp_undoRedirection(); //TODO
+
 
 };
 
