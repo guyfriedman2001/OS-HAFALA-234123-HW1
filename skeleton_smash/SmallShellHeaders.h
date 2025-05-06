@@ -124,6 +124,7 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
     } while (0)
 
 
+/* //i cant get this shit to work blyat
 #define IF_THEN_ELSE_PREPROCESSOR(FLAG, CODE_IF_TRUE, CODE_IF_FALSE) \
     #if FLAG                                            \
         CODE_IF_TRUE                                    \
@@ -132,7 +133,7 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
     #endif
 
 #define PREPROCESSOR_COMMA ,
-
+*/
 
 
 // ============= TODO: ADD HERE TEMPORAIRLY DISABLING FLAGS =============
