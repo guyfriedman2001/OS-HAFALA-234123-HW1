@@ -5,6 +5,8 @@
 #include "Commands.h"
 #include "signals.h"
 #include "SmallShellHeaders.h"
+#include "SmallShell.h"
+
 
 
 #define SHELL_INSTANCE   SmallShell::getInstance()
