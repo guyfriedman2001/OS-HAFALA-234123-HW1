@@ -258,6 +258,33 @@ ExternalCommands.cpp.s:
 	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s
 .PHONY : ExternalCommands.cpp.s
 
+FDManager.o: FDManager.cpp.o
+
+.PHONY : FDManager.o
+
+# target to build an object file
+FDManager.cpp.o:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.o
+.PHONY : FDManager.cpp.o
+
+FDManager.i: FDManager.cpp.i
+
+.PHONY : FDManager.i
+
+# target to preprocess a source file
+FDManager.cpp.i:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.i
+.PHONY : FDManager.cpp.i
+
+FDManager.s: FDManager.cpp.s
+
+.PHONY : FDManager.s
+
+# target to generate assembly for a file
+FDManager.cpp.s:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.s
+.PHONY : FDManager.cpp.s
+
 JobList.o: JobList.cpp.o
 
 .PHONY : JobList.o
@@ -339,6 +366,33 @@ SpecialCommands.cpp.s:
 	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s
 .PHONY : SpecialCommands.cpp.s
 
+Temp_Restore.o: Temp_Restore.cpp.o
+
+.PHONY : Temp_Restore.o
+
+# target to build an object file
+Temp_Restore.cpp.o:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o
+.PHONY : Temp_Restore.cpp.o
+
+Temp_Restore.i: Temp_Restore.cpp.i
+
+.PHONY : Temp_Restore.i
+
+# target to preprocess a source file
+Temp_Restore.cpp.i:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.i
+.PHONY : Temp_Restore.cpp.i
+
+Temp_Restore.s: Temp_Restore.cpp.s
+
+.PHONY : Temp_Restore.s
+
+# target to generate assembly for a file
+Temp_Restore.cpp.s:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.s
+.PHONY : Temp_Restore.cpp.s
+
 signals.o: signals.cpp.o
 
 .PHONY : signals.o
@@ -417,6 +471,9 @@ help:
 	@echo "... ExternalCommands.o"
 	@echo "... ExternalCommands.i"
 	@echo "... ExternalCommands.s"
+	@echo "... FDManager.o"
+	@echo "... FDManager.i"
+	@echo "... FDManager.s"
 	@echo "... JobList.o"
 	@echo "... JobList.i"
 	@echo "... JobList.s"
@@ -426,6 +483,9 @@ help:
 	@echo "... SpecialCommands.o"
 	@echo "... SpecialCommands.i"
 	@echo "... SpecialCommands.s"
+	@echo "... Temp_Restore.o"
+	@echo "... Temp_Restore.i"
+	@echo "... Temp_Restore.s"
 	@echo "... signals.o"
 	@echo "... signals.i"
 	@echo "... signals.s"

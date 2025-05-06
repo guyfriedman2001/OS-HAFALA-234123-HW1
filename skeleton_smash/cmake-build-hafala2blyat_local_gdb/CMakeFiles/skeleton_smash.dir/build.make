@@ -297,6 +297,54 @@ CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.provides: CMakeFiles/skeleto
 CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.provides.build: CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
 
 
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o: ../FDManager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/skeleton_smash.dir/FDManager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/FDManager.cpp.o -c /tmp/tmp.TYjBIARtOH/FDManager.cpp
+
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/FDManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.TYjBIARtOH/FDManager.cpp > CMakeFiles/skeleton_smash.dir/FDManager.cpp.i
+
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/FDManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.TYjBIARtOH/FDManager.cpp -o CMakeFiles/skeleton_smash.dir/FDManager.cpp.s
+
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.requires:
+
+.PHONY : CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.requires
+
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.provides: CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.requires
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.provides.build
+.PHONY : CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.provides
+
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.provides.build: CMakeFiles/skeleton_smash.dir/FDManager.cpp.o
+
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o: CMakeFiles/skeleton_smash.dir/flags.make
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o: ../Temp_Restore.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o -c /tmp/tmp.TYjBIARtOH/Temp_Restore.cpp
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /tmp/tmp.TYjBIARtOH/Temp_Restore.cpp > CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.i
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /tmp/tmp.TYjBIARtOH/Temp_Restore.cpp -o CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.s
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.requires:
+
+.PHONY : CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.requires
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.provides: CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.requires
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.provides.build
+.PHONY : CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.provides
+
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.provides.build: CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o
+
+
 # Object files for target skeleton_smash
 skeleton_smash_OBJECTS = \
 "CMakeFiles/skeleton_smash.dir/smash.cpp.o" \
@@ -308,7 +356,9 @@ skeleton_smash_OBJECTS = \
 "CMakeFiles/skeleton_smash.dir/JobList.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o" \
 "CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o" \
-"CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
+"CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o" \
+"CMakeFiles/skeleton_smash.dir/FDManager.cpp.o" \
+"CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o"
 
 # External object files for target skeleton_smash
 skeleton_smash_EXTERNAL_OBJECTS =
@@ -323,9 +373,11 @@ skeleton_smash: CMakeFiles/skeleton_smash.dir/JobList.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
+skeleton_smash: CMakeFiles/skeleton_smash.dir/FDManager.cpp.o
+skeleton_smash: CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o
 skeleton_smash: CMakeFiles/skeleton_smash.dir/build.make
 skeleton_smash: CMakeFiles/skeleton_smash.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable skeleton_smash"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX executable skeleton_smash"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/skeleton_smash.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -343,6 +395,8 @@ CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/JobList.cp
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/AliasManager.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o.requires
 CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o.requires
+CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/FDManager.cpp.o.requires
+CMakeFiles/skeleton_smash.dir/requires: CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o.requires
 
 .PHONY : CMakeFiles/skeleton_smash.dir/requires
 

@@ -258,6 +258,33 @@ ExternalCommands.cpp.s:
 	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.s
 .PHONY : ExternalCommands.cpp.s
 
+FDManager.o: FDManager.cpp.o
+
+.PHONY : FDManager.o
+
+# target to build an object file
+FDManager.cpp.o:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.o
+.PHONY : FDManager.cpp.o
+
+FDManager.i: FDManager.cpp.i
+
+.PHONY : FDManager.i
+
+# target to preprocess a source file
+FDManager.cpp.i:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.i
+.PHONY : FDManager.cpp.i
+
+FDManager.s: FDManager.cpp.s
+
+.PHONY : FDManager.s
+
+# target to generate assembly for a file
+FDManager.cpp.s:
+	$(MAKE) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/FDManager.cpp.s
+.PHONY : FDManager.cpp.s
+
 JobList.o: JobList.cpp.o
 
 .PHONY : JobList.o
@@ -417,6 +444,9 @@ help:
 	@echo "... ExternalCommands.o"
 	@echo "... ExternalCommands.i"
 	@echo "... ExternalCommands.s"
+	@echo "... FDManager.o"
+	@echo "... FDManager.i"
+	@echo "... FDManager.s"
 	@echo "... JobList.o"
 	@echo "... JobList.i"
 	@echo "... JobList.s"

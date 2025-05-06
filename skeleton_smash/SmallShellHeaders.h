@@ -86,6 +86,8 @@ typedef int BIBE;
 #define FOR_DEBUG_MODE(CODE_CONTENTS)
 #endif
 
+#define PRINT_DEBUG_MODE(STRING) FOR_DEBUG_MODE(cout << "(PRINT_DEBUG_MODE)  "<< STRING << endl)
+#define PRINT_DEBUG_MODE_CERR(STRING) FOR_DEBUG_MODE(cerr << "(PRINT_DEBUG_MODE_CERR)  "<< STRING << endl)
 
 // ============= TODO: add here #define utilities and functions =============
 #define STRINGS_EQUAL(A, B) ((A) == (B))

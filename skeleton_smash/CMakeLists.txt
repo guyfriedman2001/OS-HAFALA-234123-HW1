@@ -19,4 +19,10 @@ add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp
         SmallShell.h
         SmallShell.cpp
         SpecialCommands.cpp
-        SmashUtil.h)
+        SmashUtil.h
+        FDManager.h
+        FDManager.cpp
+        FDManager.cpp
+        FDManager.cpp
+        Temp_Restore.h
+        Temp_Restore.cpp)
