@@ -289,7 +289,7 @@ void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location
   }
 }
 
-void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
+void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
 {
   assert(isRedirectionCommand(cmd_line));
   open_flag flag = getFlagVectorArg(args);
@@ -301,6 +301,7 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDIN_FILE_NUM);
+    remaining_args = left_arguments;
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
     std_out = dup(STDOUT_FILE_NUM);
@@ -308,6 +309,7 @@ void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDOUT_FILE_NUM);
+    remaining_args = left_arguments;
   } else if (isPipeCommand(cmd_line)) {
     split_pipe(args, left_arguments, right_arguments);
     create_pipe(args,left_arguments,right_arguments,std_in,std_out,std_err,is_stderr_pipe(args));
@@ -387,35 +389,37 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   isRedirectionCmd = isRedirectionCommand(afterAliases);
 
 
-
+  argv remaining_args;
 
 
   if (isRedirectionCmd)
   {
     // mask signals and apply changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &new_mask, &original_mask),"sigprocmask");
-    applyRedirection(afterAliases, args, std_in, std_out, std_err);
+    applyRedirection(afterAliases, args, remaining_args, std_in, std_out, std_err);
+  } else { //if it is redirection, it would take care of remaining_args, else i need to manually initialise it for all of the args.
+    remaining_args = args;
   }
 
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line);
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line);
     // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line);
     // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
@@ -423,7 +427,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   if (returnCommand == nullptr)
   {
     Error404CommandNotFound factory;
-    returnCommand = factory.makeCommand(args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line);
     // returnCommand = Error404CommandNotFound::makeCommand(args, num_args, cmd_line);
   }
 #endif//if UNFOUND_COMMAND_HANDLED_AUTOMATICALLY
@@ -432,7 +436,7 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   {
     // unmask signals and revert changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
-    undoRedirection(afterAliases, args, std_in, std_out, std_err);
+    undoRedirection(afterAliases, args, std_in, std_out, std_err); //IMPORTANT: UNDO NEEDS ALL OF THE ARGS, NOT ONLY THE REMAINING ARGS!
   }
 
   return returnCommand;
