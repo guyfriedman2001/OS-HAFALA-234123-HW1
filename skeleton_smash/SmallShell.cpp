@@ -178,13 +178,13 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   remove_background_flag_from_da_argv_blyat(args);
   strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
-  isRedirectionCmd = isRedirectionCommand(afterAliases);
+  //isRedirectionCmd = isRedirectionCommand(afterAliases);
 
 
   argv remaining_args;
 
 
-  m_fdmanager.applyRedirection();
+  m_fdmanager.applyRedirection(cmd_line, args, remaining_args);
 
 
   if (returnCommand == nullptr)
@@ -217,12 +217,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   }
 #endif//if UNFOUND_COMMAND_HANDLED_AUTOMATICALLY
 
+#if 0
   if (isRedirectionCmd)
   {
     // unmask signals and revert changes to FD
     TRY_SYS2(sigprocmask(SIG_SETMASK, &original_mask, nullptr),"sigprocmask"); //sigprocmask - restore original
     undoRedirection(afterAliases, args, std_in, std_out, std_err); //IMPORTANT: UNDO NEEDS ALL OF THE ARGS, NOT ONLY THE REMAINING ARGS!
   }
+#endif
 
   return returnCommand;
 }

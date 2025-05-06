@@ -266,6 +266,8 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
   }
   //THE NEXT COMMENTED LINE:
   //remaining_args = left_arguments;
+#else
+  applyRedirection(cmd_line, args, remaining_args);
 #endif
 }
 
