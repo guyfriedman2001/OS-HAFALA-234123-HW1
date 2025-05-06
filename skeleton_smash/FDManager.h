@@ -5,7 +5,9 @@
 #ifndef FDMANAGER_H
 #define FDMANAGER_H
 #include "SmallShellHeaders.h"
+#if 0
 #include "Temp_Restore.h"
+#endif
 //#define class_to_manage_its_fd SmallShell
 
 /*
@@ -24,6 +26,7 @@ public:
 private:
     friend SmallShell;
     void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args,fd_location &std_in,fd_location &std_out,fd_location &std_err, open_flag flag);
+    void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args);
     void undoRedirection(const char *cmd_line, const argv &args, argv &remaining_args,fd_location &std_in,fd_location &std_out,fd_location &std_err, open_flag flag);
     void undoRedirection(const argv &args);
     void undoRedirection(const char *cmd_line);
@@ -31,7 +34,9 @@ private:
     void undoSpecificRedirection(fd_location &saved_location, fd_location destination_location);
 private:
     //forward declare the class
+#if 0
     friend Temp_Restore; //if this shit doesnt work, just move these two functions to public
+#endif
     void return_from_temporary_suspension_to_what_was_changed();
     void temporairly_suspend_redirection_and_return_to_default();
 private:
