@@ -4,8 +4,7 @@
 
 #ifndef FDMANAGER_H
 #define FDMANAGER_H
-
-
+#include "SmallShellHeaders.h"
 
 
 class FdManager {
@@ -42,6 +41,8 @@ private:
     //explicit FdManager(int target_fd);
     FdManager(const FdManager&) = delete;
     FdManager& operator=(const FdManager&) = delete;
+
+    void switch_two_fd_entries(fd_location entry1, fd_location entry2);
 
     void applyRedirection(); //TODO
     void undoRedirection(); //TODO
