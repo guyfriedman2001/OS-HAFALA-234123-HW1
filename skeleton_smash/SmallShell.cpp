@@ -250,14 +250,23 @@ void SmallShell::executeCommand(const argv& args)
   this->executeCommand(args_in_char_chochavit);
 }
 
+bool isEmptyCommand(const char *cmd_line)
+{ //FIXME
+  return false;
+}
+
 void SmallShell::executeCommand(const char *cmd_line)
 {
+  if (isEmptyCommand(cmd_line)) {
+    Command* cmd = this->CreateCommand(cmd_line);
 
-  Command* cmd = this->CreateCommand(cmd_line);
+    cmd->execute();
 
-  cmd->execute();
-
-  m_fdmanager.undoRedirection();
+    m_fdmanager.undoRedirection();
+  } else {
+    EmptyCommand cmd;
+    cmd.execute();
+  }
 
 
 }
