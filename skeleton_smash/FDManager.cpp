@@ -183,6 +183,7 @@ void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location
 
 FdManager::FdManager()
 {
+#if 0
   m_current_std_in = STDIN_FILE_NUM;
   m_current_std_out = STDOUT_FILE_NUM;
   m_current_std_error = STDERR_FILE_NUM;
@@ -190,6 +191,7 @@ FdManager::FdManager()
   closed_extern_channel(m_extern_std_in);
   closed_extern_channel(m_extern_std_out);
   closed_extern_channel(m_extern_std_error);
+#endif
 }
 
 FdManager::~FdManager()
