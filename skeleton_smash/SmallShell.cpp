@@ -295,9 +295,15 @@ void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_ar
   open_flag flag = getFlagVectorArg(args);
   argv left_arguments, right_arguments;
   if (isInputRedirectionCommand(cmd_line)) {
+    assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
     split_input(args, left_arguments, right_arguments);
     std_in = dup(STDIN_FILE_NUM);
     TRY_SYS2(std_in,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
 
     fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(new_temp_fd,"open");
@@ -314,9 +320,15 @@ void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_ar
     //initialise remaining arguments vector
     remaining_args = left_arguments;
   } else if (isOutputRedirectionCommand(cmd_line)) {
+    assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
     split_output(args, left_arguments, right_arguments);
     std_out = dup(STDOUT_FILE_NUM);
     TRY_SYS2(std_out,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
 
     fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(new_temp_fd,"open");
