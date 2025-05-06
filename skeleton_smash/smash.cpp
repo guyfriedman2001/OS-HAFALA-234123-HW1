@@ -6,6 +6,7 @@
 #include "signals.h"
 #include "SmallShellHeaders.h"
 #include "SmallShell.h"
+#include "SmallShell.cpp"
 
 
 
