@@ -114,6 +114,26 @@ perror(ERROR_STRING); \
 #define TRY_SYS2(SYSTEM_CALL, SYS_CALL_NAME) \
 TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 
+#define IF_THEN_ELSE_LOGICALL(FLAG, RUN_IF_TRUE, RUN_IF_FALSE) \
+    do {                                                \
+        if (FLAG) {                                     \
+            RUN_IF_TRUE;                               \
+        } else {                                        \
+            RUN_IF_FALSE;                              \
+        }                                               \
+    } while (0)
+
+
+#define IF_THEN_ELSE_PREPROCESSOR(FLAG, CODE_IF_TRUE, CODE_IF_FALSE) \
+    #if FLAG                                            \
+        CODE_IF_TRUE                                    \
+    #else                                              \
+        CODE_IF_FALSE                                   \
+    #endif
+
+#define PREPROCESSOR_COMMA ,
+
+
 
 // ============= TODO: ADD HERE TEMPORAIRLY DISABLING FLAGS =============
 #define ONLY_FOR_DEBUG(BOOL) (DEBUG_MODE&&BOOL)
