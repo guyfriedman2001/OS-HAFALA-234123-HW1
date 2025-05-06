@@ -6,6 +6,10 @@
 
 using namespace std;
 
+
+#if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+#elif  //if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
 void ctrlCHandler(int sig_num) {
     pid_t foreground_task;
     switch (sig_num)
@@ -113,3 +117,6 @@ void ctrlCHandler(int sig_num) {
     }
 
 }
+
+#endif  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
+

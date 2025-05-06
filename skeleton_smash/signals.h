@@ -1,6 +1,14 @@
 #ifndef SMASH__SIGNALS_H_
 #define SMASH__SIGNALS_H_
 
+
+
+#if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+#elif  //if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
 void ctrlCHandler(int sig_num);
+
+#endif  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
 
 #endif //SMASH__SIGNALS_H_
