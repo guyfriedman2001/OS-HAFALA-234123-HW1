@@ -151,9 +151,12 @@ void SmallShell::printPrompt()
 Command *SmallShell::CreateCommand(const char *cmd_line)
 {
 
+#if 0 //FIXME - ADD TEMPORARY CHANGES REVOKE FOR SIGNAL HANDLERS.
   sigset_t original_mask, new_mask;
   sigemptyset(&new_mask);
   sigaddset(&new_mask, SIGINT);
+#endif
+
   bool isRedirectionCmd = false;
 
   fd_location std_in, std_out, std_err; //here FD changes would be stored and used for reversion proccess
@@ -171,10 +174,14 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
 
   char afterAliases[COMMAND_MAX_LENGTH];
 
+  assert(num_args != 0);
+#if 0
   if (num_args == 0)
   {
     return new EmptyCommand();
   }
+#endif
+
 
   remove_background_flag_from_da_argv_blyat(args);
   strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
@@ -190,21 +197,21 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   { // TODO: might need a bit more logic to decide if a command is just external or special.
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
     // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line);
+    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
     // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
@@ -257,7 +264,7 @@ bool isEmptyCommand(const char *cmd_line)
 
 void SmallShell::executeCommand(const char *cmd_line)
 {
-  if (isEmptyCommand(cmd_line)) {
+  if (!isEmptyCommand(cmd_line)) {
     Command* cmd = this->CreateCommand(cmd_line);
 
     cmd->execute();
