@@ -154,6 +154,7 @@ JobsList::JobEntry *JobsList::getLastStoppedJob(int *jobId)
 
 int JobsList::get_max_current_jobID()
 {
+  removeFinishedJobs();
   Jobs &jbs = this->jobs;
   if (jbs.empty())
   {
