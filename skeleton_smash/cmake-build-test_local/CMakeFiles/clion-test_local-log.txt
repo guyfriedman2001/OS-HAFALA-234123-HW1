@@ -1,0 +1,13 @@
+/home/student/Desktop/clion/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Release -G "CodeBlocks - Unix Makefiles" -S /home/student/Desktop/234123_HW1/skeleton_smash -B /home/student/Desktop/234123_HW1/skeleton_smash/cmake-build-test_local
+CMake Deprecation Warning:
+  Support for "Extra Generators" like
+
+    CodeBlocks
+
+  is deprecated and will be removed from a future version of CMake.  IDEs may
+  use the cmake-file-api(7) to view CMake-generated project build trees.
+
+
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/student/Desktop/234123_HW1/skeleton_smash/cmake-build-test_local
