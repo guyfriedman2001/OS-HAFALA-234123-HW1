@@ -53,69 +53,59 @@ using std::cerr;
 using std::cin;
 using std::istringstream;
 
+
+
+// ============= TODO: add here typedefs =============
 typedef std::vector<std::string> argv;
 typedef int open_flag;
 typedef int fd_location;
 typedef std::shared_ptr<Command> cmdp;
-
-#define STRINGS_EQUAL(A, B) ((A) == (B))
-#define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
-
-#define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true
-
-#define STDIN_FILE_NUM 0
-#define STDOUT_FILE_NUM 1
-#define STDERR_FILE_NUM 2
-
-#define MAX(A,B) ((A) > (B) ? (A) : (B))
-
-#define RWXRWXRWX (0777)
-#define OPEN_IN_GOD_MODE RWXRWXRWX
-
 typedef int BIBE;
-#define BIBE_SIZE (2)
-#define BIBE_READ (0)
-#define BIBE_WRITE (1)
 
-#define PIPE_CHANGES_DADDYS_FD false
 
-//FIXME: flip flag and test before submission!
-#define DEBUG_MODE true
+
+// ============= TODO: add here permanent disabling flags / switches =============
+#define DEBUG_MODE true  //FIXME: flip flag and test before submission!
+#define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true //refers to the case that an invalid command was given and smash tried to execute it externally
+#define PIPE_CHANGES_DADDYS_FD false //refers to the case that pipe would change the fd in the original daddy process
+
+
+
+// ============= TODO: add here #define debug utilities and functions =============
+#if !DEBUG_MODE //this would make sure that DNDEBUG flag would be defined to take off the asserts, without having to change the compile command
+#ifndef NDEBUG
+#define NDEBUG
+#endif //ifndef NDEBUG
+#endif //if !DEBUG_MODE
+
+
+//this function automatically removes the CODE_CONTENTS if DEBUG_MODE is off
 #if DEBUG_MODE
 #define FOR_DEBUG_MODE(CODE_CONTENTS) CODE_CONTENTS
 #else
 #define FOR_DEBUG_MODE(CODE_CONTENTS)
 #endif
 
-#define Block_until_the_child_terminates 0
-#define check_if_process_finished_without_blocking WNOHANG
-#define wait_but_can_still_get_ctrl_c WUNTRACED
-//#define O_RDONLY (0x0000)
-//#define O_WRONLY (0x0001)
-//#define O_RDWR   (0x0002)
-//#define O_CREAT  (0x0200)
-//#define O_TRUNC  (0x0400)
-//#define O_APPEND (0x0008)
-#define ERR_ARG (-1)
 
-#define SYSTEM_CALL_ERROR (-1)
-#define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR)
-//#define temporairly_disable_kill_all_jobs (true&&DEBUG_MODE)
-//#define temporairly_disable_removeFinishedJobs (true&&DEBUG_MODE)
+// ============= TODO: add here #define utilities and functions =============
+#define STRINGS_EQUAL(A, B) ((A) == (B))
+#define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}
+#define MAX(A,B) ((A) > (B) ? (A) : (B)) //return maximum between two numbers
+#define SYSTEM_CALL_FAILED(SYSTEM_CALL) (SYSTEM_CALL == SYSTEM_CALL_ERROR) //return true if system call failrd (on system calls that return -1 on failure only, does not handle system calls that return 0 or nullptr on failure)
 
-
-//TODO: maybe remove DO_SYS
+//try a system call, and on failure (for system calls that return -1 on failure) print ERROR_STRING to stderr and exit
 #define DO_SYS(SYSTEM_CALL, ERROR_STRING) \
 do { \
-if ((SYSTEM_CALL) == -1) { \
+if (SYSTEM_CALL_FAILED(SYSTEM_CALL)) { \
 perror(ERROR_STRING); \
 exit(1); \
 } \
 } while (0)
 
+//same as DO_SYS except without exiting
 #define TRY_SYS(SYSTEM_CALL, ERROR_STRING) \
 do { \
-if ((SYSTEM_CALL) == -1) { \
+if (SYSTEM_CALL_FAILED(SYSTEM_CALL)) { \
 perror(ERROR_STRING); \
 } \
 } while (0)
@@ -123,6 +113,54 @@ perror(ERROR_STRING); \
 //I want the functionality of TRY_SYS without changing existing code and with easier use for smash calls
 #define TRY_SYS2(SYSTEM_CALL, SYS_CALL_NAME) \
 TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
+
+
+// ============= TODO: ADD HERE TEMPORAIRLY DISABLING FLAGS =============
+#define ONLY_FOR_DEBUG(BOOL) (DEBUG_MODE&&BOOL)
+#define TEMPORAIRLY_DISABLE_CTRL_HANDLER ONLY_FOR_DEBUG(true)
+//#define temporairly_disable_kill_all_jobs ONLY_FOR_DEBUG(true)
+//#define temporairly_disable_removeFinishedJobs ONLY_FOR_DEBUG(true)
+
+
+
+// ============= TODO: add here 'magic number' definitions =============
+
+//standard in/out/error file descriptor indexes
+#define STDIN_FILE_NUM 0
+#define STDOUT_FILE_NUM 1
+#define STDERR_FILE_NUM 2
+
+//open flag for permissions for new files
+#define RWXRWXRWX (0777)
+#define OPEN_IN_GOD_MODE RWXRWXRWX
+#define RW_R__R__ (0644)
+#define RWXR__R__ (0744)
+
+//pipe definitions for easier and more readable pipe handling
+#define BIBE_SIZE (2)
+#define BIBE_READ (0)
+#define BIBE_WRITE (1)
+
+//wait flags
+#define Block_until_the_child_terminates 0
+#define check_if_process_finished_without_blocking WNOHANG
+#define wait_but_can_still_get_ctrl_c WUNTRACED
+
+//open file flags
+//#define O_RDONLY (0x0000)
+//#define O_WRONLY (0x0001)
+//#define O_RDWR   (0x0002)
+//#define O_CREAT  (0x0200)
+//#define O_TRUNC  (0x0400)
+//#define O_APPEND (0x0008)
+
+//general magic numbers
+#define ERR_ARG (-1)
+#define SYSTEM_CALL_ERROR (-1)
+
+
+
+
 
 
 
