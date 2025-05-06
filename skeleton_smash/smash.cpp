@@ -7,11 +7,13 @@
 
 
 
+#define SHELL_INSTANCE   SmallShell::getInstance()
+
 #if TEMPORAIRLY_DISABLE_CTRL_HANDLER
 void ctrlCHandler(int sig_num)
 {
 printf("smash: got ctrl-C\n");
-foreground_task = SHELL_INSTANCE.get_foreground_pid();
+pid_t foreground_task = SHELL_INSTANCE.get_foreground_pid();
 if (foreground_task == ERR_ARG) {
     return;
 }
