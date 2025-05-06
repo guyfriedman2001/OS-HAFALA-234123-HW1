@@ -102,6 +102,7 @@ public:
 };
 
 class WhoAmICommand : public SpecialCommand {
+    int uid;
     string username;
     string homeDirectory;
 public:
@@ -111,6 +112,10 @@ public:
     }
 
     void execute() override;
+    int findUID();
+    string findHomeDirectory(int uid);
+    string findUsername(int uid);
+    string getFieldByUid(int uid, int fieldIndex);
 };
 
 class NetInfo : public SpecialCommand {

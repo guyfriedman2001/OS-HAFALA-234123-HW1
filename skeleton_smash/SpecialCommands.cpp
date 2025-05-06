@@ -473,14 +473,91 @@ int DiskUsageCommand::getFileSize(const string& path)
 
 WhoAmICommand::WhoAmICommand(const argv& args, const char *cmd_line)
 {
-  //struct passwd* pwd = getpwuid(id);
-  //username = pwd->pw_name;
-  //homeDirectory = pwd->pw_dir;
+  uid = findUID();
+  username = findUsername(uid);
+  homeDirectory = findHomeDirectory(uid);
 }
 
 void WhoAmICommand::execute()
 {
   cout << username << "/" << homeDirectory << endl;
+}
+
+int WhoAmICommand::findUID() //TODO add TRY_SYS2 where needed 
+{
+    int fd;
+    TRY_SYS2(fd = open("/proc/self/status", O_RDONLY), "open");
+    if (fd < 0) {
+       return -1; 
+    }
+
+    char buffer[4096];
+    ssize_t bytesRead = read(fd, buffer, 4095);
+    TRY_SYS2(close(fd),"close");
+    if (bytesRead <= 0) {
+       return -1;
+    }
+
+    buffer[bytesRead] = '\0';
+    char* start = strstr(buffer, "Uid:");
+    if (!start) {
+       return -1; 
+    }
+
+    start += 4; // Skip "Uid:"
+    while (*start == ' ' || *start == '\t') start++; //skip spaces and tabs
+    return atoi(start);
+}
+
+string WhoAmICommand::findHomeDirectory(int uid)
+{
+    return getFieldByUid(uid, 5);
+}
+
+string WhoAmICommand::findUsername(int uid) //TODO add TRY_SYS2 where needed 
+{
+    return getFieldByUid(uid, 0);
+}
+
+string getFieldByUid(int uid, int fieldIndex) {
+    int fd;
+    TRY_SYS2(fd = open("/etc/passwd", O_RDONLY),"open");
+    if (fd < 0) {
+      return "";
+    }
+
+    char buffer[4096];
+    string line;
+    ssize_t bytesRead;
+
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    while (bytesRead > 0) {
+        for (int i = 0; i < bytesRead; ++i) {
+            char character = buffer[i];
+            if (character == '\n') {
+                std::stringstream ss(line);
+                string field;
+                argv fields;
+
+                while (std::getline(ss, field, ':')) {
+                    fields.push_back(field);
+                }
+
+                if (fields.size() > fieldIndex && fields.size() >= 3) { //ensures 3 fields: username, password, uid
+                    int parsedUid = stoi(fields[2]);
+                    if (parsedUid == uid) { //ensures the uid is correct
+                        TRY_SYS2(close(fd),"close");
+                        return fields[fieldIndex];
+                    }
+                }
+                line.clear();
+            } else {
+                line += character;
+            }
+        }
+    }
+    TRY_SYS2(close(fd),"close");
+    return "";
 }
 
 NetInfo::NetInfo(const argv& args, const char *cmd_line)
