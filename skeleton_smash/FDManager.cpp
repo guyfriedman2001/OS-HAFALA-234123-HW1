@@ -9,6 +9,23 @@
 #define CLOSED_CHANNEL (-1)
 #define CHANNEL_IS_CLOSED(CHANNEL) (CHANNEL == CLOSED_CHANNEL)
 
+fd_location FdManager::m_current_std_in = STDIN_FILE_NUM;
+fd_location FdManager::m_current_std_out = STDOUT_FILE_NUM;
+fd_location FdManager::m_current_std_error = STDERR_FILE_NUM;
+fd_location FdManager::m_extern_std_in = CLOSED_CHANNEL;
+fd_location FdManager::m_extern_std_out = CLOSED_CHANNEL;
+fd_location FdManager::m_extern_std_error = CLOSED_CHANNEL;
+
+/*
+m_current_std_in = STDIN_FILE_NUM;
+  m_current_std_out = STDOUT_FILE_NUM;
+  m_current_std_error = STDERR_FILE_NUM;
+
+  closed_extern_channel(m_extern_std_in);
+  closed_extern_channel(m_extern_std_out);
+  closed_extern_channel(m_extern_std_error);
+ */
+
 bool isRedirectionCommand(const char *cmd_line)
 {
   if (isIORedirectionCommand(cmd_line))
