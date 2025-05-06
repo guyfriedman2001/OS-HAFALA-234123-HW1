@@ -297,27 +297,53 @@ void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_ar
   if (isInputRedirectionCommand(cmd_line)) {
     split_input(args, left_arguments, right_arguments);
     std_in = dup(STDIN_FILE_NUM);
+    TRY_SYS2(std_in,"dup");
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
     TRY_SYS2(close(STDIN_FILE_NUM),"close");
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDIN_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
     remaining_args = left_arguments;
   } else if (isOutputRedirectionCommand(cmd_line)) {
     split_output(args, left_arguments, right_arguments);
     std_out = dup(STDOUT_FILE_NUM);
+    TRY_SYS2(std_out,"dup");
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDOUT_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
     TRY_SYS2(close(STDOUT_FILE_NUM),"close");
     fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(fd,"open");
     assert(fd == STDOUT_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
     remaining_args = left_arguments;
   } else if (isPipeCommand(cmd_line)) {
     split_pipe(args, left_arguments, right_arguments);
     create_pipe(args,left_arguments,right_arguments,std_in,std_out,std_err,is_stderr_pipe(args));
+    //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
+    //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
   } else {
     FOR_DEBUG_MODE(
     perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
     )
   }
+  //THE NEXT COMMENTED LINE:
+  //remaining_args = left_arguments;
 }
 
 void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)
