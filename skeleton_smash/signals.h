@@ -8,7 +8,7 @@
 
 void ctrlCHandler(int sig_num);
 
-#endif  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
+#else  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
 
 
 #endif //SMASH__SIGNALS_H_
