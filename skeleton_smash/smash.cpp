@@ -8,6 +8,14 @@
 
 
 #if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
+#elif  //if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+#endif  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
+IF_THEN_ELSE_PREPROCESSOR(TEMPORAIRLY_DISABLE_CTRL_HANDLER 
+
+PREPROCESSOR_COMMA
+
 void ctrlCHandler(int sig_num)
 {
 printf("smash: got ctrl-C\n");
@@ -19,9 +27,11 @@ if (foreground_task == ERR_ARG) {
 TRY_SYS2(kill(foreground_task, SIGKILL), "kill");
 printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, foreground_task, SmallShell::SIGKILL_STRING_MESSAGE_2);
 }
-#elif  //if TEMPORAIRLY_DISABLE_CTRL_HANDLER
+
+PREPROCESSOR_COMMA
+
 #include "SmallShell.h"
-#endif  //elif TEMPORAIRLY_DISABLE_CTRL_HANDLER
+)
 
 
 
