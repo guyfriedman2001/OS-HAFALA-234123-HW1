@@ -4,7 +4,7 @@
 #include <signal.h>
 #include "Commands.h"
 #include "signals.h"
-
+#include "SmallShellHeaders.h"
 
 
 #define SHELL_INSTANCE   SmallShell::getInstance()
