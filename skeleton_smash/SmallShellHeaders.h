@@ -155,6 +155,8 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 #define TEMPORAIRLY_DISABLE_CTRL_HANDLER ONLY_FOR_DEBUG(false)
 //#define temporairly_disable_kill_all_jobs ONLY_FOR_DEBUG(true)
 //#define temporairly_disable_removeFinishedJobs ONLY_FOR_DEBUG(true)
+#define messing_around ONLY_FOR_DEBUG(true)
+
 
 
 

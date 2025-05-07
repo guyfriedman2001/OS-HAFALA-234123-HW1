@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
         perror("smash error: failed to set ctrl-C handler");
     }
     #else // TEMPORAIRLY_DISABLE_CTRL_HANDLER
-    FOR_DEBUG_MODE(printf("setting up cntrl handler");)
+    FOR_DEBUG_MODE(printf("(FOR_DEBUG_MODE) setting up cntrl handler\n");)
     setup_signal_handlers();
     #endif // TEMPORAIRLY_DISABLE_CTRL_HANDLER
 

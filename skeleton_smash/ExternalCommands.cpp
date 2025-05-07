@@ -44,8 +44,8 @@ void ExternalCommand::execute()
   this->jobPID = kid_pid;
 
   bool is_kid = (kid_pid == 0);
-  if (!is_kid){ //FIXME RETURN CHECK TO (is_kid)
-                        // Child
+  if (is_kid){
+    // Child
     this->executeHelper(); // <---- DELEGATE to a helper method
     exit(1);               // If executeHelper returns, it means exec failed
   }else{ // Parent
@@ -75,13 +75,17 @@ void ExternalCommand::executeHelper()
   }
   char_argv[args.size()] = nullptr; // exec expects null-terminated array
 
-  MARK_FOR_DEBUGGING_PERROR
+  #define shut_up_for_now true
+  #if !shut_up_for_now
+    MARK_FOR_DEBUGGING_PERROR
 
-FOR_DEBUG_MODE(
-for (const auto& arg : char_argv) {
-cout << "in ExternalCommand::executeHelper, argument:" << arg << endl;
-}
-)
+  FOR_DEBUG_MODE(
+  for (const auto& arg : char_argv) {
+  cout << "in ExternalCommand::executeHelper, argument:" << arg << endl;
+  }
+  )
+  #endif
+
   // Execute the external command
   execvp(char_argv[0], char_argv);
 
