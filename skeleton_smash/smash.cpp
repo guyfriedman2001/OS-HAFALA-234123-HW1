@@ -119,10 +119,3 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-FOR_DEBUG_MODE(
-printf("%s%d%s","(FOR_DEBUG_MODE)",1,"\n");
-printf("%s%d%s","(FOR_DEBUG_MODE)",2,"\n");
-printf("%s%d%s","(FOR_DEBUG_MODE)",3,"\n");
-cout << "this is also possible" << endl;
-cerr << "this is also possiBILL" << endl;
-)
