@@ -67,7 +67,7 @@ void remove_background_flag_from_da_argv_blyat(argv& args) {
 }
 
 SmallShell::SmallShell()
-    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false), foreground_pid(NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID),
+    : currentPrompt("smash"), promptEndChar("> "), old_path_set(false), foreground_pid(NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID),
       m_fdmanager(FdManager::getFDManager())
 {
 }
