@@ -30,7 +30,7 @@ private:
     void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args);
 
 public:
-    Command *CreateCommand(const char *cmd_line);
+    Command *CreateCommand(const char *cmd_line_to_store);
 
     SmallShell(SmallShell const &) = delete; // disable copy ctor
     void operator=(SmallShell const &) = delete; // disable = operator

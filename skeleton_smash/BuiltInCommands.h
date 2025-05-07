@@ -34,9 +34,9 @@ class BuiltInCommand : public Command {
 public:
     BuiltInCommand() = default;
 
-    BuiltInCommand(const char *cmd_line);
+    BuiltInCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
-    BuiltInCommand(const argv& args, const char *cmd_line);
+    BuiltInCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~BuiltInCommand() = default;
 };
@@ -49,7 +49,7 @@ public:
 
     //ChangePromptCommand(char **args, int num_args, const char* cmd_line);
 
-    ChangePromptCommand(const argv& args, const char* cmd_line);
+    ChangePromptCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~ChangePromptCommand() = default;
 
@@ -67,7 +67,7 @@ class ShowPidCommand : public BuiltInCommand { //"showpid"
 
         //ShowPidCommand(char **args, int num_args, const char* cmd_line);
 
-        ShowPidCommand(const argv& args, const char* cmd_line);
+        ShowPidCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
 
         virtual ~ShowPidCommand() = default;
@@ -85,7 +85,7 @@ public:
 
     //GetCurrDirCommand(char **args, int num_args, const char* cmd_line);
 
-    GetCurrDirCommand(const argv& args, const char* cmd_line);
+    GetCurrDirCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~GetCurrDirCommand() = default;
 
@@ -105,7 +105,7 @@ public:
 
     //ChangeDirCommand(char **args, int num_args, const char* cmd_line);
 
-    ChangeDirCommand(const argv& args, const char* cmd_line);
+    ChangeDirCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~ChangeDirCommand() = default;
 
@@ -119,7 +119,7 @@ public:
 
     //JobsCommand(char **args, int num_args, const char* cmd_line);
 
-    JobsCommand(const argv& args, const char* cmd_line);
+    JobsCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~JobsCommand() {
     }
@@ -153,7 +153,7 @@ public:
 
     //ForegroundCommand(char **args, int num_args, const char* cmd_line);
 
-    ForegroundCommand(const argv& args, const char* cmd_line);
+    ForegroundCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~ForegroundCommand() {}
 
@@ -169,7 +169,7 @@ class QuitCommand : public BuiltInCommand { // AKA "quit"
 public:
     QuitCommand(char **args);
 
-    QuitCommand(const argv& args, const char* cmd_line);
+    QuitCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
 
     virtual ~QuitCommand() {
@@ -188,7 +188,7 @@ class KillCommand : public BuiltInCommand { // AKA "kill"
 public:
     KillCommand(char **args);
 
-    KillCommand(const argv& args, const char* cmd_line);
+    KillCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~KillCommand() {
     }
@@ -209,7 +209,7 @@ class AliasCommand : public BuiltInCommand { // AKA "alias"
 public:
     AliasCommand(char **args);
 
-    AliasCommand(const argv& args, const char* cmd_line);
+    AliasCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~AliasCommand() {
     }
@@ -230,7 +230,7 @@ class UnAliasCommand : public BuiltInCommand { // AKA "unalias"
 public:
     UnAliasCommand(char **args);
 
-    UnAliasCommand(const argv& args, const char* cmd_line);
+    UnAliasCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~UnAliasCommand() {
     }
@@ -246,7 +246,7 @@ class UnSetEnvCommand : public BuiltInCommand { // AKA "unsetenv"
     public:
         UnSetEnvCommand(char **args);
 
-        UnSetEnvCommand(const argv& args, const char* cmd_line);
+        UnSetEnvCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
         virtual ~UnSetEnvCommand() {
         }
@@ -269,7 +269,7 @@ class WatchProcCommand : public BuiltInCommand { // AKA "watchproc"
 public:
     WatchProcCommand(char **args);
 
-    WatchProcCommand(const argv& args, const char* cmd_line);
+    WatchProcCommand(const argv& args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~WatchProcCommand() {
     }

@@ -13,19 +13,20 @@ pid_t ExternalCommand::getPID()
   return this->jobPID;
 }
 
-ExternalCommand::ExternalCommand(const char *cmd_line)
+ExternalCommand::ExternalCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
-  strcpy(this->command_original, cmd_line);
+  strcpy(this->command_after_aliases, cmd_line_after_aliases);
+  strcpy(this->command_before_aliases, cmd_line_before_aliases);
   this->jobPID = getpid();
 }
 
-ExternalCommand::ExternalCommand(const char *cmd_line, pid_t pid) : ExternalCommand(cmd_line)
+ExternalCommand::ExternalCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases, pid_t pid) : ExternalCommand(cmd_line_after_aliases,cmd_line_before_aliases)
 {
   this->jobPID = pid;
 }
 
 
-ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : ExternalCommand(cmd_line)
+ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases) : ExternalCommand(cmd_line_after_aliases,cmd_line_before_aliases)
 {
   // Inhereting classes can call Ctor():ExternalCommand(){} to take care of command copying;
   assert_not_empty(args);
@@ -34,7 +35,11 @@ ExternalCommand::ExternalCommand(const argv &args, const char *cmd_line) : Exter
 
 void ExternalCommand::printYourself()
 {
-  cout << this->command_original;
+#if JOBS_PRINTS_COMMAND_BEFORE_ALIASES
+  cout << this->command_before_aliases;
+#else
+  cout << this->command_after_aliases;
+#endif
 }
 
 void ExternalCommand::execute()
@@ -51,7 +56,7 @@ void ExternalCommand::execute()
   }else{ // Parent
     int status;
     do {
-      if (!_isBackgroundComamnd(this->command_original)) //we need to wait for this command
+      if (!_isBackgroundComamnd(this->command_after_aliases)) //we need to wait for this command
       {
         TRY_SYS2(waitpid(kid_pid, &status, wait_but_can_still_get_ctrl_c),"waitpid");
       }

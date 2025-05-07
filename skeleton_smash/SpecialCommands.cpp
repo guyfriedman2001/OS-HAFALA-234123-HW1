@@ -20,7 +20,7 @@ struct linux_dirent64 {
 
 SpecialCommand::~SpecialCommand() {}
 
-
+#if !OLD_CODE_AND_IRRELEVANT
 IORedirection::IORedirection(const argv& args, const char *cmd_line) : pid(getpid()), args(args)
 {
   assert_not_empty(args);
@@ -368,12 +368,14 @@ void PipeCommand::execute()
     }
 }
 
+#endif
+
 const char* DiskUsageCommand::TOO_MANY_ARGS = "smash error: du: too many arguments";
 const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_1 = "smash error: du: directory ";
 const char* DiskUsageCommand::DIRECTORY_DOESNT_EXIST_2 = " does not exist";
 const char* DiskUsageCommand::TOTAL_DISK_USAGE = "Total disk usage: ";
 
-DiskUsageCommand::DiskUsageCommand(const argv& args, const char *cmd_line)
+DiskUsageCommand::DiskUsageCommand(const argv& args, const char *cmd_line, const char *unused_in_special_commands)
 {
   if (args.size() == 1)
   {
@@ -471,7 +473,7 @@ int DiskUsageCommand::getFileSize(const string& path)
     return 0;
 }
 
-WhoAmICommand::WhoAmICommand(const argv& args, const char *cmd_line)
+WhoAmICommand::WhoAmICommand(const argv& args,  const char *cmd_line, const char *unused_in_special_commands)
 {
   uid = findUID();
   username = findUsername(uid);
@@ -564,7 +566,7 @@ string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
     return "";
 }
 
-NetInfo::NetInfo(const argv& args, const char *cmd_line)
+NetInfo::NetInfo(const argv& args, const char *cmd_line, const char *unused_in_special_commands)
 {
   //BONUS
 }

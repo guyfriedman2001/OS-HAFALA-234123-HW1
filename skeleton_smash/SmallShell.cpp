@@ -145,13 +145,22 @@ void SmallShell::printPrompt()
   printf("%s%s", this->getPrompt().c_str(), this->getEndStr().c_str());
 }
 
+void fillBufferWithArgs(char* buffer, const std::vector<std::string>& args) {
+  buffer[0] = '\0';  // Start with an empty string
 
+  for (size_t i = 0; i < args.size(); ++i) {
+    std::strcat(buffer, args[i].c_str());
+    if (i != args.size() - 1) {
+      std::strcat(buffer, " ");
+    }
+  }
+}
 
 
 /**
  * Creates and returns a pointer to Command class which matches the given command line (cmd_line)
  */
-Command *SmallShell::CreateCommand(const char *cmd_line)
+Command *SmallShell::CreateCommand(const char *cmd_line_to_store)
 {
 
 #if 0 //FIXME - ADD TEMPORARY CHANGES REVOKE FOR SIGNAL HANDLERS.
@@ -165,56 +174,40 @@ Command *SmallShell::CreateCommand(const char *cmd_line)
   fd_location std_in, std_out, std_err; //here FD changes would be stored and used for reversion proccess
 
 
-  string cmd_s = _trim(string(cmd_line));
+  string cmd_s = _trim(string(cmd_line_to_store));
   string firstWord = cmd_s.substr(0, cmd_s.find_first_of(" \n"));
   Command *returnCommand = nullptr;
 
   argv args = uncoverAliases(parseCommandLine(cmd_s));
 
-  // char *args_[COMMAND_MAX_ARGS];
-  size_t num_args = args.size(); //_parseCommandLine(cmd_line, args_); //get num of arguments
-  // commandDestructor(args_, num_args);
-
-  char afterAliases[COMMAND_MAX_LENGTH];
-
-  assert(num_args != 0);
-#if 0
-  if (num_args == 0)
-  {
-    return new EmptyCommand();
-  }
-#endif
-
-
+  char afterAliases[COMMAND_MAX_LENGTH]; //
+  fillBufferWithArgs(afterAliases, args);
   remove_background_flag_from_da_argv_blyat(args);
-  strcpy(afterAliases,cmd_line); //TODO MAKE ALIAS FUNCTION THAT TAKES ALAIASED ARGV AND APPLIES TO CHAR* BLYAT, for now is basic strcpy for debugging
-  //isRedirectionCmd = isRedirectionCommand(afterAliases);
-
 
   argv remaining_args;
 
 
-  m_fdmanager.applyRedirection(cmd_line, args, remaining_args);
+  m_fdmanager.applyRedirection(afterAliases, args, remaining_args);
 
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 

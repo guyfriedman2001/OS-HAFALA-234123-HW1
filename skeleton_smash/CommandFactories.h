@@ -44,8 +44,8 @@ public:
         return dynamic_cast<DerivedClass*>(this->factoryHelper(args,cmd_line));//, shell));
     }*/
 
-    inline Command* makeCommand(argv args, const char* cmd_line) {
-    return this->factoryHelper(args, cmd_line);
+    inline Command* makeCommand(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases) {
+    return this->factoryHelper(args, cmd_line_after_aliases, cmd_line_before_aliases);
     }
 
 protected:
@@ -58,7 +58,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a newly constructed Command object.
      */
-    virtual Command* factoryHelper(argv args, const char* cmd_line) = 0;
+    virtual Command* factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases) = 0;
 };
 
 /**
@@ -83,7 +83,7 @@ protected:
      * @return A pointer to a new BuiltInCommand object.
      */
     //inline virtual Command* factoryHelper(argv args, const char* cmd_line) override;
-    virtual Command* factoryHelper(argv args, const char* cmd_line);
+    virtual Command* factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 };
 
 /**
@@ -109,7 +109,7 @@ protected:
      * @param args A null-terminated array of C-style strings.
      * @return A pointer to a new ExternalCommand object.
      */
-    virtual Command* factoryHelper(argv args, const char* cmd_line);
+    virtual Command* factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 };
 
 /**
@@ -136,7 +136,7 @@ class SpecialCommandFactory : public CommandFactory<SpecialCommand> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        virtual Command* factoryHelper(argv args, const char* cmd_line);
+        virtual Command* factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 };
 
 /**
@@ -163,7 +163,7 @@ class Error404CommandNotFound : public CommandFactory<Command> {
          * @param args A null-terminated array of C-style strings.
          * @return A pointer to a new Command object, or nullptr if no valid command is found.
          */
-        virtual Command* factoryHelper(argv args, const char* cmd_line);
+        virtual Command* factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 };
 
 

@@ -19,7 +19,7 @@ ChangePromptCommand::ChangePromptCommand(const argv &args) : nextPrompt((args.si
   assert_not_empty(args);
 }
 
-ChangePromptCommand::ChangePromptCommand(const argv &args, const char *cmd_line) : ChangePromptCommand(args) {}
+ChangePromptCommand::ChangePromptCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin) : ChangePromptCommand(args) {}
 
 void ChangePromptCommand::execute()
 {
@@ -36,7 +36,7 @@ ShowPidCommand::ShowPidCommand(const argv &args) : ShowPidCommand()
 const char *ChangeDirCommand::TOO_MANY_ARGS = "smash error: cd: too many arguments";
 const char *ChangeDirCommand::OLD_PWD_NOT_SET = "smash error: cd: OLDPWD not set";
 
-ShowPidCommand::ShowPidCommand(const argv &args, const char *cmd_line)
+ShowPidCommand::ShowPidCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin)
     : ShowPidCommand(args) {}
 
 void ShowPidCommand::execute()
@@ -54,7 +54,7 @@ GetCurrDirCommand::GetCurrDirCommand(const argv &args) : GetCurrDirCommand()
   assert_not_empty(args);
 }
 
-GetCurrDirCommand::GetCurrDirCommand(const argv &args, const char *cmd_line) : GetCurrDirCommand(args) {}
+GetCurrDirCommand::GetCurrDirCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin) : GetCurrDirCommand(args) {}
 
 void GetCurrDirCommand::execute()
 {
@@ -105,7 +105,7 @@ ChangeDirCommand::ChangeDirCommand(const argv &args)
 }
 
 
-ChangeDirCommand::ChangeDirCommand(const argv &args, const char *cmd_line)
+ChangeDirCommand::ChangeDirCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin)
     : ChangeDirCommand(args) {}
 
 void ChangeDirCommand::execute()
@@ -140,7 +140,7 @@ JobsCommand::JobsCommand(const argv &args)
 
 }
 
-JobsCommand::JobsCommand(const argv &args, const char *cmd_line)
+JobsCommand::JobsCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin)
     : JobsCommand(args)
 {
   SHELL_INSTANCE.getJobsList().removeFinishedJobs();
@@ -198,7 +198,7 @@ ForegroundCommand::ForegroundCommand(const argv &args)
   // TODO: COMPLETE LOGIC
 }
 
-ForegroundCommand::ForegroundCommand(const argv &args, const char *cmd_line) : ForegroundCommand(args) {}
+ForegroundCommand::ForegroundCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin) : ForegroundCommand(args) {}
 
 
 
@@ -247,7 +247,7 @@ void ForegroundCommand::execute()
 const char* QuitCommand::SENDING_SIGKILL = "smash: sending SIGKILL signal to ";
 
 
-QuitCommand::QuitCommand(const argv& args, const char *cmd_line)
+QuitCommand::QuitCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   if (args.size() >= 2)
   {
@@ -275,7 +275,7 @@ const char* KillCommand::INVALID_ARGUMENTS = "smash error: kill: invalid argumen
 const char* KillCommand::JOB_DOESNT_EXIST_1 = "smash error: kill: job-id ";
 const char* KillCommand::JOB_DOESNT_EXIST_2 = " does not exist";
 
-KillCommand::KillCommand(const argv& args, const char *cmd_line)
+KillCommand::KillCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   if (args.size() > 3)
   {
@@ -301,7 +301,7 @@ const char* AliasCommand::INVALID_FORMAT = "smash error: alias: invalid alias fo
 const char* AliasCommand::ALIAS_EXISTS_1 = "smash error: alias: ";
 const char* AliasCommand::ALIAS_EXISTS_2 = " already exists or is a reserved command";
 
-AliasCommand::AliasCommand(const argv& args, const char *cmd_line)
+AliasCommand::AliasCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   if (args.size() == 1)
   {
@@ -378,7 +378,7 @@ const char* UnAliasCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unalias: not en
 const char* UnAliasCommand::ALIAS_DOESNT_EXIST_1 = "smash error: unalias: ";
 const char* UnAliasCommand::ALIAS_DOESNT_EXIST_2 = "does not exist";
 
-UnAliasCommand::UnAliasCommand(const argv& args, const char *cmd_line)
+UnAliasCommand::UnAliasCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   for (int i = 1; i < args.size(); i++)
   {
@@ -421,7 +421,7 @@ const char* UnSetEnvCommand::NOT_ENOUGH_ARGUMENTS = "smash error: unsetenv: not 
 const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_1 = "smash error: unsetenv: ";
 const char* UnSetEnvCommand::VARIABLE_DOESNT_EXIST_2 = "does not exist";
 
-UnSetEnvCommand::UnSetEnvCommand(const argv& args, const char *cmd_line)
+UnSetEnvCommand::UnSetEnvCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   variablesToRemove = extractVariables(args);
 }
@@ -514,7 +514,7 @@ const char* WatchProcCommand::INVALID_ARGUMENTS = "smash error: watchproc: inval
 const char* WatchProcCommand::PID_DOESNT_EXIST_1 = "smash error: watchproc: pid ";
 const char* WatchProcCommand::PID_DOESNT_EXIST_2 = "does not exist";
 
-WatchProcCommand::WatchProcCommand(const argv& args, const char *cmd_line)
+WatchProcCommand::WatchProcCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   if (args.size() == 2)
   {
