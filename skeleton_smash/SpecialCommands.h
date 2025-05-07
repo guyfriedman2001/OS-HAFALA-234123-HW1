@@ -142,6 +142,7 @@ public:
     string getDefaultGetway(const string& interfaceName);
     string extractGateway(const string& line, const string& interfaceName);
     string getDnsServers();
+    string extractDns(const string& line);
 };
 
 

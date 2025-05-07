@@ -662,5 +662,50 @@ string extractGateway(const string& line, const string& interfaceName) {
 
 string NetInfo::getDnsServers()
 {
-    return string();
+    int fd;
+    TRY_SYS3(fd, open("/etc/resolv.conf", O_RDONLY), "open");
+    if (fd < 0) {
+        return "";
+    }
+    char buffer[4096];
+    ssize_t bytesRead;
+    TRY_SYS3(fd, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd), "close");
+    if (bytesRead <= 0) {
+        return "";
+    }
+    buffer[bytesRead] = '\0';
+
+    string bufferString(buffer);
+    istringstream iss(bufferString);
+    string line;
+    string dnsList;
+    bool isFirst = true;
+
+    while (getline(iss, line)) {
+        string dnsIP = extractDns(line);
+        if (!dnsIP.empty()) {
+            if (!isFirst)
+              dnsList += ", ";
+            dnsList += dnsIP;
+            isFirst = false;
+        }
+    }
+    if (dnsList.empty()) {
+    return "";
+    } else {
+    return dnsList;
+    }
+}
+
+string NetInfo::extractDns(const string &line)
+{
+    if (line.rfind("nameserver", 0) != 0) {
+        return "";
+    }
+
+    istringstream iss(line);
+    string keyword, ipAddress;
+    iss >> keyword >> ipAddress;
+    return ipAddress;
 }
