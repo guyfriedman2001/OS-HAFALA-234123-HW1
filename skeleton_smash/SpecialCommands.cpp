@@ -587,7 +587,7 @@ void NetInfo::execute()
     cerr << this->NOT_SPECIFIED << endl;
     return;
   }
-  if (iPAdress.empty() || subnetMask.empty() || defaultGetway.empty() || dnsServers.empty()) {
+  if (iPAdress.empty() || subnetMask.empty() || dnsServers.empty()) {
     cerr << this->INTERFACE_DOESNT_EXIST_1 << interface << this->INTERFACE_DOESNT_EXIST_2 << endl;
     return;
   }
@@ -635,7 +635,7 @@ string NetInfo::getDefaultGetway(const string &interfaceName)
     }
     char buffer[4096];
     ssize_t bytesRead;
-    TRY_SYS3(fd, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1), "read");
     TRY_SYS3(fd,close(fd), "close");
     if (bytesRead <= 0) {
         return "";
@@ -656,7 +656,7 @@ string NetInfo::getDefaultGetway(const string &interfaceName)
     return "";
 }
 
-string extractGateway(const string& line, const string& interfaceName) {
+string NetInfo::extractGateway(const string& line, const string& interfaceName) {
     istringstream iss(line);
     string iface, destHex, gatewayHex;
     iss >> iface >> destHex >> gatewayHex;
@@ -682,7 +682,7 @@ string NetInfo::getDnsServers()
     }
     char buffer[4096];
     ssize_t bytesRead;
-    TRY_SYS3(fd, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1), "read");
     TRY_SYS3(fd,close(fd), "close");
     if (bytesRead <= 0) {
         return "";
