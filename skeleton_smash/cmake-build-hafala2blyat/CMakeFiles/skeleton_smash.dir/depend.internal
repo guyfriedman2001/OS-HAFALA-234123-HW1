@@ -12,10 +12,12 @@ CMakeFiles/skeleton_smash.dir/BuiltInCommands.cpp.o
  /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
 CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o
  /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
  /tmp/tmp.PEojR1gXKU/CommandFactories.cpp
@@ -25,6 +27,7 @@ CMakeFiles/skeleton_smash.dir/CommandFactories.cpp.o
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/SpecialCommands.h
 CMakeFiles/skeleton_smash.dir/Commands.cpp.o
  /tmp/tmp.PEojR1gXKU/Commands.cpp
  /tmp/tmp.PEojR1gXKU/Commands.h
@@ -37,10 +40,24 @@ CMakeFiles/skeleton_smash.dir/ExternalCommands.cpp.o
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.cpp
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
+CMakeFiles/skeleton_smash.dir/FDManager.cpp.o
+ /tmp/tmp.PEojR1gXKU/AliasManager.h
+ /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
+ /tmp/tmp.PEojR1gXKU/Commands.h
+ /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.cpp
+ /tmp/tmp.PEojR1gXKU/FDManager.h
+ /tmp/tmp.PEojR1gXKU/JobList.h
+ /tmp/tmp.PEojR1gXKU/SmallShell.h
+ /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
+ /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
 CMakeFiles/skeleton_smash.dir/JobList.cpp.o
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
@@ -54,11 +71,13 @@ CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o
  /tmp/tmp.PEojR1gXKU/CommandFactories.h
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.cpp
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
  /tmp/tmp.PEojR1gXKU/signals.h
 CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
  /tmp/tmp.PEojR1gXKU/AliasManager.h
@@ -66,21 +85,31 @@ CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
  /tmp/tmp.PEojR1gXKU/CommandFactories.h
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
  /tmp/tmp.PEojR1gXKU/SpecialCommands.cpp
  /tmp/tmp.PEojR1gXKU/SpecialCommands.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
+CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o
+ /tmp/tmp.PEojR1gXKU/FDManager.h
+ /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
+ /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.cpp
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
 CMakeFiles/skeleton_smash.dir/signals.cpp.o
  /tmp/tmp.PEojR1gXKU/AliasManager.h
  /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
  /tmp/tmp.PEojR1gXKU/signals.cpp
  /tmp/tmp.PEojR1gXKU/signals.h
 CMakeFiles/skeleton_smash.dir/smash.cpp.o
@@ -88,9 +117,11 @@ CMakeFiles/skeleton_smash.dir/smash.cpp.o
  /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
  /tmp/tmp.PEojR1gXKU/Commands.h
  /tmp/tmp.PEojR1gXKU/ExternalCommands.h
+ /tmp/tmp.PEojR1gXKU/FDManager.h
  /tmp/tmp.PEojR1gXKU/JobList.h
  /tmp/tmp.PEojR1gXKU/SmallShell.h
  /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
  /tmp/tmp.PEojR1gXKU/SmashUtil.h
+ /tmp/tmp.PEojR1gXKU/Temp_Restore.h
  /tmp/tmp.PEojR1gXKU/signals.h
  /tmp/tmp.PEojR1gXKU/smash.cpp

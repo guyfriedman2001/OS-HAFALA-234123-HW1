@@ -75,6 +75,8 @@ cstdlib
 /tmp/tmp.PEojR1gXKU/CommandFactories.cpp
 CommandFactories.h
 /tmp/tmp.PEojR1gXKU/CommandFactories.h
+SpecialCommands.h
+/tmp/tmp.PEojR1gXKU/SpecialCommands.h
 ExternalCommands.h
 /tmp/tmp.PEojR1gXKU/ExternalCommands.h
 
@@ -146,6 +148,18 @@ SmallShellHeaders.h
 Commands.h
 /tmp/tmp.PEojR1gXKU/Commands.h
 
+/tmp/tmp.PEojR1gXKU/FDManager.cpp
+FDManager.h
+/tmp/tmp.PEojR1gXKU/FDManager.h
+SmallShell.h
+/tmp/tmp.PEojR1gXKU/SmallShell.h
+
+/tmp/tmp.PEojR1gXKU/FDManager.h
+SmallShellHeaders.h
+/tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
+Temp_Restore.h
+/tmp/tmp.PEojR1gXKU/Temp_Restore.h
+
 /tmp/tmp.PEojR1gXKU/JobList.cpp
 JobList.h
 /tmp/tmp.PEojR1gXKU/JobList.h
@@ -195,6 +209,8 @@ BuiltInCommands.h
 /tmp/tmp.PEojR1gXKU/BuiltInCommands.h
 AliasManager.h
 /tmp/tmp.PEojR1gXKU/AliasManager.h
+FDManager.h
+/tmp/tmp.PEojR1gXKU/FDManager.h
 
 /tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
 SmashUtil.h
@@ -276,7 +292,17 @@ SmallShellHeaders.h
 Commands.h
 /tmp/tmp.PEojR1gXKU/Commands.h
 
+/tmp/tmp.PEojR1gXKU/Temp_Restore.cpp
+Temp_Restore.h
+/tmp/tmp.PEojR1gXKU/Temp_Restore.h
+FDManager.h
+/tmp/tmp.PEojR1gXKU/FDManager.h
+
+/tmp/tmp.PEojR1gXKU/Temp_Restore.h
+
 /tmp/tmp.PEojR1gXKU/signals.cpp
+SmallShell.h
+/tmp/tmp.PEojR1gXKU/SmallShell.h
 iostream
 -
 signal.h
@@ -285,8 +311,16 @@ signals.h
 /tmp/tmp.PEojR1gXKU/signals.h
 Commands.h
 /tmp/tmp.PEojR1gXKU/Commands.h
-SmallShell.h
-/tmp/tmp.PEojR1gXKU/SmallShell.h
+csignal
+-
+cstring
+-
+iostream
+-
+unistd.h
+-
+string
+-
 
 /tmp/tmp.PEojR1gXKU/signals.h
 
@@ -301,8 +335,16 @@ signal.h
 -
 Commands.h
 /tmp/tmp.PEojR1gXKU/Commands.h
-signals.h
-/tmp/tmp.PEojR1gXKU/signals.h
+SmallShellHeaders.h
+/tmp/tmp.PEojR1gXKU/SmallShellHeaders.h
 SmallShell.h
 /tmp/tmp.PEojR1gXKU/SmallShell.h
+signals.h
+/tmp/tmp.PEojR1gXKU/signals.h
+csignal
+-
+iostream
+-
+unistd.h
+-
 

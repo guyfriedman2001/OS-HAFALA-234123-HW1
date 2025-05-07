@@ -131,22 +131,17 @@ void yedideinu_azor_li(char* command, char** argv) {
 
 void ComplexExternalCommand::executeHelper()
 {
+  #define try_use_argv  true
+  #if !try_use_argv
   const char *bash_path = "/bin/bash";
   char *bash_args[COMMAND_MAX_ARGS+1];
-  #if 0
+
+  #define use_give_parser false
+  #if use_give_parser
   _parseCommandLine(this->command_original,bash_args);
   #else
   yedideinu_azor_li(this->command_original,bash_args);
   #endif
-
-  MARK_FOR_DEBUGGING_PERROR
-
-  FOR_DEBUG_MODE(
-for (const auto& arg : bash_args) {
-  cout << "in ComplexExternalCommand::executeHelper, argument:" << arg << endl;
-}
-  )
-
   execv(bash_path, bash_args);
 
   MARK_FOR_DEBUGGING_PERROR
@@ -159,6 +154,31 @@ for (const auto& arg : bash_args) {
   FOR_DEBUG_MODE(std::fprintf(stderr, "%s%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n","(FORDEB~UGMODE) ", __FILE__, __LINE__);)
   //same here from "void ExternalCommand::executeHelper()"
   TRY_SYS2(ERR_ARG, "execvp");
+  FOR_DEBUG_MODE(
+for (const auto& arg : bash_args) {
+cout << "in ComplexExternalCommand::executeHelper, argument:" << arg << endl;
+}
+)
+  #else
+  std::vector<char*> argv_char;
+  std::vector<std::string> extra_args = {"/bin/bash", "-c"};
+  for (const std::string& arg : extra_args) {
+    argv_char.push_back(const_cast<char*>(arg.c_str()));  // execv requires char*
+  }
+  for (const std::string& arg : given_args) {
+    argv_char.push_back(const_cast<char*>(arg.c_str()));  // execv requires char*
+  }
+  argv_char.push_back(nullptr); // Null-terminate the array
+
+  execv(argv_char[0], argv_char.data());
+  TRY_SYS2(ERR_ARG, "execv");
+  #endif
+
+  MARK_FOR_DEBUGGING_PERROR
+
+
+
+
 }
 #if 0
 hdtjyfthdshjrt
