@@ -39,26 +39,27 @@ void ExternalCommand::printYourself()
 
 void ExternalCommand::execute()
 {
-  pid_t pid = fork();
-  TRY_SYS2(pid, "fork");
-  this->jobPID = pid;
+  pid_t kid_pid = fork();
+  TRY_SYS2(kid_pid, "fork");
+  this->jobPID = kid_pid;
 
-  if (pid == 0)
-  {                        // Child
+  bool is_kid = (kid_pid == 0);
+  if (!is_kid){ //FIXME RETURN CHECK TO (is_kid)
+                        // Child
     this->executeHelper(); // <---- DELEGATE to a helper method
     exit(1);               // If executeHelper returns, it means exec failed
-  }
-  else
-  { // Parent
+  }else{ // Parent
     int status;
-    if (!_isBackgroundComamnd(this->command_original)) //we need to wait for this command
-    {
-      TRY_SYS2(waitpid(pid, &status, wait_but_can_still_get_ctrl_c),"waitpid");
-    }
-    else
-    {
-      SHELL_INSTANCE.addJob(this);
-    }
+    do {
+      if (!_isBackgroundComamnd(this->command_original)) //we need to wait for this command
+      {
+        TRY_SYS2(waitpid(kid_pid, &status, wait_but_can_still_get_ctrl_c),"waitpid");
+      }
+      else
+      {
+        SHELL_INSTANCE.addJob(this);
+      }
+    } while (0);
   }
 }
 
@@ -113,11 +114,30 @@ inline int _parseCommandLine(const char *cmd_line, char **args)
 }
 
 #endif
+
+void yedideinu_azor_li(char* command, char** argv) {
+  int i = 0;
+  char* token = strtok(command, " \t\n");
+
+  while (token != nullptr && i < COMMAND_MAX_ARGS) {
+    argv[i++] = token;
+    token = strtok(nullptr, " \t\n");
+  }
+
+  assert(i==COMMAND_MAX_ARGS);
+  argv[i] = nullptr;  // Null-terminate the array
+}
+
+
 void ComplexExternalCommand::executeHelper()
 {
   const char *bash_path = "/bin/bash";
-  char *bash_args[COMMAND_MAX_ARGS]; //+1];
-  _parseCommandLine(this->command,bash_args);
+  char *bash_args[COMMAND_MAX_ARGS+1];
+  #if 0
+  _parseCommandLine(this->command_original,bash_args);
+  #else
+  yedideinu_azor_li(this->command_original,bash_args);
+  #endif
 
   MARK_FOR_DEBUGGING_PERROR
 
@@ -140,3 +160,23 @@ for (const auto& arg : bash_args) {
   //same here from "void ExternalCommand::executeHelper()"
   TRY_SYS2(ERR_ARG, "execvp");
 }
+#if 0
+hdtjyfthdshjrt
+
+shdjdh
+dfjd
+djf
+fjfjd
+j
+dfjd
+fjdj
+decltype(jdj
+  df
+  jf
+  jf
+  jf
+
+
+  clion thinks i didnt change the code enough amd is not letting me rebuild project blyaat
+  )
+#endif

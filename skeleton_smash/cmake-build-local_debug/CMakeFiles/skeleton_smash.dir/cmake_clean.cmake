@@ -10,6 +10,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/skeleton_smash.dir/SmallShell.cpp.o"
   "CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o"
   "CMakeFiles/skeleton_smash.dir/FDManager.cpp.o"
+  "CMakeFiles/skeleton_smash.dir/Temp_Restore.cpp.o"
   "skeleton_smash.pdb"
   "skeleton_smash"
 )

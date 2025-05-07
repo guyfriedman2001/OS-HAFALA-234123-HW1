@@ -9,7 +9,7 @@
 
 
 class ExternalCommand : public Command {
-private:
+protected:
     char command_original[COMMAND_MAX_LENGTH];
     argv given_args;
     pid_t jobPID = 0;
@@ -39,8 +39,8 @@ public:
 
 class ComplexExternalCommand : public ExternalCommand {
 private:
-    char command[COMMAND_MAX_LENGTH];
-    argv given_args;
+    //char command[COMMAND_MAX_LENGTH];
+    //argv given_args;
 public:
     ComplexExternalCommand(const char *cmd_line) : ExternalCommand(cmd_line) {}
 

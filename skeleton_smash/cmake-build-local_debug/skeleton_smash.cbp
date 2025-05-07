@@ -144,6 +144,9 @@
 		<Unit filename="/tmp/tmp.PEojR1gXKU/SpecialCommands.h">
 			<Option target="skeleton_smash"/>
 		</Unit>
+		<Unit filename="/tmp/tmp.PEojR1gXKU/Temp_Restore.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
 		<Unit filename="/tmp/tmp.PEojR1gXKU/Temp_Restore.h">
 			<Option target="skeleton_smash"/>
 		</Unit>
