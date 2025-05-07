@@ -1,0 +1,4 @@
+hello viki
+bye viki
+\r hello there
+ hello again
