@@ -137,7 +137,14 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
         }                                               \
     } while (0)
 
-
+#define TRY_SYS3(VAR, EXPR, NAME)                  \
+do {                                                     \
+    VAR = (EXPR);                                        \
+    if (SYSTEM_CALL_FAILED(VAR)) {                       \
+        perror("smash error: " NAME " failed");          \
+        FOR_DEBUG_MODE(PERRORF("error in file: %s, line: %d\n",__FILE__,__LINE__);) \
+    }                                                    \
+} while (0)
 /* //i cant get this shit to work blyat
 #define IF_THEN_ELSE_PREPROCESSOR(FLAG, CODE_IF_TRUE, CODE_IF_FALSE) \
     #if FLAG                                            \

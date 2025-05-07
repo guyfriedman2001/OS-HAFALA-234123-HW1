@@ -394,16 +394,16 @@ void DiskUsageCommand::execute()
 {
   if (tooManyArgs)
   {
-    cerr << this->TOO_MANY_ARGS;
+    cerr << this->TOO_MANY_ARGS << endl;
     return;
   } else if (!pathGiven)
   {
-    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB";
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB" << endl;
   } else if (directoryExists(path))
   {
-    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB";
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB" << endl;
   } else {
-    cerr << this->DIRECTORY_DOESNT_EXIST_1 << path << this->DIRECTORY_DOESNT_EXIST_2;
+    cerr << this->DIRECTORY_DOESNT_EXIST_1 << path << this->DIRECTORY_DOESNT_EXIST_2 << endl;
   }
   
     
@@ -413,11 +413,11 @@ void DiskUsageCommand::execute()
 bool DiskUsageCommand::directoryExists(const string &path)
 {
     int fd; 
-    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
+    TRY_SYS3(fd, open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
     if (fd == -1) {
         return false;  
     }
-    TRY_SYS2(close(fd),"close");    
+    TRY_SYS3(fd,close(fd),"close");    
     return true;     
 }
 
@@ -426,12 +426,12 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
    int totalSize = getFileSize(path);  
 
     int fd; 
-    TRY_SYS2(fd = open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
+    TRY_SYS3(fd, open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
 
     char buffer[4000] = {0};
     struct linux_dirent64* entry;
     int bytesRead;
-    TRY_SYS2(bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
+    TRY_SYS3(bytesRead, syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
     while (bytesRead > 0) {
         int offset = 0;
         while (offset < bytesRead) {
@@ -449,10 +449,10 @@ int DiskUsageCommand::calculateDiskUsage(const string &path)
             }
             offset += entry->d_reclen;
         }
-        TRY_SYS2(bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
+        TRY_SYS3(bytesRead, syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
     }
 
-    TRY_SYS2(close(fd),"close");
+    TRY_SYS3(fd,close(fd),"close");
     return totalSize;
 }
 
@@ -480,28 +480,25 @@ WhoAmICommand::WhoAmICommand(const argv& args, const char *cmd_line)
 
 void WhoAmICommand::execute()
 {
-  cout << username << "/" << homeDirectory << endl;
+  cout << username << homeDirectory << endl;
 }
 
 int WhoAmICommand::findUID() //TODO add TRY_SYS2 where needed 
 {
+    
     int fd;
-    TRY_SYS2(fd = open("/proc/self/status", O_RDONLY), "open");
-    std::cout << "open returned: " << fd << std::endl;
+    TRY_SYS3(fd, open("/proc/self/status", O_RDONLY), "open");
     if (fd < 0) {
        return -1; 
     }
     char buffer[4096];
     ssize_t bytesRead;
-    std::cout << "trying to read...\n";
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
-    buffer[bytesRead] = '\0';
-    std::cout << "== BUFFER ==\n" << buffer << "\n== END ==\n";
-    TRY_SYS2(close(fd),"close");
+    TRY_SYS3(bytesRead ,read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd), "close");
     if (bytesRead <= 0) {
        return -1;
     }
-
+    buffer[bytesRead] = '\0';
     
     char* start = strstr(buffer, "Uid:");
     if (!start) {
@@ -525,7 +522,7 @@ string WhoAmICommand::findUsername(int uid) //TODO add TRY_SYS2 where needed
 
 string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
     int fd;
-    TRY_SYS2(fd = open("/etc/passwd", O_RDONLY),"open");
+    TRY_SYS3(fd,open("/etc/passwd", O_RDONLY),"open");
     if (fd < 0) {
       return "";
     }
@@ -534,7 +531,7 @@ string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
     string line;
     ssize_t bytesRead;
 
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(bytesRead , read(fd, buffer, sizeof(buffer) - 1), "read");
     while (bytesRead > 0) {
         for (int i = 0; i < bytesRead; ++i) {
             char character = buffer[i];
@@ -550,7 +547,7 @@ string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
                 if (fields.size() > fieldIndex && fields.size() >= 3) { //ensures 3 fields: username, password, uid
                     int parsedUid = stoi(fields[2]);
                     if (parsedUid == uid) { //ensures the uid is correct
-                        TRY_SYS2(close(fd),"close");
+                        TRY_SYS3(fd,close(fd),"close");
                         return fields[fieldIndex];
                     }
                 }
@@ -560,7 +557,7 @@ string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
             }
         }
     }
-    TRY_SYS2(close(fd),"close");
+    TRY_SYS3(fd,close(fd),"close");
     return "";
 }
 

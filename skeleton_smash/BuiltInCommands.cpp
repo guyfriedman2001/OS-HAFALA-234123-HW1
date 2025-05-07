@@ -41,7 +41,7 @@ ShowPidCommand::ShowPidCommand(const argv &args, const char *cmd_line)
 
 void ShowPidCommand::execute()
 {
-  printf("smash pid is %d", this->smashPID);
+  printf("smash pid is %d \n", this->smashPID);
 }
 
 GetCurrDirCommand::GetCurrDirCommand() // TODO: need to initialise fields? maybe.
@@ -487,14 +487,14 @@ bool UnSetEnvCommand::foundEnvVar(const char* entry, const string& var) {
 bool UnSetEnvCommand::doesVariableExist(const string &var)
 {
     int fd;
-    TRY_SYS2(fd = open("/proc/self/environ", O_RDONLY), "open");
+    TRY_SYS3(fd, open("/proc/self/environ", O_RDONLY), "open");
     if (fd == -1)
         return false;
 
     char buffer[4096] = {0};
     ssize_t bytesRead;
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
-    TRY_SYS2(close(fd),"close");
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd),"close");
 
     if (bytesRead <= 0)
         return false; 
@@ -521,7 +521,7 @@ WatchProcCommand::WatchProcCommand(const argv& args, const char *cmd_line)
     pid = static_cast<pid_t>(stoi(args[1]));
     argsFormat = true;
   } else {
-  argsFormat = false;
+    argsFormat = false;
   }
 }
 
@@ -588,14 +588,14 @@ float WatchProcCommand::calculateMemoryUsage()
 {
     string path = "/proc/" + std::to_string(pid) + "/status";
     int fd; 
-    TRY_SYS2(fd = open(path.c_str(), O_RDONLY), "open");
+    TRY_SYS3(fd,open(path.c_str(), O_RDONLY), "open");
     if (fd == -1)
         return -1;
 
     char buffer[4096] = {0};
     ssize_t bytesRead;
-    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
-    TRY_SYS2(close(fd),"close");
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd),"close");
     if (bytesRead <= 0)
         return -1;
 
@@ -656,14 +656,14 @@ float WatchProcCommand::processTotalTime(const char* buffer)
 long WatchProcCommand::readProcessTime(pid_t pid) {
     string path = "/proc/" + std::to_string(pid) + "/stat";
     char buffer[4096] = {0};
-
-    int fd = open(path.c_str(), O_RDONLY);
+    int fd;
+    TRY_SYS3(fd,open(path.c_str(), O_RDONLY), "open");
     if (fd < 0) { 
       return -1;
     }
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
-
+    ssize_t bytesRead;
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd),"close");
     if (bytesRead <= 0) {
        return -1;
     }
@@ -673,13 +673,11 @@ long WatchProcCommand::readProcessTime(pid_t pid) {
 long WatchProcCommand::readSystemTime() {
     char buffer[4096] = {0};
 
-    int fd = open("/proc/stat", O_RDONLY);
-    if (fd < 0) { 
-      return -1;
-    }
-    ssize_t bytesRead = read(fd, buffer, sizeof(buffer) - 1);
-    close(fd);
-
+    int fd;
+    TRY_SYS3(fd, open("/proc/stat", O_RDONLY), "open");
+    ssize_t bytesRead;
+    TRY_SYS3(bytesRead, read(fd, buffer, sizeof(buffer) - 1),"read");
+    TRY_SYS3(fd,close(fd),"close");
     if (bytesRead <= 0) {
        return -1;
     }
