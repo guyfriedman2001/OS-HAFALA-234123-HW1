@@ -136,7 +136,7 @@ for (const auto& arg : bash_args) {
     free(bash_args[i]);
   }
 
-  FOR_DEBUG_MODE(std::fprintf(stderr, "%S%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n","(FORDEB~UGMODE) ", __FILE__, __LINE__);)
+  FOR_DEBUG_MODE(std::fprintf(stderr, "%s%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n","(FORDEB~UGMODE) ", __FILE__, __LINE__);)
   //same here from "void ExternalCommand::executeHelper()"
   TRY_SYS2(ERR_ARG, "execvp");
 }
