@@ -14,9 +14,9 @@ private:
 public:
     SpecialCommand() = default;
 
-    SpecialCommand(const char *cmd_line);
+    SpecialCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
-    SpecialCommand(const argv& args, const char *cmd_line);
+    SpecialCommand(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~SpecialCommand();
 
@@ -26,6 +26,8 @@ public:
 
 };
 
+#define OLD_CODE_AND_IRRELEVANT true
+#if !OLD_CODE_AND_IRRELEVANT
 class IORedirection : public SpecialCommand {
 protected:
     pid_t pid;
@@ -33,7 +35,7 @@ protected:
     char cmd_line[COMMAND_MAX_LENGTH];
     open_flag m_open_flag;
 public:
-    explicit IORedirection(const argv& args, const char* cmd_line);
+    explicit IORedirection(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~IORedirection();
 
@@ -50,7 +52,7 @@ public:
 class RedirectionCommand : public IORedirection {
 
 public:
-    explicit RedirectionCommand(const argv& args, const char* cmd_line);
+    explicit RedirectionCommand(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~RedirectionCommand() {}
 
@@ -69,7 +71,7 @@ private:
     argv right_args;
     bool is_stderr_pipe = false;
 public:
-    PipeCommand(const argv& args, const char* cmd_line);
+    PipeCommand(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~PipeCommand() {
     }
@@ -77,6 +79,7 @@ public:
     void execute() override;
     virtual int get_first_redirection_index(const argv& args) override;
 };
+#endif
 
 class DiskUsageCommand : public SpecialCommand {
     bool pathGiven;
@@ -89,7 +92,7 @@ class DiskUsageCommand : public SpecialCommand {
     const static char* TOTAL_DISK_USAGE;
 
 public:
-    DiskUsageCommand(const argv& args, const char* cmd_line);
+    DiskUsageCommand(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~DiskUsageCommand() {
     }
@@ -106,7 +109,7 @@ class WhoAmICommand : public SpecialCommand {
     string username;
     string homeDirectory;
 public:
-    WhoAmICommand(const argv& args, const char* cmd_line);
+    WhoAmICommand(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~WhoAmICommand() {
     }
@@ -121,7 +124,7 @@ public:
 class NetInfo : public SpecialCommand {
     // TODO: Add your data members **BONUS: 10 Points**
 public:
-    NetInfo(const argv& args, const char* cmd_line);
+    NetInfo(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~NetInfo() {
     }

@@ -6,56 +6,68 @@
 #include "SpecialCommands.h"
 #include "ExternalCommands.h"
 
-Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
+Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
   string &command = args[0];
   if (STRINGS_EQUAL(command, "chprompt"))
   {
-    return new ChangePromptCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("ChangePromptCommand");
+    return new ChangePromptCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "showpid"))
   {
-    return new ShowPidCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("ShowPidCommand");
+    return new ShowPidCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "pwd"))
   {
-    return new GetCurrDirCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("GetCurrDirCommand");
+    return new GetCurrDirCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "cd"))
   {
-    return new ChangeDirCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("ChangeDirCommand");
+    return new ChangeDirCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "jobs"))
   {
-    return new JobsCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("JobsCommand");
+    return new JobsCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "fg"))
   {
-    return new ForegroundCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("ForegroundCommand");
+    return new ForegroundCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "quit"))
   {
-    return new QuitCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("QuitCommand");
+    return new QuitCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "kill"))
   {
-    return new KillCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("KillCommand");
+    return new KillCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "alias"))
   {
-    return new AliasCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("AliasCommand");
+    return new AliasCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "unalias"))
   {
-    return new UnAliasCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("UnAliasCommand");
+    return new UnAliasCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "unsetenv"))
   {
-    return new UnSetEnvCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("UnSetEnvCommand");
+    return new UnSetEnvCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "watchproc"))
   {
-    return new WatchProcCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("WatchProcCommand");
+    return new WatchProcCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else
   { // unknown command
@@ -63,12 +75,14 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
   }
 }
 
-Command *ExternalCommandFactory::factoryHelper(argv args, const char *cmd_line)
+Command *ExternalCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
-  if (SmashUtil::isCompleExternalCommand(cmd_line)) {
-    return new ComplexExternalCommand(args, cmd_line);
+  if (SmashUtil::isCompleExternalCommand(cmd_line_after_aliases)) {
+    PRINT_DEBUG_MODE("ComplexExternalCommand");
+    return new ComplexExternalCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   } else {
-    return new ExternalCommand(args, cmd_line);
+    PRINT_DEBUG_MODE("ExternalCommand");
+    return new ExternalCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
 }
 
@@ -112,30 +126,32 @@ void runExternalCommand(const char* cmd_line) {
 }
 */
 
-Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line)
+Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
   string &command = args[0];
   if (STRINGS_EQUAL(command, "du"))
   {
     PRINT_DEBUG_MODE("DiskUsageCommand");
-    return new DiskUsageCommand(args, cmd_line);
+    return new DiskUsageCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "whoami"))
   {
     PRINT_DEBUG_MODE("whoami command");
-    return new WhoAmICommand(args, cmd_line);
+    return new WhoAmICommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "netinfo"))
   {
     PRINT_DEBUG_MODE("netinfo command");
-    return new NetInfo(args, cmd_line);
+    return new NetInfo(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else {
     return nullptr;
   }
 }
 
+#if 0
 Command *Error404CommandNotFound::factoryHelper(argv args, const char *cmd_line)
 {
   return new CommandNotFound(args, cmd_line);
 }
+#endif

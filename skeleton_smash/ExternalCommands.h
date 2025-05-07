@@ -10,15 +10,17 @@
 
 class ExternalCommand : public Command {
 protected:
-    char command_original[COMMAND_MAX_LENGTH];
+    char command_after_aliases[COMMAND_MAX_LENGTH];
+    char command_before_aliases[COMMAND_MAX_LENGTH];
+
     argv given_args;
     pid_t jobPID = 0;
 public:
-    ExternalCommand(const char *cmd_line);
+    ExternalCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
-    ExternalCommand(const char *cmd_line, pid_t pid);
+    ExternalCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases, pid_t pid);
 
-    ExternalCommand(const argv& args,const char *cmd_line);
+    ExternalCommand(const argv& args,const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
     virtual ~ExternalCommand() {
     }
@@ -42,9 +44,9 @@ private:
     //char command[COMMAND_MAX_LENGTH];
     //argv given_args;
 public:
-    ComplexExternalCommand(const char *cmd_line) : ExternalCommand(cmd_line) {}
+    ComplexExternalCommand(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases) : ExternalCommand(cmd_line_after_aliases,cmd_line_before_aliases) {}
 
-    ComplexExternalCommand(const argv& args,const char *cmd_line) : ExternalCommand(args,cmd_line) {}
+    ComplexExternalCommand(const argv& args,const char *cmd_line_after_aliases, const char *cmd_line_before_aliases) : ExternalCommand(args,cmd_line_after_aliases,cmd_line_before_aliases) {}
 
     virtual ~ComplexExternalCommand() {
     }
