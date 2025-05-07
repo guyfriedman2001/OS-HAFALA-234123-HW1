@@ -487,18 +487,22 @@ int WhoAmICommand::findUID() //TODO add TRY_SYS2 where needed
 {
     int fd;
     TRY_SYS2(fd = open("/proc/self/status", O_RDONLY), "open");
+    std::cout << "open returned: " << fd << std::endl;
     if (fd < 0) {
        return -1; 
     }
-
     char buffer[4096];
-    ssize_t bytesRead = read(fd, buffer, 4095);
+    ssize_t bytesRead;
+    std::cout << "trying to read...\n";
+    TRY_SYS2(bytesRead = read(fd, buffer, sizeof(buffer) - 1), "read");
+    buffer[bytesRead] = '\0';
+    std::cout << "== BUFFER ==\n" << buffer << "\n== END ==\n";
     TRY_SYS2(close(fd),"close");
     if (bytesRead <= 0) {
        return -1;
     }
 
-    buffer[bytesRead] = '\0';
+    
     char* start = strstr(buffer, "Uid:");
     if (!start) {
        return -1; 
@@ -519,7 +523,7 @@ string WhoAmICommand::findUsername(int uid) //TODO add TRY_SYS2 where needed
     return getFieldByUid(uid, 0);
 }
 
-string getFieldByUid(int uid, int fieldIndex) {
+string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
     int fd;
     TRY_SYS2(fd = open("/etc/passwd", O_RDONLY),"open");
     if (fd < 0) {

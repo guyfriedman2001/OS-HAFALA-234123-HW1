@@ -3,7 +3,7 @@
 //
 
 #include "CommandFactories.h"
-
+#include "SpecialCommands.h"
 #include "ExternalCommands.h"
 
 Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line)
@@ -114,9 +114,25 @@ void runExternalCommand(const char* cmd_line) {
 
 Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line)
 {
-  // TODO: your implementation here
   string &command = args[0];
-  return nullptr;
+  if (STRINGS_EQUAL(command, "du"))
+  {
+    PRINT_DEBUG_MODE("DiskUsageCommand");
+    return new DiskUsageCommand(args, cmd_line);
+  }
+  else if (STRINGS_EQUAL(command, "whoami"))
+  {
+    PRINT_DEBUG_MODE("whoami command");
+    return new WhoAmICommand(args, cmd_line);
+  }
+  else if (STRINGS_EQUAL(command, "netinfo"))
+  {
+    PRINT_DEBUG_MODE("netinfo command");
+    return new NetInfo(args, cmd_line);
+  }
+  else {
+    return nullptr;
+  }
 }
 
 Command *Error404CommandNotFound::factoryHelper(argv args, const char *cmd_line)
