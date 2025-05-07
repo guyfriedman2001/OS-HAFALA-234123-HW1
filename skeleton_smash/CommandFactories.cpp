@@ -11,50 +11,62 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line_af
   string &command = args[0];
   if (STRINGS_EQUAL(command, "chprompt"))
   {
+    PRINT_DEBUG_MODE("ChangePromptCommand");
     return new ChangePromptCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "showpid"))
   {
+    PRINT_DEBUG_MODE("ShowPidCommand");
     return new ShowPidCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "pwd"))
   {
+    PRINT_DEBUG_MODE("GetCurrDirCommand");
     return new GetCurrDirCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "cd"))
   {
+    PRINT_DEBUG_MODE("ChangeDirCommand");
     return new ChangeDirCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "jobs"))
   {
+    PRINT_DEBUG_MODE("JobsCommand");
     return new JobsCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "fg"))
   {
+    PRINT_DEBUG_MODE("ForegroundCommand");
     return new ForegroundCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "quit"))
   {
+    PRINT_DEBUG_MODE("QuitCommand");
     return new QuitCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "kill"))
   {
+    PRINT_DEBUG_MODE("KillCommand");
     return new KillCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "alias"))
   {
+    PRINT_DEBUG_MODE("AliasCommand");
     return new AliasCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "unalias"))
   {
+    PRINT_DEBUG_MODE("UnAliasCommand");
     return new UnAliasCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "unsetenv"))
   {
+    PRINT_DEBUG_MODE("UnSetEnvCommand");
     return new UnSetEnvCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else if (STRINGS_EQUAL(command, "watchproc"))
   {
+    PRINT_DEBUG_MODE("WatchProcCommand");
     return new WatchProcCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
   else
@@ -66,8 +78,10 @@ Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line_af
 Command *ExternalCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
   if (SmashUtil::isCompleExternalCommand(cmd_line_after_aliases)) {
+    PRINT_DEBUG_MODE("ComplexExternalCommand");
     return new ComplexExternalCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   } else {
+    PRINT_DEBUG_MODE("ExternalCommand");
     return new ExternalCommand(args, cmd_line_after_aliases, cmd_line_before_aliases);
   }
 }

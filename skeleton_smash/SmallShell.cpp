@@ -193,21 +193,21 @@ Command *SmallShell::CreateCommand(const char *cmd_line_to_store)
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
     BuiltInCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, afterAliases,cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = BuiltInCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     SpecialCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, afterAliases,cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = SpecialCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
   if (returnCommand == nullptr)
   {
     ExternalCommandFactory factory;
-    returnCommand = factory.makeCommand(remaining_args, cmd_line_to_store); //maybe change to pass by reference
+    returnCommand = factory.makeCommand(remaining_args, afterAliases,cmd_line_to_store); //maybe change to pass by reference
     // returnCommand = ExternalCommandFactory::makeCommand(args, num_args, cmd_line);
   }
 
@@ -365,9 +365,9 @@ void SmallShell::addJob(ExternalCommand *cmd, bool isStopped)
   this->jobs.addJob(cmd, isStopped);
 }
 
-void SmallShell::addJob(const char *cmd_line, pid_t pid, bool isStopped)
+void SmallShell::addJob(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases, pid_t pid, bool isStopped)
 {
-  this->addJob(new ExternalCommand(cmd_line, pid), isStopped);
+  this->addJob(new ExternalCommand(cmd_line_after_aliases, cmd_line_before_aliases, pid), isStopped);
 }
 
 void SmallShell::return_from_temporary_suspension_to_what_was_changed()

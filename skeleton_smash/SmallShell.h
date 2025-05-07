@@ -96,7 +96,7 @@ public:
 
     void addJob(ExternalCommand *cmd, bool isStopped = false);
 
-    void addJob(const char *cmd_line, pid_t pid, bool isStopped = false);
+    void addJob(const char *cmd_line_after_aliases, const char *cmd_line_before_aliases, pid_t pid, bool isStopped = false);
 
     void printPrompt();
 
