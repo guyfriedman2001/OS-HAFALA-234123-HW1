@@ -83,14 +83,17 @@ void setup_signal_handlers() {
 #endif // NEED_TO_HANDLE_ALL_SIGNALS
     //always handle ctrl c
     if (signal(SIGINT, ctrlCHandler) == SIG_ERR) {
-        perror("smash error: failed to set ctrl-C handler");
+        perror("smash error: failed to set ctrl-C handler\n");
     }
 }
 
 
 void ctrlCHandler(int sig_num)
 {
+    #if REDIRECTION_COMMMANDS_CAN_GET_SIGNALS
     SHELL_INSTANCE.temporairly_suspend_redirection_and_return_to_default();
+    #endif
+
     printf("smash: got ctrl-C\n");
     //pid_t foreground_task = SHELL_INSTANCE.get_foreground_pid();
     if (!SHELL_INSTANCE.has_foreground_process()){//foreground_task == ERR_ARG) {
@@ -99,9 +102,12 @@ void ctrlCHandler(int sig_num)
     }
     //TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
     pid_t remember_what_to_print = SHELL_INSTANCE.get_foreground_pid();
-    TRY_SYS2(kill(SHELL_INSTANCE.kill_foreground_process(SIGKILL), SIGKILL), "kill");
+    TRY_SYS2(kill(remember_what_to_print, SIGKILL), "kill");
     printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, remember_what_to_print, SmallShell::SIGKILL_STRING_MESSAGE_2);
+
+    #if REDIRECTION_COMMMANDS_CAN_GET_SIGNALS
     SHELL_INSTANCE.return_from_temporary_suspension_to_what_was_changed();
+    #endif
 }
 
 #if NEED_TO_HANDLE_ALL_SIGNALS

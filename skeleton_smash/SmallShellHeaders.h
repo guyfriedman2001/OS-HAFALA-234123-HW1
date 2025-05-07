@@ -71,11 +71,11 @@ typedef int BIBE;
 #define DEBUG_MODE false //DONT CHANGE THIS LINE! AUTOMATIC DEBUG TURN OFF FOR -DNDEBUG COMPILATION!
 #endif // NDEBUG
 #define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true //refers to the case that an invalid command was given and smash tried to execute it externally
-#define PIPE_CHANGES_DADDYS_FD false //refers to the case that pipe would change the fd in the original daddy process
+#define PIPE_CHANGES_DADDYS_FD false //refers to the case that pipe would change the fd in the original daddy process directly (without using FDManager)
 #define PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND true //refers to the case that pipes should only execute in the foreground, not background
 #define NEED_TO_HANDLE_ALL_SIGNALS false //refers to whether all signals should be handled; when set to false only ctr c (sigint) would be handled in a non default way
 #define JOBS_PRINTS_COMMAND_BEFORE_ALIASES true //refers to whether jobs prints the original given command or the command after the aliases were uncovered
-
+#define REDIRECTION_COMMMANDS_CAN_GET_SIGNALS false
 
 // ============= TODO: add here #define debug utilities and functions =============
 #if !DEBUG_MODE //this would make sure that DNDEBUG flag would be defined to take off the asserts, without having to change the compile command
