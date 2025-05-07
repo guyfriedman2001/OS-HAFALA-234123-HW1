@@ -95,6 +95,11 @@ typedef int BIBE;
 #define PERRORF(fmt, ...) \
 fprintf(stderr, fmt ": %s\n", ##__VA_ARGS__, strerror(errno))
 
+#define PERROR_FOR_DEBUG(fmt, ...) FOR_DEBUG_MODE(PERRORF(fmt, __VA_ARGS__);)
+
+#define MARK_FOR_DEBUGGING_PERROR \
+FOR_DEBUG_MODE( do { PERRORF("(FOR_DEBUG_MODE(PERRORF)) error in file: %s, line: %d\n", __FILE__, __LINE__); } while (0); )
+
 // ============= TODO: add here #define utilities and functions =============
 #define STRINGS_EQUAL(A, B) ((A) == (B))
 #define COPY_CHAR_ARR(A, B) (while (*A++ = *B++)) // inline void strcopy(char* destination, char* origin){while(*destination++ = *origin++);}

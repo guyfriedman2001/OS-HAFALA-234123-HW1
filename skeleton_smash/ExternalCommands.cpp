@@ -74,6 +74,13 @@ void ExternalCommand::executeHelper()
   }
   char_argv[args.size()] = nullptr; // exec expects null-terminated array
 
+  MARK_FOR_DEBUGGING_PERROR
+
+FOR_DEBUG_MODE(
+for (const auto& arg : char_argv) {
+cout << "in ExternalCommand::executeHelper, argument:" << arg << endl;
+}
+)
   // Execute the external command
   execvp(char_argv[0], char_argv);
 
@@ -87,21 +94,49 @@ void ExternalCommand::executeHelper()
   }
 }
 
+#if 0
+inline int _parseCommandLine(const char *cmd_line, char **args)
+{
+  FUNC_ENTRY();
+  int i = 0;
+  std::istringstream iss(_trim(string(cmd_line)));
+  for (std::string s; iss >> s; )
+  {
+    args[i] = (char *)malloc(s.length() + 1);
+    std::memset(args[i], 0, s.length() + 1);
+    std::strcpy(args[i], s.c_str());
+    ++i;
+  }
+  args[i] = NULL;  // Only once, after the loop!
+  FUNC_EXIT();
+  return i;
+}
+
+#endif
 void ComplexExternalCommand::executeHelper()
 {
   const char *bash_path = "/bin/bash";
-  char *bash_args[COMMAND_MAX_ARGS];
+  char *bash_args[COMMAND_MAX_ARGS]; //+1];
   _parseCommandLine(this->command,bash_args);
 
+  MARK_FOR_DEBUGGING_PERROR
+
+  FOR_DEBUG_MODE(
+for (const auto& arg : bash_args) {
+  cout << "in ComplexExternalCommand::executeHelper, argument:" << arg << endl;
+}
+  )
+
   execv(bash_path, bash_args);
+
+  MARK_FOR_DEBUGGING_PERROR
 
   for (size_t i = 0; i < this->given_args.size(); ++i)
   {
     free(bash_args[i]);
   }
 
-  FOR_DEBUG_MODE(std::fprintf(stderr, "%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n", __FILE__, __LINE__);)
-
+  FOR_DEBUG_MODE(std::fprintf(stderr, "%S%s:%d: 'void ComplexExternalCommand::executeHelper() override' after forking and waiting for child\n","(FORDEB~UGMODE) ", __FILE__, __LINE__);)
   //same here from "void ExternalCommand::executeHelper()"
   TRY_SYS2(ERR_ARG, "execvp");
 }
