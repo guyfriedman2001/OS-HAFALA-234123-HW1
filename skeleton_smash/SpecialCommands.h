@@ -122,10 +122,12 @@ public:
 };
 
 class NetInfo : public SpecialCommand {
+    string interface;
     string iPAdress;
     string subnetMask;
     string defaultGetway;
     string dnsServers;
+    bool interfaceExists;
     const static char* NOT_SPECIFIED;
     const static char* INTERFACE_DOESNT_EXIST_1;
     const static char* INTERFACE_DOESNT_EXIST_2;

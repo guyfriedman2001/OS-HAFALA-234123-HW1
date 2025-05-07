@@ -569,19 +569,32 @@ const char* NetInfo::INTERFACE_DOESNT_EXIST_2 = " does not exist";
 
 NetInfo::NetInfo(const argv& args, const char *cmd_line, const char *unused_in_special_commands)
 {
-  iPAdress = getIPAddress(args[1]);
-  subnetMask = getSubnetMask(args[1]);
-  
+  if (args.size() == 2) {
+    interfaceExists = true;
+    interface = args[1];
+    iPAdress = getIPAddress(interface);
+    subnetMask = getSubnetMask(interface);
+    defaultGetway = getDefaultGetway(interface);
+    dnsServers = getDnsServers();
+  } else {
+    interface = false;
+  }
 }
 
 void NetInfo::execute()
 {
-  if (iPAdress.empty() || subnetMask.empty()) {
+  if(!interfaceExists) {
     cerr << this->NOT_SPECIFIED << endl;
+    return;
+  }
+  if (iPAdress.empty() || subnetMask.empty() || defaultGetway.empty() || dnsServers.empty()) {
+    cerr << this->INTERFACE_DOESNT_EXIST_1 << interface << this->INTERFACE_DOESNT_EXIST_2 << endl;
     return;
   }
   cout << "IP Address: " << iPAdress << endl;
   cout << "Subnet Mask: " << subnetMask << endl;
+  cout << "Default Gateway: " << defaultGetway << endl;
+  cout << "DNS Servers: " << dnsServers << endl;
 }
 
 string getInterfaceAddress(const string& interfaceName, int ioctlCommand) {
@@ -703,7 +716,6 @@ string NetInfo::extractDns(const string &line)
     if (line.rfind("nameserver", 0) != 0) {
         return "";
     }
-
     istringstream iss(line);
     string keyword, ipAddress;
     iss >> keyword >> ipAddress;
