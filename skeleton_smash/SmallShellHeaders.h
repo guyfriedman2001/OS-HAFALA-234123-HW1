@@ -115,8 +115,8 @@ exit(1); \
 do { \
 if (SYSTEM_CALL_FAILED(SYSTEM_CALL)) { \
 perror(ERROR_STRING); \
-} \
 FOR_DEBUG_MODE(PERRORF("(FOR_DEBUG_MODE(PERRORF)) error in file: %s, line: %d\n",__FILE__,__LINE__);) \
+} \
 } while (0)
 
 //I want the functionality of TRY_SYS without changing existing code and with easier use for smash calls
