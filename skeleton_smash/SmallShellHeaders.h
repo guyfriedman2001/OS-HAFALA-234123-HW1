@@ -67,7 +67,7 @@ typedef int fd_location;
 typedef std::shared_ptr<Command> cmdp;
 typedef int BIBE;
 
-#define NDEBUG
+//#define NDEBUG
 
 // ============= TODO: add here permanent disabling flags / switches =============
 #ifndef NDEBUG
