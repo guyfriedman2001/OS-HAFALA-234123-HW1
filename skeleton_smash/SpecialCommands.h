@@ -122,7 +122,13 @@ public:
 };
 
 class NetInfo : public SpecialCommand {
-    // TODO: Add your data members **BONUS: 10 Points**
+    string iPAdress;
+    string subnetMask;
+    string defaultGetway;
+    string dnsServers;
+    const static char* NOT_SPECIFIED;
+    const static char* INTERFACE_DOESNT_EXIST_1;
+    const static char* INTERFACE_DOESNT_EXIST_2;
 public:
     NetInfo(const argv& args,  const char *cmd_line_after_aliases, const char *cmd_line_before_aliases);
 
@@ -130,6 +136,11 @@ public:
     }
 
     void execute() override;
+    string getInterfaceAdress(const string& interfaceName, int ioctlCommand);
+    string getIPAddress(const string& interfaceName);
+    string getSubnetMask(const string& interfaceName);
+    string getDefaultGetway();
+    string getDnsServers();
 };
 
 

@@ -38,7 +38,11 @@ class Command;
 #include <cstdlib> // for getenv
 #include <sys/syscall.h>
 #include <sys/stat.h>
-#include <pwd.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>	
+#include <net/if.h>	
+#include <netinet/in.h>	
+#include <arpa/inet.h>	
 
 //TODO: add macros here V
 #ifdef NDEBUG

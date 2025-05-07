@@ -8,8 +8,8 @@
 #include "CommandFactories.h"
 #include "ExternalCommands.h"
 #include "SmallShell.h"
+#include <cmath>
 
-//#include <linux/dirent.h>
 struct linux_dirent64 {
     ino64_t        d_ino;
     off64_t        d_off;
@@ -400,10 +400,10 @@ void DiskUsageCommand::execute()
     return;
   } else if (!pathGiven)
   {
-    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB" << endl;
+    cout << this->TOTAL_DISK_USAGE << ceil((double)calculateDiskUsage(getCurrentDirectory()) / 1024) << " KB" << endl;
   } else if (directoryExists(path))
   {
-    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB" << endl;
+    cout << this->TOTAL_DISK_USAGE << ceil((double)calculateDiskUsage(path) / 1024) << " KB" << endl;
   } else {
     cerr << this->DIRECTORY_DOESNT_EXIST_1 << path << this->DIRECTORY_DOESNT_EXIST_2 << endl;
   }
@@ -563,12 +563,52 @@ string WhoAmICommand::getFieldByUid(int uid, int fieldIndex) {
     return "";
 }
 
+const char* NetInfo::NOT_SPECIFIED = "smash error: netinfo: interface not specified";
+const char* NetInfo::INTERFACE_DOESNT_EXIST_1 = "smash error: netinfo: interface ";
+const char* NetInfo::INTERFACE_DOESNT_EXIST_2 = " does not exist";
+
 NetInfo::NetInfo(const argv& args, const char *cmd_line, const char *unused_in_special_commands)
 {
-  //BONUS
+  iPAdress = getIPAddress(args[1]);
+  subnetMask = getSubnetMask(args[1]);
+  
 }
 
 void NetInfo::execute()
 {
-  //BONUS
+  if (iPAdress.empty() || subnetMask.empty()) {
+    cerr << this->NOT_SPECIFIED << endl;
+    return;
+  }
+  cout << "IP Address: " << iPAdress << endl;
+  cout << "Subnet Mask: " << subnetMask << endl;
+}
+
+string getInterfaceAddress(const string& interfaceName, int ioctlCommand) {
+    int networkSocket = socket(AF_INET, SOCK_DGRAM, 0);
+    if (networkSocket < 0) {
+        return "";
+    }
+    struct ifreq interfaceRequest = {};
+    strncpy(interfaceRequest.ifr_name, interfaceName.c_str(), IFNAMSIZ - 1);
+    interfaceRequest.ifr_name[IFNAMSIZ - 1] = '\0';
+    if (ioctl(networkSocket, ioctlCommand, &interfaceRequest) < 0) {
+        close(networkSocket);
+        return "";
+    }
+    struct sockaddr_in* address_struct = (struct sockaddr_in*)&interfaceRequest.ifr_addr;
+    string result = inet_ntoa(address_struct->sin_addr);
+
+    close(networkSocket);
+    return result;
+}
+
+string NetInfo::getIPAddress(const string& interfaceName)
+{
+    return getInterfaceAddress(interfaceName, SIOCGIFADDR);
+}
+
+string NetInfo::getSubnetMask(const string& interfaceName)
+{
+    return getInterfaceAddress(interfaceName, SIOCGIFNETMASK);
 }
