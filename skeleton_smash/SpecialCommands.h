@@ -139,7 +139,8 @@ public:
     string getInterfaceAdress(const string& interfaceName, int ioctlCommand);
     string getIPAddress(const string& interfaceName);
     string getSubnetMask(const string& interfaceName);
-    string getDefaultGetway();
+    string getDefaultGetway(const string& interfaceName);
+    string extractGateway(const string& line, const string& interfaceName);
     string getDnsServers();
 };
 

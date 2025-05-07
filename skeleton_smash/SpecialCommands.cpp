@@ -612,3 +612,55 @@ string NetInfo::getSubnetMask(const string& interfaceName)
 {
     return getInterfaceAddress(interfaceName, SIOCGIFNETMASK);
 }
+
+string NetInfo::getDefaultGetway(const string &interfaceName)
+{
+    int fd;
+    TRY_SYS3(fd, open("/proc/net/route", O_RDONLY), "open");
+    if (fd < 0) {
+        return "";
+    }
+    char buffer[4096];
+    ssize_t bytesRead;
+    TRY_SYS3(fd, read(fd, buffer, sizeof(buffer) - 1), "read");
+    TRY_SYS3(fd,close(fd), "close");
+    if (bytesRead <= 0) {
+        return "";
+    }
+    buffer[bytesRead] = '\0';
+
+    string bufferString(buffer);
+    istringstream iss(bufferString);
+    string line;
+    getline(iss, line);
+    while (getline(iss,line)) {
+        string gateway = extractGateway(line, interfaceName);
+        if (!gateway.empty()) {
+            return gateway;
+        }
+    }
+
+    return "";
+}
+
+string extractGateway(const string& line, const string& interfaceName) {
+    istringstream iss(line);
+    string iface, destHex, gatewayHex;
+    iss >> iface >> destHex >> gatewayHex;
+    if (iface == interfaceName && destHex == "00000000") {
+        unsigned long actualGetaway;
+        std::stringstream convert;
+        convert << std::hex << gatewayHex;
+        convert >> actualGetaway;
+
+        struct in_addr gatewayAddress;
+        gatewayAddress.s_addr = actualGetaway;
+        return inet_ntoa(gatewayAddress);
+    }
+    return "";
+}
+
+string NetInfo::getDnsServers()
+{
+    return string();
+}
