@@ -41,9 +41,14 @@ class Command;
 #include <pwd.h>
 
 //TODO: add macros here V
-
+#ifdef NDEBUG
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
+#else
+#define COMMAND_MAX_LENGTH (20000)
+#define COMMAND_MAX_ARGS (20000)
+#endif
+
 #define MAX_DIR_LENGTH (COMMAND_MAX_LENGTH)
 
 using std::string;
