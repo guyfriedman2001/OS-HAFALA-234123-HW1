@@ -25,6 +25,10 @@ private:
     char* loadShellPath(char* buffer_location, size_t buffer_size);
     FdManager& m_fdmanager;
 
+    void undoRedirection();
+
+    void applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args);
+
 public:
     Command *CreateCommand(const char *cmd_line);
 
@@ -82,6 +86,8 @@ public:
 
     pid_t get_foreground_pid();
 
+    bool has_foreground_process() const;
+
     int kill_foreground_process(int status);
 
     int kill_process(pid_t pid, int sig_num);
@@ -102,9 +108,9 @@ public:
 
     static void join_argv_to_cstr(const argv& args, char* buffer, size_t max_len);
 
-    void temp_applyRedirection(); //TODO
+    void return_from_temporary_suspension_to_what_was_changed();
 
-    void temp_undoRedirection(); //TODO
+    void temporairly_suspend_redirection_and_return_to_default();
 
 
 };

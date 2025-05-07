@@ -65,10 +65,11 @@ typedef int BIBE;
 
 
 // ============= TODO: add here permanent disabling flags / switches =============
-#define DEBUG_MODE true  //FIXME: flip flag and test before submission!
+#define DEBUG_MODE true  //FIXME: switch flag to false, and test before submission!
 #define UNFOUND_COMMAND_HANDLED_AUTOMATICALLY true //refers to the case that an invalid command was given and smash tried to execute it externally
 #define PIPE_CHANGES_DADDYS_FD false //refers to the case that pipe would change the fd in the original daddy process
-#define PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND true
+#define PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND true //refers to the case that pipes should only execute in the foreground, not background
+#define NEED_TO_HANDLE_ALL_SIGNALS false //refers to whether all signals should be handled; when set to false only ctr c (sigint) would be handled in a non default way
 
 
 // ============= TODO: add here #define debug utilities and functions =============
@@ -140,7 +141,7 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 
 // ============= TODO: ADD HERE TEMPORAIRLY DISABLING FLAGS =============
 #define ONLY_FOR_DEBUG(BOOL) (DEBUG_MODE&&BOOL)
-#define TEMPORAIRLY_DISABLE_CTRL_HANDLER ONLY_FOR_DEBUG(true)
+#define TEMPORAIRLY_DISABLE_CTRL_HANDLER ONLY_FOR_DEBUG(false)
 //#define temporairly_disable_kill_all_jobs ONLY_FOR_DEBUG(true)
 //#define temporairly_disable_removeFinishedJobs ONLY_FOR_DEBUG(true)
 
@@ -180,6 +181,10 @@ TRY_SYS(SYSTEM_CALL, ("smash error: " SYS_CALL_NAME " failed"))
 //general magic numbers
 #define ERR_ARG (-1)
 #define SYSTEM_CALL_ERROR (-1)
+
+//small shell handling external processes in the foreground
+#define NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID (-1)
+
 
 
 

@@ -22,6 +22,7 @@ const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed";
 
 
 
+
 /*void ctrlCHandler(int sig_num) {
   printf("smash: got ctrl-C\n");
   pid_t foreground_task =  SmallShell::getInstance().get_foreground_pid();
@@ -66,15 +67,17 @@ void remove_background_flag_from_da_argv_blyat(argv& args) {
 }
 
 SmallShell::SmallShell()
-    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false), foreground_pid(-1),
+    : currentPrompt("smash"), promptEndChar(">"), old_path_set(false), foreground_pid(NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID),
       m_fdmanager(FdManager::getFDManager())
 {
 }
 
 SmallShell::~SmallShell()
 {
-  // TODO: add your implementation
+  //undoRedirection(); //TODO: need to make sure that this is called in the destructor of fdmanager
 }
+
+
 
 bool SmallShell::hasOldPath()
 {
@@ -373,5 +376,27 @@ void SmallShell::addJob(const char *cmd_line, pid_t pid, bool isStopped)
 {
   this->addJob(new ExternalCommand(cmd_line, pid), isStopped);
 }
+
+void SmallShell::return_from_temporary_suspension_to_what_was_changed()
+{
+  this->m_fdmanager.return_from_temporary_suspension_to_what_was_changed();
+}
+void SmallShell::temporairly_suspend_redirection_and_return_to_default()
+{
+  this->m_fdmanager.temporairly_suspend_redirection_and_return_to_default();
+}
+void SmallShell::undoRedirection()
+{
+  this->m_fdmanager.undoRedirection();
+}
+void SmallShell::applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args)
+{
+  this->m_fdmanager.applyRedirection(cmd_line, args, remaining_args);
+}
+
+bool SmallShell::has_foreground_process() const {
+  return this->foreground_pid == NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID;
+}
+
 
 
