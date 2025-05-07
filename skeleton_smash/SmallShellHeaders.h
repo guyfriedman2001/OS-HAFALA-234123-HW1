@@ -89,6 +89,11 @@ typedef int BIBE;
 
 #define PRINT_DEBUG_MODE(STRING) FOR_DEBUG_MODE(cout << "(PRINT_DEBUG_MODE)  "<< STRING << endl)
 #define PRINT_DEBUG_MODE_CERR(STRING) FOR_DEBUG_MODE(cerr << "(PRINT_DEBUG_MODE_CERR)  "<< STRING << endl)
+#define PRINT_DEBUG_MODE_CERR_2(STRING) (PRINT_DEBUG_MODE_CERR(STRING)FOR_DEBUG_MODE(;))
+
+
+#define PERRORF(fmt, ...) \
+fprintf(stderr, fmt ": %s\n", ##__VA_ARGS__, strerror(errno))
 
 // ============= TODO: add here #define utilities and functions =============
 #define STRINGS_EQUAL(A, B) ((A) == (B))
@@ -111,6 +116,7 @@ do { \
 if (SYSTEM_CALL_FAILED(SYSTEM_CALL)) { \
 perror(ERROR_STRING); \
 } \
+FOR_DEBUG_MODE(PERRORF("(FOR_DEBUG_MODE(PERRORF)) error in file: %s, line: %d\n",__FILE__,__LINE__);) \
 } while (0)
 
 //I want the functionality of TRY_SYS without changing existing code and with easier use for smash calls
