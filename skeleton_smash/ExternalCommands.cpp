@@ -50,6 +50,7 @@ void ExternalCommand::execute()
 
   bool is_kid = (kid_pid == 0);
   if (is_kid){
+    TRY_SYS2(setpgrp(), "setpgrp");
     // Child
     this->executeHelper(); // <---- DELEGATE to a helper method
     exit(1);               // If executeHelper returns, it means exec failed

@@ -18,7 +18,7 @@
 SmallShell& SHELL_INSTANCE = SmallShell::getInstance();
 
 const char* SmallShell::SIGKILL_STRING_MESSAGE_1 = "smash: process ";
-const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed";
+const char* SmallShell::SIGKILL_STRING_MESSAGE_2 = " was killed\n";
 
 
 

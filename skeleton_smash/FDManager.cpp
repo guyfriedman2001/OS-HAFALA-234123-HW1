@@ -157,8 +157,11 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
       return;
     } while (0);
   } else { //do kids work
+    TRY_SYS2(setpgrp(), "setpgrp");
+
     //close unused bibe end
     TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
 
     //change input to be the pipe
     m_extern_std_in = my_pipe[BIBE_READ];
