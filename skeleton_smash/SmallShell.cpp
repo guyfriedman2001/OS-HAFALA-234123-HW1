@@ -388,7 +388,7 @@ void SmallShell::applyRedirection(const char *cmd_line, const argv &args, argv &
 }
 
 bool SmallShell::has_foreground_process() const {
-  return this->foreground_pid == NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID;
+  return this->foreground_pid != NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID;
 }
 
 
