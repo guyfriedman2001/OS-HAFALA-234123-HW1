@@ -254,8 +254,12 @@ void SmallShell::executeCommand(const argv& args)
 }
 
 bool isEmptyCommand(const char *cmd_line)
-{ //FIXME
-  return false;
+{
+  bool option1 = (cmd_line == nullptr);
+  if (option1){return true;}
+  bool option2 = (cmd_line[0] == '\0');
+  bool option3 = ((cmd_line[0] == '\n')&&(cmd_line[1] == '\0'));
+  return option2 || option3;
 }
 
 void SmallShell::executeCommand(const char *cmd_line)
