@@ -22,7 +22,7 @@ void JobsList::JobEntry::printYourselfWithPID(bool backwards)
   if (backwards)
   {
     this->command->printYourself();
-    cout << " " << this->getJobPID();
+    cout << " " << this->getJobPID() << endl;
   } else
   {
     cout << this->getJobPID() << ": ";

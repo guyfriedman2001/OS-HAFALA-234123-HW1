@@ -27,7 +27,6 @@ void ctrlCHandler(int sig_num)
     TRY_SYS2(kill(remember_what_to_print, SIGKILL), "kill");
     printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, remember_what_to_print, SmallShell::SIGKILL_STRING_MESSAGE_2);
 
-
 }
 
 int main(int argc, char *argv[]) {
