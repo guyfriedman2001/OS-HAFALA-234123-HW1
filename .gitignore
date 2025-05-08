@@ -3,3 +3,5 @@
 .idea/editor.xml
 skeleton_smash/cmake-build-debug/.cmake/api/v1/reply/codemodel-v2-3e2570a8563f32d9f2e2.json
 .DS_Store
+tests/
+Tests_updated.zip
