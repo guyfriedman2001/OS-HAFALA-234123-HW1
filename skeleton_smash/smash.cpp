@@ -20,10 +20,17 @@ void ctrlCHandler(int sig_num)
     printf("smash: got ctrl-C\n");
     //pid_t foreground_task = SHELL_INSTANCE.get_foreground_pid();
     if (!SHELL_INSTANCE.has_foreground_process()){//foreground_task == ERR_ARG) {
+        SHELL_INSTANCE.printPrompt();
+        cout.flush();
         return;
     }
     //TRY_SYS(kill(foreground_task, SIGKILL), "smash error: kill failed");
     pid_t remember_what_to_print = SHELL_INSTANCE.get_foreground_pid();
+     if (waitpid(remember_what_to_print, nullptr, WNOHANG) != 0) {
+        SHELL_INSTANCE.printPrompt();
+        cout.flush();
+        return;
+    }
     TRY_SYS2(kill(remember_what_to_print, SIGKILL), "kill");
     printf("%s%d%s", SmallShell::SIGKILL_STRING_MESSAGE_1, remember_what_to_print, SmallShell::SIGKILL_STRING_MESSAGE_2);
 
