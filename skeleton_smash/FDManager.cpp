@@ -124,7 +124,7 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
-#if PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+#if PIPES_SHOULD_ONLY_FORK_ONCE
 void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
                   fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
 { //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
@@ -444,7 +444,7 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
   } else if (isPipeCommand(cmd_line)) {
     split_pipe(args, left_arguments, right_arguments);
     create_pipe(args,left_arguments,right_arguments,m_current_std_in,m_current_std_out,m_extern_std_error,is_stderr_pipe(args));
-#if PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+#if PIPES_SHOULD_ONLY_FORK_ONCE
 
     remaining_args = left_arguments;
 
@@ -452,7 +452,7 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
 
     //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
     //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
-
+    remaining_args = argv(); //meaning no arguments left since first child should be able to handle it //FIXME add another check for empty args in this case
 #endif //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
   } else {
     //FOR_DEBUG_MODE(perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");)

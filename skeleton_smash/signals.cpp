@@ -1,4 +1,6 @@
+#include "SmallShellHeaders.h"
 #include "SmallShell.h"
+#if !PERMANENTLY_DISABLE_SIGNALS_H
 #if TEMPORAIRLY_DISABLE_CTRL_HANDLER
 //do nothing
 #else  //if TEMPORAIRLY_DISABLE_CTRL_HANDLER
@@ -295,3 +297,4 @@ void ctrlCHandler(int sig_num) {
 
 #endif  //else TEMPORAIRLY_DISABLE_CTRL_HANDLER
 
+#endif //PERMANENTLY_DISABLE_SIGNALS_H
