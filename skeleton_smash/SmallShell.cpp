@@ -346,7 +346,7 @@ int SmallShell::waitPID(pid_t pid)
   int status;
   this->update_foreground_pid(pid);
   TRY_SYS2(waitpid(pid, &status, Block_until_the_child_terminates),"waitpid");
-  this->update_foreground_pid(ERR_ARG);
+  this->update_foreground_pid(NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID);
   return status;
 }
 

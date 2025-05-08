@@ -58,7 +58,9 @@ void ExternalCommand::execute()
     do {
       if (!_isBackgroundComamnd(this->command_after_aliases)) //we need to wait for this command
       {
+        SmallShell::getInstance().update_foreground_pid(kid_pid);
         TRY_SYS2(waitpid(kid_pid, &status, wait_but_can_still_get_ctrl_c),"waitpid");
+        SmallShell::getInstance().update_foreground_pid(NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID);
       }
       else
       {

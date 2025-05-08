@@ -45,13 +45,9 @@ class Command;
 #include <arpa/inet.h>	
 
 //TODO: add macros here V
-#ifdef NDEBUG
 #define COMMAND_MAX_LENGTH (200)
 #define COMMAND_MAX_ARGS (20)
-#else
-#define COMMAND_MAX_LENGTH (20000)
-#define COMMAND_MAX_ARGS (20000)
-#endif
+
 
 #define MAX_DIR_LENGTH (COMMAND_MAX_LENGTH)
 
@@ -75,7 +71,7 @@ typedef int BIBE;
 
 // ============= TODO: add here permanent disabling flags / switches =============
 #ifndef NDEBUG
-#define DEBUG_MODE true  //FIXME: switch flag to false, and test before submission! (or simply compile using -DNDEBUG flag)
+#define DEBUG_MODE false  //FIXME: switch flag to false, and test before submission! (or simply compile using -DNDEBUG flag)
 #else // NDEBUG
 #define DEBUG_MODE false //DONT CHANGE THIS LINE! AUTOMATIC DEBUG TURN OFF FOR -DNDEBUG COMPILATION!
 #endif // NDEBUG
