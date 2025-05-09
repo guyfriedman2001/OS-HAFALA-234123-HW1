@@ -69,6 +69,7 @@ public:
 
     inline pid_t getJobPID(int jobID); 
 
+    void debugPrintJobsCount(const std::string& context = "") const;
     // TODO: Add extra methods or modify exisitng ones as needed
 };
 

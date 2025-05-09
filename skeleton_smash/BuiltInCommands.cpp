@@ -143,7 +143,7 @@ JobsCommand::JobsCommand(const argv &args)
 JobsCommand::JobsCommand(const argv &args, const char *cmd_line, const char *unused_in_builtin)
     : JobsCommand(args)
 {
-  SHELL_INSTANCE.getJobsList().removeFinishedJobs();
+  //SHELL_INSTANCE.getJobsList().removeFinishedJobs();
   }
 
 void JobsCommand::execute()
@@ -238,8 +238,8 @@ void ForegroundCommand::execute()
   }
   this->job->printYourselfWithPID(true);
   cout.flush();
-  int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
   SHELL_INSTANCE.getJobsList().removeJobById(this->jobID);
+  int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
   // now what?? need to print something? maybe print @exit_status????
   FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)
 }
