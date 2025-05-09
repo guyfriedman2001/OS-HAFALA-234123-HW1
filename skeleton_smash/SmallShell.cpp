@@ -269,8 +269,8 @@ void SmallShell::executeCommand(const char *cmd_line)
     Command* cmd = this->CreateCommand(cmd_line);
 
     cmd->execute();
-
     m_fdmanager.undoRedirection();
+
   } else {
     EmptyCommand cmd;
     cmd.execute();
@@ -396,5 +396,15 @@ bool SmallShell::has_foreground_process() const {
   return this->foreground_pid != NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID;
 }
 
+Command* SmallShell::CreateCommandFromArgs(const argv& args)
+{
+    // בנה מחדש את קו הפקודה
+    std::string full_cmd_line;
+    for (const std::string& arg : args) {
+        full_cmd_line += arg + " ";
+    }
+
+    return this->CreateCommand(full_cmd_line.c_str());
+}
 
 

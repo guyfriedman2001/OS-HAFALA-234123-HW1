@@ -66,7 +66,9 @@ private:
     FdManager(const FdManager&) = delete;
     FdManager& operator=(const FdManager&) = delete;
 
-    void switch_two_fd_entries(fd_location &entry1, fd_location &entry2);
+    //void switch_two_fd_entries(fd_location &entry1, fd_location &entry2);
+    //void switch_two_fd_entries(fd_location &saved_fd, fd_location new_fd);
+    void switch_two_fd_entries(fd_location &saved_fd, fd_location new_fd, int std_fd);
     void create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in, fd_location &std_out,fd_location &std_err, bool isCerrPipe);
 
 

@@ -128,7 +128,7 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
 void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
                   fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
 { //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
-  SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+ /*SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
   //start by making a pipe
   BIBE my_pipe[BIBE_SIZE];
@@ -148,12 +148,14 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
     do {  //now im working as the first process (daddy), this part will continue to later use @left_args
       if (isCerrPipe) {
         m_extern_std_error = my_pipe[BIBE_WRITE];
-        switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+        switch_two_fd_entries(m_current_std_error,m_extern_std_error,STDERR_FILENO);
       } else {
         m_current_std_out = my_pipe[BIBE_WRITE];
-        switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+        switch_two_fd_entries(m_current_std_out,m_extern_std_out,STDOUT_FILENO);
       }
 
+      SHELL_INSTANCE.executeCommand(left_args);
+      waitpid(first_born, nullptr, 0);
       return;
     } while (0);
   } else { //do kids work
@@ -165,14 +167,71 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
 
     //change input to be the pipe
     m_extern_std_in = my_pipe[BIBE_READ];
-    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in,STDIN_FILENO);
 
     //use existing smash logic for the rest of the process
     SHELL_INSTANCE.executeCommand(right_args);
 
     //after process finished no longer need for kid
     exit(0);
-  }
+  }*/
+
+
+    int pipefd[2];
+    TRY_SYS2(pipe(pipefd), "pipe");
+
+    pid_t right_child = fork();  // child: will handle right side (grep)
+    TRY_SYS2(right_child, "fork");
+
+    if (right_child == 0) {
+        // Child: execute right_args (command after the pipe)
+        TRY_SYS2(setpgrp(), "setpgrp");
+
+        // pipefd[0] is read end — we want it as stdin
+        close(pipefd[1]);  // close write end
+        TRY_SYS2(dup2(pipefd[0], STDIN_FILENO), "dup2");
+        close(pipefd[0]);
+
+        // execute right command
+        SHELL_INSTANCE.executeCommand(right_args);
+        exit(0);
+    }
+
+    // Parent continues
+    pid_t left_child = fork();  // another child: handles left side 
+    TRY_SYS2(left_child, "fork");
+
+    if (left_child == 0) {
+        TRY_SYS2(setpgrp(), "setpgrp");
+
+        // pipefd[1] is write end — we want it as stdout or stderr
+        close(pipefd[0]);  // close read end
+
+        if (isCerrPipe) {
+            TRY_SYS2(dup2(pipefd[1], STDERR_FILENO), "dup2");
+        } else {
+            TRY_SYS2(dup2(pipefd[1], STDOUT_FILENO), "dup2");
+        }
+
+        close(pipefd[1]);
+
+        // execute left command
+       Command* cmd = SmallShell::getInstance().CreateCommandFromArgs(left_args);
+        if (cmd != nullptr) {
+          cmd->execute();
+          delete cmd;
+        }
+        exit(0);
+    }
+
+    // Parent: smash
+    // close both ends of pipe — we don't use them
+    close(pipefd[0]);
+    close(pipefd[1]);
+
+    // wait for both children to finish
+    waitpid(left_child, nullptr, 0);
+    waitpid(right_child, nullptr, 0);
 }
 #else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
 void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
@@ -244,6 +303,9 @@ FdManager::FdManager()
   closed_extern_channel(m_extern_std_out);
   closed_extern_channel(m_extern_std_error);
 #endif
+
+  m_current_std_in = m_current_std_out = m_current_std_error = -1;
+    m_extern_std_in = m_extern_std_out = m_extern_std_error = -1;
 }
 
 FdManager::~FdManager()
@@ -254,7 +316,7 @@ FdManager::~FdManager()
 
 void FdManager::undoSpecificRedirection(fd_location &saved_location, fd_location destination_location)
 {
-  if (destination_location == saved_location) {
+  /*if (destination_location == saved_location) {
     return;
   }
   int success1 = dup2(saved_location, destination_location);
@@ -264,7 +326,21 @@ void FdManager::undoSpecificRedirection(fd_location &saved_location, fd_location
   TRY_SYS2(success2,"close");
   if (!SYSTEM_CALL_FAILED(success2)) {
     saved_location = destination_location;
-  }
+  }*/
+
+   if (saved_location == -1 || destination_location== -1) {
+        return;
+    }
+
+    int success1 = dup2(saved_location, destination_location);
+    TRY_SYS2(success1, "dup2");
+
+    int success2 = close(saved_location);
+    TRY_SYS2(success2, "close");
+
+    if (!SYSTEM_CALL_FAILED(success2)) {
+        saved_location = -1;
+    }
 }
 
 void FdManager::do_close_extern_channel(fd_location &channel_to_close)
@@ -366,7 +442,7 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
     if (SYSTEM_CALL_FAILED(m_extern_std_in)) {return;}
 
     //apply input channel switch change
-    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in,STDOUT_FILENO);
 
     FOR_DEBUG_MODE(
     std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
@@ -410,7 +486,7 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
     if(SYSTEM_CALL_FAILED(m_extern_std_out)){return;}
 
     //apply output channel switch change
-    switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+    switch_two_fd_entries(m_current_std_out,m_extern_std_out,STDOUT_FILENO);
 
     FOR_DEBUG_MODE(
     std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
@@ -467,11 +543,15 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
 
 void FdManager::closed_extern_channel(fd_location &closed_channel)
 {
-  closed_channel = CLOSED_CHANNEL;
+  /*closed_channel = CLOSED_CHANNEL;*/
+   if (closed_channel != -1) {
+        close(closed_channel);
+    }
+    closed_channel = -1;
 }
 
 
-void FdManager::switch_two_fd_entries(fd_location &entry1, fd_location &entry2)
+/*void FdManager::switch_two_fd_entries(fd_location &entry1, fd_location &entry2)
 {
   if (entry1 == entry2) {
     return;
@@ -490,36 +570,96 @@ void FdManager::switch_two_fd_entries(fd_location &entry1, fd_location &entry2)
   if (SYSTEM_CALL_FAILED(move_temp_to_2)){return;}
   int close_temp = close(temp);
   TRY_SYS2(close_temp,"close");
+}*/
+
+/*void FdManager::switch_two_fd_entries(fd_location &saved_fd, fd_location new_fd)
+{
+    // אם הקלט כבר מופנה נכון — אין מה לעשות
+    if (new_fd == STDIN_FILE_NUM || new_fd == STDOUT_FILE_NUM || new_fd == STDERR_FILE_NUM) {
+        // נניח שאתה קובע את הכיוון לפי saved_fd
+        int std_fd = (saved_fd == m_current_std_in) ? STDIN_FILENO :
+                     (saved_fd == m_current_std_out) ? STDOUT_FILENO :
+                     STDERR_FILENO;
+
+        // שמירה של הקלט/פלט/שגיאה המקורי
+        saved_fd = dup(std_fd);
+        TRY_SYS2(saved_fd, "dup");
+
+        // ניתוב ל־fd החדש
+        int result = dup2(new_fd, std_fd);
+        TRY_SYS2(result, "dup2");
+    }
+}*/
+
+void FdManager::switch_two_fd_entries(fd_location &saved_fd, fd_location new_fd, int std_fd)
+{
+    if (new_fd == -1 || std_fd == -1) return;
+
+    saved_fd = dup(std_fd);  // שמירת fd המקורי
+    TRY_SYS2(saved_fd, "dup");
+
+    int result = dup2(new_fd, std_fd);  // ביצוע ניתוב
+    TRY_SYS2(result, "dup2");
 }
 
 void FdManager::return_from_temporary_suspension_to_what_was_changed()
 {
   if (!isTempChanged) {return;}
-  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
-  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
-  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in,STDIN_FILENO);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out,STDOUT_FILENO);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error,STDERR_FILENO);
   isTempChanged = false;
 }//TODO
 
 void FdManager::temporairly_suspend_redirection_and_return_to_default()
 {
   if (isTempChanged) {return;}
-  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
-  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
-  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in,STDIN_FILENO);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out,STDOUT_FILENO);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error,STDERR_FILENO);
   isTempChanged = true;
 }
 
 
 void FdManager::undoRedirection()
 {
-  return_from_temporary_suspension_to_what_was_changed();
+  /*//return_from_temporary_suspension_to_what_was_changed();
   undoSpecificRedirection(m_current_std_in, STDIN_FILE_NUM);
   closed_extern_channel(m_extern_std_in);
   undoSpecificRedirection(m_current_std_out, STDOUT_FILE_NUM);
   closed_extern_channel(m_extern_std_out);
   undoSpecificRedirection(m_current_std_error, STDERR_FILE_NUM);
-  closed_extern_channel(m_extern_std_error);
+  closed_extern_channel(m_extern_std_error);*/
+
+  if (m_current_std_in != -1) {
+        dup2(m_current_std_in, STDIN_FILENO);
+        close(m_current_std_in);
+        m_current_std_in = -1;
+    }
+    if (m_extern_std_in != -1) {
+        close(m_extern_std_in);
+        m_extern_std_in = -1;
+    }
+
+    if (m_current_std_out != -1) {
+        dup2(m_current_std_out, STDOUT_FILENO);
+        close(m_current_std_out);
+        m_current_std_out = -1;
+    }
+    if (m_extern_std_out != -1) {
+        close(m_extern_std_out);
+        m_extern_std_out = -1;
+    }
+
+    if (m_current_std_error != -1) {
+        dup2(m_current_std_error, STDERR_FILENO);
+        close(m_current_std_error);
+        m_current_std_error = -1;
+    }
+    if (m_extern_std_error != -1) {
+        close(m_extern_std_error);
+        m_extern_std_error = -1;
+    }
 }
 
 void FdManager::undoRedirection(const char *cmd_line){undoRedirection();}

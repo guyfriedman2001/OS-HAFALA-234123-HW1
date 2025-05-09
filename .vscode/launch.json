@@ -9,8 +9,7 @@
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
             "stopAtEntry": false,
-            "console": "externalTerminal",  
-            "externalConsole": true,
+            "externalConsole": false,
             "setupCommands": [
               {
                 "text": "-enable-pretty-printing",

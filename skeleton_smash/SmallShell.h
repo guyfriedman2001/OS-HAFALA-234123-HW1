@@ -112,6 +112,7 @@ public:
 
     void temporairly_suspend_redirection_and_return_to_default();
 
+    Command* CreateCommandFromArgs(const argv& args);
 
 };
 
