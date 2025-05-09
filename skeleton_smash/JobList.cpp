@@ -137,7 +137,7 @@ for (const auto& job : jobs) {
 }
 
 for (int id : jobs_to_remove) {
-    cout << "Removing finished job with pid=" << id << std::endl;
+    //cout << "Removing finished job with pid=" << id << std::endl;
     jobs.erase(id);
 }
 this->debugPrintJobsCount("after removeFinishedJobs");

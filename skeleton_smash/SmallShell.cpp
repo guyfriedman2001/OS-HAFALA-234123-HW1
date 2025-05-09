@@ -396,5 +396,18 @@ bool SmallShell::has_foreground_process() const {
   return this->foreground_pid != NO_CURRENT_EXTERNAL_FOREGROUND_PROCESS_PID;
 }
 
+Command* SmallShell::CreateCommandFromArgs(const argv& args)
+{
+    std::string full_cmd_line;
+    for (const auto& arg : args) {
+        full_cmd_line += arg + " ";
+    }
+    // הסר רווח מיותר בסוף (אם קיים)
+    if (!full_cmd_line.empty() && full_cmd_line.back() == ' ') {
+        full_cmd_line.pop_back();
+    }
+
+    return this->CreateCommand(full_cmd_line.c_str());
+}
 
 

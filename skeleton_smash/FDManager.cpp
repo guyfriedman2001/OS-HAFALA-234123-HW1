@@ -104,7 +104,11 @@ void split_output(const argv& args, argv& left_args, argv& right_args)
 {
   int idx = get_arg_split_idx(args, ">");
   int idx2 = get_arg_split_idx(args, ">>");
-  int actual_idx = MAX(idx,idx2);
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
@@ -112,7 +116,11 @@ void split_input(const argv& args, argv& left_args, argv& right_args)
 {
   int idx = get_arg_split_idx(args, "<");
   int idx2 = get_arg_split_idx(args, "<<");
-  int actual_idx = MAX(idx,idx2);
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
@@ -120,7 +128,11 @@ void split_pipe(const argv& args, argv& left_args, argv& right_args)
 {
   int idx = get_arg_split_idx(args, "|");
   int idx2 = get_arg_split_idx(args, "|&");
-  int actual_idx = MAX(idx,idx2);
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
   split_args_by_index(args, left_args, right_args, actual_idx);
 }
 
@@ -129,7 +141,6 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
                   fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
 { //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
   SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
-
   //start by making a pipe
   BIBE my_pipe[BIBE_SIZE];
   int pipe_status = pipe(my_pipe);
@@ -141,7 +152,6 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
   if (SYSTEM_CALL_FAILED(first_born)) {TRY_SYS2(close(my_pipe[BIBE_READ]), "close");TRY_SYS2(close(my_pipe[BIBE_WRITE]), "close");return;}
 
   if (first_born != 0) { //do daddys work
-
     //close unused bibe end
     TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
 
@@ -154,6 +164,11 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
         switch_two_fd_entries(m_current_std_out,m_extern_std_out);
       }
 
+      Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(left_args);
+      if (cmd) {
+          cmd->execute();
+          delete cmd;
+      }
       return;
     } while (0);
   } else { //do kids work
@@ -168,11 +183,80 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
     switch_two_fd_entries(m_current_std_in,m_extern_std_in);
 
     //use existing smash logic for the rest of the process
-    SHELL_INSTANCE.executeCommand(right_args);
-
+    Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(right_args);
+    if (cmd) {
+        cmd->execute();
+        delete cmd;
+    }
     //after process finished no longer need for kid
     exit(0);
   }
+    /*SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+
+    // DEBUG: הדפסת הפקודות בצד ימין ושמאל
+    std::cerr << "[DEBUG] left_args: ";
+    for (const auto& s : left_args) std::cerr << s << " ";
+    std::cerr << "\n[DEBUG] right_args: ";
+    for (const auto& s : right_args) std::cerr << s << std::endl;
+
+    // יצירת pipe
+    int pipefd[2];
+    TRY_SYS2(pipe(pipefd), "pipe");
+
+    // שמירת הפלטים המקוריים
+    int stdout_copy = dup(STDOUT_FILENO);
+    int stderr_copy = dup(STDERR_FILENO);
+
+    // יצירת תהליך עבור הפקודה מימין
+    pid_t child_pid = fork();
+    TRY_SYS2(child_pid, "fork");
+
+    if (child_pid == 0) {
+        // ===== CHILD PROCESS: מריץ את הפקודה מימין (right_args) =====
+        TRY_SYS2(setpgrp(), "setpgrp");
+
+        // חיבור STDIN לקלט מה-pipe
+        TRY_SYS2(dup2(pipefd[0], STDIN_FILENO), "dup2");
+        close(pipefd[0]);
+        close(pipefd[1]);
+
+        Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(left_args);
+        if (cmd) {
+            cmd->execute();
+            delete cmd;
+        }
+        exit(0);
+    }
+
+    // ===== PARENT PROCESS: מריץ את הפקודה משמאל (left_args) =====
+
+    // סגירת הקצה הלא בשימוש של הקריאה
+    close(pipefd[0]);
+
+    // חיבור הפלט ל־pipe
+    if (isCerrPipe) {
+        TRY_SYS2(dup2(pipefd[1], STDERR_FILENO), "dup2");
+    } else {
+        TRY_SYS2(dup2(pipefd[1], STDOUT_FILENO), "dup2");
+    }
+    close(pipefd[1]);
+
+    // הפעלת הפקודה השמאלית
+    Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(right_args);
+    if (cmd) {
+        cmd->execute();
+        delete cmd;
+    }
+
+    // שיחזור של STDOUT/STDERR המקוריים
+    dup2(stdout_copy, STDOUT_FILENO);
+    dup2(stderr_copy, STDERR_FILENO);
+    close(stdout_copy);
+    close(stderr_copy);
+
+    // המתנה לסיום הילד
+    waitpid(child_pid, nullptr, 0);
+    */
 }
 #else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
 void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
