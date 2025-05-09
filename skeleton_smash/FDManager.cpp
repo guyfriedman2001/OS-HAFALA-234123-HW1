@@ -269,9 +269,13 @@ void FdManager::undoSpecificRedirection(fd_location &saved_location, fd_location
 
 void FdManager::do_close_extern_channel(fd_location &channel_to_close)
 {
-  assert(!CHANNEL_IS_CLOSED(channel_to_close));
-  close(channel_to_close);
-  closed_extern_channel(channel_to_close);
+  if (CHANNEL_IS_CLOSED(channel_to_close)) {return;}
+  assert((channel_to_close == &m_extern_std_out) || (channel_to_close == &m_extern_std_in) || (channel_to_close == &m_extern_std_err));
+int success1 = close(channel_to_close);
+  TRY_SYS2(success1,"close");
+  if (!SYSTEM_CALL_FAILED(success1)) {
+    closed_extern_channel(channel_to_close);
+  }
 }
 
 
@@ -479,17 +483,48 @@ void FdManager::switch_two_fd_entries(fd_location &entry1, fd_location &entry2)
   if (CHANNEL_IS_CLOSED(entry1) || CHANNEL_IS_CLOSED(entry2)) {
     return;
   }
-  fd_location temp = dup(entry1);
-  TRY_SYS2(temp,"dup");
-  if (SYSTEM_CALL_FAILED(temp)){return;}
+
+  //save entry1 to a temporary placeholder
+  fd_location move_entry_1_to_temporary_location = dup(entry1);
+  TRY_SYS2(move_entry_1_to_temporary_location,"dup");
+  if (SYSTEM_CALL_FAILED(move_entry_1_to_temporary_location)){return;}
+
+  //move entry2 to entry1
   int move_2_to_1 = dup2(entry2,entry1);
   TRY_SYS2(move_2_to_1,"dup2");
   if (SYSTEM_CALL_FAILED(move_2_to_1)){return;}
-  int move_temp_to_2 = dup2(temp,entry2);
+
+  //move temporary of entry1 to entry 2
+  int move_temp_to_2 = dup2(move_entry_1_to_temporary_location,entry2);
   TRY_SYS2(move_temp_to_2,"dup2");
   if (SYSTEM_CALL_FAILED(move_temp_to_2)){return;}
+
+  //closed unused temporary placeholder
+  int closed_temporary_placeholder = close(move_entry_1_to_temporary_location);
+  TRY_SYS2(closed_temporary_placeholder,"dup2");
+  if (SYSTEM_CALL_FAILED(closed_temporary_placeholder)){return;}
+
+  //update entry1 and entry2 representations
+  fd_location temporary_for_flip_representations = entry1;
+  entry1 = entry2;
+  entry2 = temporary_for_flip_representations;
+
+#if 0
+  fd_location temp_entry = dup(entry1);
+  TRY_SYS2(temp_entry,"dup");
+  if (SYSTEM_CALL_FAILED(temp_entry)){return;}
+  int move_2_to_1 = dup2(entry2,entry1);
+  TRY_SYS2(move_2_to_1,"dup2");
+  if (SYSTEM_CALL_FAILED(move_2_to_1)){return;}
+  auto temp2 = entry2;
+  entry2 = entry1;
+  int move_temp_to_2 = dup2(temp_entry,entry2);
+  TRY_SYS2(move_temp_to_2,"dup2");
+  if (SYSTEM_CALL_FAILED(move_temp_to_2)){return;}
+  entry1 = temp2;
   int close_temp = close(temp);
   TRY_SYS2(close_temp,"close");
+#endif
 }
 
 void FdManager::return_from_temporary_suspension_to_what_was_changed()
@@ -514,12 +549,15 @@ void FdManager::temporairly_suspend_redirection_and_return_to_default()
 void FdManager::undoRedirection()
 {
   return_from_temporary_suspension_to_what_was_changed();
-  undoSpecificRedirection(m_current_std_in, STDIN_FILE_NUM);
-  closed_extern_channel(m_extern_std_in);
-  undoSpecificRedirection(m_current_std_out, STDOUT_FILE_NUM);
-  closed_extern_channel(m_extern_std_out);
-  undoSpecificRedirection(m_current_std_error, STDERR_FILE_NUM);
-  closed_extern_channel(m_extern_std_error);
+  //undoSpecificRedirection(m_current_std_in, STDIN_FILE_NUM);
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+  do_close_extern_channel(m_extern_std_in);
+  //undoSpecificRedirection(m_current_std_out, STDOUT_FILE_NUM);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+  do_close_extern_channel(m_extern_std_out);
+  //undoSpecificRedirection(m_current_std_error, STDERR_FILE_NUM);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  do_close_extern_channel(m_extern_std_error);
 }
 
 void FdManager::undoRedirection(const char *cmd_line){undoRedirection();}

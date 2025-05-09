@@ -78,10 +78,12 @@ ChangeDirCommand::ChangeDirCommand(const argv &args)
   if (given_args == 0)
   {
     this->DoNothing = true;
+    return;
   }
   if (given_args > 1)
   {
     this->TooManyArgs = true;
+    return;
   }
 
   string next_path_arg = args[1];
