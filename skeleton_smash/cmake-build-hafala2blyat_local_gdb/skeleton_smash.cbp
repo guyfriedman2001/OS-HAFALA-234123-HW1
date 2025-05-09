@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="skeleton_smash"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skeleton_smash">
+				<Option output="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/skeleton_smash" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 skeleton_smash"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skeleton_smash/fast">
+				<Option output="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/skeleton_smash" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 skeleton_smash/fast"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/AliasManager.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/AliasManager.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/BuiltInCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/BuiltInCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/CommandFactories.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/CommandFactories.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/Commands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/Commands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/ExternalCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/ExternalCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/FDManager.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/FDManager.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/JobList.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/JobList.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SmallShell.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SmallShell.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SmallShellHeaders.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SmashUtil.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SpecialCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/SpecialCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/Temp_Restore.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/Temp_Restore.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/signals.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/signals.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/smash.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.TYjBIARtOH/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

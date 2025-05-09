@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="skeleton_smash"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/tmp/tmp.lnTt4x3onn/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/tmp/tmp.lnTt4x3onn/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skeleton_smash">
+				<Option output="/tmp/tmp.lnTt4x3onn/cmake-build-debug/skeleton_smash" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.lnTt4x3onn/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 skeleton_smash"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="skeleton_smash/fast">
+				<Option output="/tmp/tmp.lnTt4x3onn/cmake-build-debug/skeleton_smash" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/tmp/tmp.lnTt4x3onn/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 skeleton_smash/fast"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/tmp/tmp.lnTt4x3onn/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j7 -f &quot;/tmp/tmp.lnTt4x3onn/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/AliasManager.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/AliasManager.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/BuiltInCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/BuiltInCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/CommandFactories.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/CommandFactories.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/Commands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/Commands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/ExternalCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/ExternalCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/FDManager.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/FDManager.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/JobList.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/JobList.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SmallShell.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SmallShell.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SmallShellHeaders.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SmashUtil.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SpecialCommands.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/SpecialCommands.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/Temp_Restore.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/Temp_Restore.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/signals.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/signals.h">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/smash.cpp">
+			<Option target="skeleton_smash"/>
+		</Unit>
+		<Unit filename="/tmp/tmp.lnTt4x3onn/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

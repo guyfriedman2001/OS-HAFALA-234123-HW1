@@ -1,0 +1,682 @@
+//
+// Created by Guy Friedman on 06/05/2025.
+//
+
+#include "FDManager.h"
+
+#include "SmallShell.h"
+
+#define CLOSED_CHANNEL (-1)
+#define CHANNEL_IS_CLOSED(CHANNEL) (CHANNEL == CLOSED_CHANNEL)
+
+fd_location FdManager::m_current_std_in = STDIN_FILE_NUM;
+fd_location FdManager::m_current_std_out = STDOUT_FILE_NUM;
+fd_location FdManager::m_current_std_error = STDERR_FILE_NUM;
+fd_location FdManager::m_extern_std_in = CLOSED_CHANNEL;
+fd_location FdManager::m_extern_std_out = CLOSED_CHANNEL;
+fd_location FdManager::m_extern_std_error = CLOSED_CHANNEL;
+
+/*
+m_current_std_in = STDIN_FILE_NUM;
+  m_current_std_out = STDOUT_FILE_NUM;
+  m_current_std_error = STDERR_FILE_NUM;
+
+  closed_extern_channel(m_extern_std_in);
+  closed_extern_channel(m_extern_std_out);
+  closed_extern_channel(m_extern_std_error);
+ */
+
+bool isRedirectionCommand(const char *cmd_line)
+{
+  if (isIORedirectionCommand(cmd_line))
+  {
+    return true;
+  }
+  if (isPipeCommand(cmd_line))
+  { //TODO: maybe we want to handle the pipe logic on a different scope? YES.
+    return true;
+  }
+  return false;
+}
+
+open_flag getFlagSingleArg(const std::string& arg) {
+  if (STRINGS_EQUAL(arg, "<")) {
+    return O_RDONLY;
+  } else if (STRINGS_EQUAL(arg, ">")) {
+    return O_WRONLY | O_CREAT | O_TRUNC;
+  } else if (STRINGS_EQUAL(arg, ">>")) {
+    return O_WRONLY | O_CREAT | O_APPEND;
+  } else if (STRINGS_EQUAL(arg, "<<")) {
+    return O_RDONLY;
+  } else { //wrong argument given
+    return ERR_ARG;
+  }
+}
+
+open_flag getFlagVectorArg(const argv& args) {
+  open_flag flag = ERR_ARG;
+  for (const auto& arg : args) {
+    if(getFlagSingleArg(arg) != ERR_ARG) {
+      flag = getFlagSingleArg(arg);
+      break;
+    }
+  }
+  return flag;
+}
+
+bool is_stderr_pipe(const argv& args)
+{
+  assert_not_empty(args);
+  for (size_t i = 0; i < args.size(); ++i) {
+    if (args[i] == "|" || args[i] == "|&") {
+      return (args[i] == "|&");
+    }
+  }
+}
+
+bool is_stderr_pipe(const char* cmd_line)
+{
+  //TODO
+  return false;
+}
+
+int get_arg_split_idx(const argv& args, const string& compare_blyat) {
+  // Find the pipe symbol
+  int pipe_index = -1;
+  for (int i = 0; i < args.size(); ++i) {
+    if (STRINGS_EQUAL(args[i],compare_blyat)){
+      pipe_index = i;
+      break;
+    }
+  }
+  return pipe_index;
+}
+
+void split_args_by_index(const argv& args, argv& left_args, argv& right_args, int split_idx)
+{
+  assert(split_idx != -1); // must have | or |&
+  // Split left and right commands
+  left_args = argv(args.begin(), args.begin() + split_idx);
+  right_args = argv(args.begin() + split_idx + 1, args.end());
+}
+
+void split_output(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, ">");
+  int idx2 = get_arg_split_idx(args, ">>");
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+void split_input(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, "<");
+  int idx2 = get_arg_split_idx(args, "<<");
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+void split_pipe(const argv& args, argv& left_args, argv& right_args)
+{
+  int idx = get_arg_split_idx(args, "|");
+  int idx2 = get_arg_split_idx(args, "|&");
+  int actual_idx;
+  if (idx != -1)
+    actual_idx = idx;
+  else if (idx2 != -1)
+    actual_idx = idx2;
+  split_args_by_index(args, left_args, right_args, actual_idx);
+}
+
+#if PIPES_SHOULD_ONLY_FORK_ONCE
+void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
+                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
+{ //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
+  SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+  //start by making a pipe
+  BIBE my_pipe[BIBE_SIZE];
+  int pipe_status = pipe(my_pipe);
+  TRY_SYS2(pipe_status, "pipe");
+  if (SYSTEM_CALL_FAILED(pipe_status)) {return;}
+
+  pid_t first_born = fork();
+  TRY_SYS2(first_born,"fork");
+  if (SYSTEM_CALL_FAILED(first_born)) {TRY_SYS2(close(my_pipe[BIBE_READ]), "close");TRY_SYS2(close(my_pipe[BIBE_WRITE]), "close");return;}
+
+  if (first_born != 0) { //do daddys work
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    do {  //now im working as the first process (daddy), this part will continue to later use @left_args
+      if (isCerrPipe) {
+        m_extern_std_error = my_pipe[BIBE_WRITE];
+        switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+      } else {
+        m_current_std_out = my_pipe[BIBE_WRITE];
+        switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+      }
+
+      Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(left_args);
+      if (cmd) {
+          cmd->execute();
+          delete cmd;
+      }
+      return;
+    } while (0);
+  } else { //do kids work
+    TRY_SYS2(setpgrp(), "setpgrp");
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+
+    //change input to be the pipe
+    m_extern_std_in = my_pipe[BIBE_READ];
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+
+    //use existing smash logic for the rest of the process
+    Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(right_args);
+    if (cmd) {
+        cmd->execute();
+        delete cmd;
+    }
+    //after process finished no longer need for kid
+    exit(0);
+  }
+    /*SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+
+    // DEBUG: הדפסת הפקודות בצד ימין ושמאל
+    std::cerr << "[DEBUG] left_args: ";
+    for (const auto& s : left_args) std::cerr << s << " ";
+    std::cerr << "\n[DEBUG] right_args: ";
+    for (const auto& s : right_args) std::cerr << s << std::endl;
+
+    // יצירת pipe
+    int pipefd[2];
+    TRY_SYS2(pipe(pipefd), "pipe");
+
+    // שמירת הפלטים המקוריים
+    int stdout_copy = dup(STDOUT_FILENO);
+    int stderr_copy = dup(STDERR_FILENO);
+
+    // יצירת תהליך עבור הפקודה מימין
+    pid_t child_pid = fork();
+    TRY_SYS2(child_pid, "fork");
+
+    if (child_pid == 0) {
+        // ===== CHILD PROCESS: מריץ את הפקודה מימין (right_args) =====
+        TRY_SYS2(setpgrp(), "setpgrp");
+
+        // חיבור STDIN לקלט מה-pipe
+        TRY_SYS2(dup2(pipefd[0], STDIN_FILENO), "dup2");
+        close(pipefd[0]);
+        close(pipefd[1]);
+
+        Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(left_args);
+        if (cmd) {
+            cmd->execute();
+            delete cmd;
+        }
+        exit(0);
+    }
+
+    // ===== PARENT PROCESS: מריץ את הפקודה משמאל (left_args) =====
+
+    // סגירת הקצה הלא בשימוש של הקריאה
+    close(pipefd[0]);
+
+    // חיבור הפלט ל־pipe
+    if (isCerrPipe) {
+        TRY_SYS2(dup2(pipefd[1], STDERR_FILENO), "dup2");
+    } else {
+        TRY_SYS2(dup2(pipefd[1], STDOUT_FILENO), "dup2");
+    }
+    close(pipefd[1]);
+
+    // הפעלת הפקודה השמאלית
+    Command* cmd = SHELL_INSTANCE.CreateCommandFromArgs(right_args);
+    if (cmd) {
+        cmd->execute();
+        delete cmd;
+    }
+
+    // שיחזור של STDOUT/STDERR המקוריים
+    dup2(stdout_copy, STDOUT_FILENO);
+    dup2(stderr_copy, STDERR_FILENO);
+    close(stdout_copy);
+    close(stderr_copy);
+
+    // המתנה לסיום הילד
+    waitpid(child_pid, nullptr, 0);
+    */
+}
+#else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,fd_location &std_in,
+                  fd_location &std_out,fd_location &std_err, bool isCerrPipe) //TODO BALAT needs testing blyat
+{ //TODO: if pupe changes daddys fd, then need to update m_extern to be on their opened destinations
+  SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
+  pid_t first_born = fork();
+  TRY_SYS2(first_born,"fork");
+  if (first_born != 0){return;} //if im the daddy
+
+  //now im working as the first born (ya'ani ben bechor), this part will use @left_args
+  //start by making a pipe
+  BIBE my_pipe[BIBE_SIZE];
+  TRY_SYS2(pipe(my_pipe), "pipe");
+
+  //now after i made my pipe, i want to make myself a son to read my yapping
+  pid_t second_born = fork();
+  TRY_SYS2(second_born,"fork");
+
+  if (second_born != 0) //todo: decide if i want to make a 'void SmallShell::executeCommand(const argv& args)' wrapper for 'void SmallShell::executeCommand(const char *cmd_line)', or it may cause broblems? YES, YHIHE BESEDER
+  { //meaning i am the firstborn
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    //use given bool to decide if i am changing my cout or cerr into the bibe
+    fd_location bibe_outbut_target = ((isCerrPipe) ? STDERR_FILE_NUM : STDOUT_FILE_NUM);
+
+    //migrate used bibe end to stdout/stderr depending on given bool
+    TRY_SYS2(dup2(my_pipe[BIBE_READ],bibe_outbut_target),"dup2");
+
+    //close redundant bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+    //use existing smash logic for the rest of the process
+    SHELL_INSTANCE.executeCommand(left_args);
+
+    //after process finished no longer need for firsborn
+    exit(0);
+
+  } else { //meaning i am the second born (yaani neched), this part would take @right_args
+
+    //close unused bibe end
+    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+
+    //migrate used bibe end to std in
+    TRY_SYS2(dup2(my_pipe[BIBE_READ],STDIN_FILE_NUM),"dup2");
+
+    //closed redundant bibe end
+    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+
+    //use existing smash logic for the rest of the process
+    SHELL_INSTANCE.executeCommand(right_args);
+
+    //after process finished no longer need for secondborn
+    exit(0);
+  }
+}
+#endif //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+
+FdManager::FdManager()
+{
+#if 0
+  m_current_std_in = STDIN_FILE_NUM;
+  m_current_std_out = STDOUT_FILE_NUM;
+  m_current_std_error = STDERR_FILE_NUM;
+
+  closed_extern_channel(m_extern_std_in);
+  closed_extern_channel(m_extern_std_out);
+  closed_extern_channel(m_extern_std_error);
+#endif
+}
+
+FdManager::~FdManager()
+{
+  undoRedirection();
+}
+
+
+void FdManager::undoSpecificRedirection(fd_location &saved_location, fd_location destination_location)
+{
+  if (destination_location == saved_location) {
+    return;
+  }
+  int success1 = dup2(saved_location, destination_location);
+  TRY_SYS2(success1,"dup2");
+  if (SYSTEM_CALL_FAILED(success1)){return;}
+  int success2 = close(saved_location);
+  TRY_SYS2(success2,"close");
+  if (!SYSTEM_CALL_FAILED(success2)) {
+    saved_location = destination_location;
+  }
+}
+
+void FdManager::do_close_extern_channel(fd_location &channel_to_close)
+{
+  if (CHANNEL_IS_CLOSED(channel_to_close)) {return;}
+  assert((channel_to_close == &m_extern_std_out) || (channel_to_close == &m_extern_std_in) || (channel_to_close == &m_extern_std_err));
+int success1 = close(channel_to_close);
+  TRY_SYS2(success1,"close");
+  if (!SYSTEM_CALL_FAILED(success1)) {
+    closed_extern_channel(channel_to_close);
+  }
+}
+
+
+
+
+void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args,fd_location &std_in,fd_location &std_out,fd_location &std_err, open_flag flag)
+{
+#if 0
+  assert(isRedirectionCommand(cmd_line));
+  open_flag flag = getFlagVectorArg(args);
+  argv left_arguments, right_arguments;
+  if (isInputRedirectionCommand(cmd_line)) {
+    assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
+    split_input(args, left_arguments, right_arguments);
+    std_in = dup(STDIN_FILE_NUM);
+    TRY_SYS2(std_in,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
+    TRY_SYS2(close(STDIN_FILE_NUM),"close");
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDIN_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+  } else if (isOutputRedirectionCommand(cmd_line)) {
+    assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
+    split_output(args, left_arguments, right_arguments);
+    std_out = dup(STDOUT_FILE_NUM);
+    TRY_SYS2(std_out,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDOUT_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
+    TRY_SYS2(close(STDOUT_FILE_NUM),"close");
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDOUT_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+  } else if (isPipeCommand(cmd_line)) {
+    split_pipe(args, left_arguments, right_arguments);
+    create_pipe(args,left_arguments,right_arguments,std_in,std_out,std_err,is_stderr_pipe(args));
+    //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
+    //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
+  } else {
+    FOR_DEBUG_MODE(
+    perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
+    )
+  }
+  //THE NEXT COMMENTED LINE:
+  //remaining_args = left_arguments;
+#else
+  applyRedirection(cmd_line, args, remaining_args);
+#endif
+}
+
+void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &remaining_args) //this is the new one
+{
+  //assert(isRedirectionCommand(cmd_line));
+  open_flag flag = getFlagVectorArg(args);
+  argv left_arguments, right_arguments;
+  if (isInputRedirectionCommand(cmd_line)) {
+    assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
+    assert(flag == O_RDONLY);
+    split_input(args, left_arguments, right_arguments);
+
+    //get next input channel
+    m_extern_std_in = open(right_arguments[0].c_str(), flag);
+    TRY_SYS2(m_extern_std_in,"open");
+    if (SYSTEM_CALL_FAILED(m_extern_std_in)) {return;}
+
+    //apply input channel switch change
+    switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#if 0
+    assert(isInputRedirectionCommand(cmd_line) && "Expected input redirection command!");
+    split_input(args, left_arguments, right_arguments);
+    m_current_std_in = dup(STDIN_FILE_NUM);
+    TRY_SYS2(m_current_std_in,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
+    TRY_SYS2(close(STDIN_FILE_NUM),"close");
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDIN_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#endif
+  } else if (isOutputRedirectionCommand(cmd_line)) {
+    assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
+    split_output(args, left_arguments, right_arguments);
+
+    //get next output channel
+    m_extern_std_out = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(m_extern_std_out,"open");
+    if(SYSTEM_CALL_FAILED(m_extern_std_out)){return;}
+
+    //apply output channel switch change
+    switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#if 0
+    assert(isOutputRedirectionCommand(cmd_line) && "Expected output redirection command!");
+    split_output(args, left_arguments, right_arguments);
+    m_current_std_out = dup(STDOUT_FILE_NUM);
+    TRY_SYS2(m_current_std_out,"dup");
+
+    FOR_DEBUG_MODE(
+    std::cerr << "(FOR_DEBUG_MODE)  " << "Right arg: " << right_arguments[0] << std::endl;
+    )
+
+
+    fd_location new_temp_fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(new_temp_fd,"open");
+    TRY_SYS2(dup2(new_temp_fd,STDOUT_FILE_NUM),"dup2");
+    TRY_SYS2(close(new_temp_fd),"close");
+
+    /*
+    TRY_SYS2(close(STDOUT_FILE_NUM),"close");
+    fd_location fd = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
+    TRY_SYS2(fd,"open");
+    assert(fd == STDOUT_FILE_NUM);
+    */
+
+    //initialise remaining arguments vector
+    remaining_args = left_arguments;
+#endif
+  } else if (isPipeCommand(cmd_line)) {
+    split_pipe(args, left_arguments, right_arguments);
+    create_pipe(args,left_arguments,right_arguments,m_current_std_in,m_current_std_out,m_extern_std_error,is_stderr_pipe(args));
+#if PIPES_SHOULD_ONLY_FORK_ONCE
+
+    remaining_args = left_arguments;
+
+#else //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+
+    //TODO: IF WE ARE IN PIPE COMMAND, NEED TO INITIALISE remaining_args IN A WAY THAT WOULD SIGNALL THE SYSTEM TO STOP WITH THE NEXT COMMAND
+    //OR IF PIPE SHOULD BE IN FOREGROUND, THEN NEED TO SPLIT ARGUMENTS AND APPLY TO REMAINING ARGS, LIKE IN THE NEXT COMMENTED LINE
+    remaining_args = argv(); //meaning no arguments left since first child should be able to handle it //FIXME add another check for empty args in this case
+#endif //PIPES_SHOULD_ONLY_BE_ABLE_TO_RUN_IN_THE_4_GROUND
+  } else {
+    //FOR_DEBUG_MODE(perror("unknown redirection command in 'void applyRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");)
+    remaining_args = args; //if it is not a redirection, then no arguments were consumed.
+  }
+  //THE NEXT COMMENTED LINE:
+  //remaining_args = left_arguments;
+}
+
+void FdManager::closed_extern_channel(fd_location &closed_channel)
+{
+  closed_channel = CLOSED_CHANNEL;
+}
+
+
+void FdManager::switch_two_fd_entries(fd_location &entry1, fd_location &entry2)
+{
+  if (entry1 == entry2) {
+    return;
+  }
+  if (CHANNEL_IS_CLOSED(entry1) || CHANNEL_IS_CLOSED(entry2)) {
+    return;
+  }
+
+  //save entry1 to a temporary placeholder
+  fd_location move_entry_1_to_temporary_location = dup(entry1);
+  TRY_SYS2(move_entry_1_to_temporary_location,"dup");
+  if (SYSTEM_CALL_FAILED(move_entry_1_to_temporary_location)){return;}
+
+  //move entry2 to entry1
+  int move_2_to_1 = dup2(entry2,entry1);
+  TRY_SYS2(move_2_to_1,"dup2");
+  if (SYSTEM_CALL_FAILED(move_2_to_1)){return;}
+
+  //move temporary of entry1 to entry 2
+  int move_temp_to_2 = dup2(move_entry_1_to_temporary_location,entry2);
+  TRY_SYS2(move_temp_to_2,"dup2");
+  if (SYSTEM_CALL_FAILED(move_temp_to_2)){return;}
+
+  //closed unused temporary placeholder
+  int closed_temporary_placeholder = close(move_entry_1_to_temporary_location);
+  TRY_SYS2(closed_temporary_placeholder,"dup2");
+  if (SYSTEM_CALL_FAILED(closed_temporary_placeholder)){return;}
+
+  //update entry1 and entry2 representations
+  fd_location temporary_for_flip_representations = entry1;
+  entry1 = entry2;
+  entry2 = temporary_for_flip_representations;
+
+#if 0
+  fd_location temp_entry = dup(entry1);
+  TRY_SYS2(temp_entry,"dup");
+  if (SYSTEM_CALL_FAILED(temp_entry)){return;}
+  int move_2_to_1 = dup2(entry2,entry1);
+  TRY_SYS2(move_2_to_1,"dup2");
+  if (SYSTEM_CALL_FAILED(move_2_to_1)){return;}
+  auto temp2 = entry2;
+  entry2 = entry1;
+  int move_temp_to_2 = dup2(temp_entry,entry2);
+  TRY_SYS2(move_temp_to_2,"dup2");
+  if (SYSTEM_CALL_FAILED(move_temp_to_2)){return;}
+  entry1 = temp2;
+  int close_temp = close(temp);
+  TRY_SYS2(close_temp,"close");
+#endif
+}
+
+void FdManager::return_from_temporary_suspension_to_what_was_changed()
+{
+  if (!isTempChanged) {return;}
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  isTempChanged = false;
+}//TODO
+
+void FdManager::temporairly_suspend_redirection_and_return_to_default()
+{
+  if (isTempChanged) {return;}
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  isTempChanged = true;
+}
+
+
+void FdManager::undoRedirection()
+{
+  return_from_temporary_suspension_to_what_was_changed();
+  //undoSpecificRedirection(m_current_std_in, STDIN_FILE_NUM);
+  switch_two_fd_entries(m_current_std_in,m_extern_std_in);
+  do_close_extern_channel(m_extern_std_in);
+  //undoSpecificRedirection(m_current_std_out, STDOUT_FILE_NUM);
+  switch_two_fd_entries(m_current_std_out,m_extern_std_out);
+  do_close_extern_channel(m_extern_std_out);
+  //undoSpecificRedirection(m_current_std_error, STDERR_FILE_NUM);
+  switch_two_fd_entries(m_current_std_error,m_extern_std_error);
+  do_close_extern_channel(m_extern_std_error);
+}
+
+void FdManager::undoRedirection(const char *cmd_line){undoRedirection();}
+#if 0
+{
+  assert(isRedirectionCommand(cmd_line));
+  if (isInputRedirectionCommand(cmd_line)) {
+    //close(STDIN_FILE_NUM); it appears that dup2 handles this case
+    TRY_SYS2(dup2(m_current_std_in, STDIN_FILE_NUM),"dup2");
+    TRY_SYS2(close(m_current_std_in),"close");
+  } else if (isOutputRedirectionCommand(cmd_line)) {
+    TRY_SYS2(dup2(m_current_std_out, STDOUT_FILE_NUM),"dup2");
+    TRY_SYS2(close(m_current_std_out),"close");
+#if PIPE_CHANGES_DADDYS_FD
+  } else if (isPipeCommand(cmd_line)) {
+    //revert input back to original
+
+    if (is_stderr_pipe(cmd_line))
+    {
+      //revert cerr pipe back to original
+      TRY_SYS2(dup2(m_current_std_error, STDERR_FILE_NUM),"dup2");
+      TRY_SYS2(close(m_current_std_error),"close");
+    } else {
+      //revert cout pipe back to original
+      TRY_SYS2(dup2(m_current_std_out, STDOUT_FILE_NUM),"dup2");
+      TRY_SYS2(close(m_current_std_out),"close");
+    }
+#endif //if PIPE_CHANGES_DADDYS_FD
+  } else {
+    FOR_DEBUG_MODE(
+    perror("unknown redirection command in 'void undoRedirection(const char *cmd_line, const argv &args,fd_location &std_in,fd_location &std_out,fd_location &std_err)'\n");
+    )
+  }
+}
+#endif
+
+void FdManager::undoRedirection(const char *cmd_line, const argv &args, argv &remaining_args,fd_location &std_in,fd_location &std_out,fd_location &std_err, open_flag flag){undoRedirection();}
+void FdManager::undoRedirection(const argv &args){undoRedirection();}
