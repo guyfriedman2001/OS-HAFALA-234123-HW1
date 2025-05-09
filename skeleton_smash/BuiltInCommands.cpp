@@ -144,10 +144,11 @@ JobsCommand::JobsCommand(const argv &args, const char *cmd_line, const char *unu
     : JobsCommand(args)
 {
   SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-}
+  }
 
 void JobsCommand::execute()
 {
+  //SHELL_INSTANCE.getJobsList().removeFinishedJobs();
   if (SHELL_INSTANCE.getJobsList().numberOfJobs() == 0)
   {
     cerr << "smash error: jobs: jobs list is empty" << endl;
@@ -165,7 +166,7 @@ ForegroundCommand::ForegroundCommand(const argv &args)
 {
   assert_not_empty(args);
   bool incorrect_args_ammount = args.size() > 2; // first arg should be "fg" and second (optional) arg should be a specific job ID
-  bool explicit_jobID_given = args.size() > 2;
+  bool explicit_jobID_given = args.size() == 2;
   bool second_arg_is_convertible_to_int;
 
   if (explicit_jobID_given)
@@ -178,11 +179,12 @@ ForegroundCommand::ForegroundCommand(const argv &args)
     second_arg_is_convertible_to_int = true;
   }
 
-  if (incorrect_args_ammount || (!second_arg_is_convertible_to_int))
+  if (incorrect_args_ammount || (!second_arg_is_convertible_to_int) || jobID < 0)
   {
     this->invalid_syntax = true;
     return;
   }
+
   this->job = SHELL_INSTANCE.getJobById(this->jobID);
   if (this->job == nullptr && explicit_jobID_given)
   {
@@ -204,19 +206,17 @@ ForegroundCommand::ForegroundCommand(const argv &args, const char *cmd_line, con
 
 void ForegroundCommand::print_no_job_with_id() const
 {
-  char buf[256];
-  snprintf(buf, sizeof(buf), "%s%d%s", JOB_DOESNT_EXIST_MESSAGE_1, this->jobID, JOB_DOESNT_EXIST_MESSAGE_2);
-  perror(buf);
+  cerr << JOB_DOESNT_EXIST_MESSAGE_1 << this->jobID << JOB_DOESNT_EXIST_MESSAGE_2 << endl;
 }
 
 void ForegroundCommand::print_invalid_args() const
 {
-  perror(INVALID_SYNTAX_MESSAGE);
+  cerr << INVALID_SYNTAX_MESSAGE << endl;
 }
 
 void ForegroundCommand::print_job_list_is_empty() const
 {
-  perror(NO_JOBS_MESSAGE);
+  cerr << NO_JOBS_MESSAGE << endl;
 }
 
 void ForegroundCommand::execute()
@@ -239,6 +239,7 @@ void ForegroundCommand::execute()
   this->job->printYourselfWithPID(true);
   cout.flush();
   int exit_status = SHELL_INSTANCE.waitPID(this->job->getJobPID());
+  SHELL_INSTANCE.getJobsList().removeJobById(this->jobID);
   // now what?? need to print something? maybe print @exit_status????
   FOR_DEBUG_MODE(printf("'void ForegroundCommand::execute()' process exit status is %d\n", exit_status);)
 }
@@ -277,23 +278,26 @@ const char* KillCommand::JOB_DOESNT_EXIST_2 = " does not exist";
 
 KillCommand::KillCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
-  if (args.size() > 3)
-  {
-    cerr << this->INVALID_ARGUMENTS;
-  }
+  numOfArgs = args.size();
   string temp = args[1];
   temp.erase(0, 1);
   signalToSend = stoi(temp);
   idToSendTo = stoi(args[2]);
-
-  if (idToSendTo == 0)
-  {
-    cerr << this->JOB_DOESNT_EXIST_1 << idToSendTo << this->JOB_DOESNT_EXIST_2;
-  }
+  job = SHELL_INSTANCE.getJobById(idToSendTo);
 }
 
 void KillCommand::execute()
 {
+  if (numOfArgs > 3)
+  {
+    cerr << this->INVALID_ARGUMENTS << endl;
+    return;
+  }
+  if (idToSendTo == 0 || job == nullptr )
+  {
+    cerr << this->JOB_DOESNT_EXIST_1 << idToSendTo << this->JOB_DOESNT_EXIST_2 << endl;
+    return;
+  }
   SHELL_INSTANCE.getJobsList().sendSignalToJobById(idToSendTo, signalToSend);
 }
 

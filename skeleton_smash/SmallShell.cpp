@@ -118,6 +118,7 @@ void SmallShell::print_jobs()
 
 JobsList::JobEntry *SmallShell::getJobById(int jobId)
 {
+  this->jobs.removeFinishedJobs();
   return this->jobs.getJobById(jobId);
 }
 

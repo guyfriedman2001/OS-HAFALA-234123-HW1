@@ -112,7 +112,7 @@ void JobsList::removeFinishedJobs()
   {
     //pid_t pid = it->second.getJobPID();
     //if (pid != -1 && waitpid(pid, nullptr, WNOHANG) != 0)
-    if (waitpid(it->second.getJobPID(), nullptr, check_if_process_finished_without_blocking) != 0)
+    if (waitpid(it->second.getJobPID(), nullptr, check_if_process_finished_without_blocking) > 0)
     {
       it = jobs.erase(it);
     }

@@ -8,16 +8,17 @@
             "program": "${workspaceFolder}/skeleton_smash/smash",
             "cwd": "${workspaceFolder}",
             "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "text": "-enable-pretty-printing",
-                    "description": "Enable pretty-printing for gdb",
-                    "ignoreFailures": true
-                }
-            ],
             "stopAtEntry": false,
-            "externalConsole": false
-        },
+            "console": "externalTerminal",  
+            "externalConsole": true,
+            "setupCommands": [
+              {
+                "text": "-enable-pretty-printing",
+                "description": "Enable pretty-printing for gdb",
+                "ignoreFailures": true
+              }
+            ]
+          },
         {
             "name": "(gdb) Launch",
             "type": "gdb",
@@ -38,7 +39,7 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "lldb",
             "preLaunchTask": "C/C++: clang++ build active file"
         },
@@ -51,7 +52,7 @@
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "lldb",
             "preLaunchTask": "C/C++: g++ build active file"
         }

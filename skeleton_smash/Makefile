@@ -2,9 +2,9 @@
 SUBMITTERS := 209846328_324249481
 COMPILER := g++
 COMPILER_FLAGS := --std=c++17 -Wall
-SRCS := Commands.cpp signals.cpp smash.cpp
+SRCS := Commands.cpp signals.cpp smash.cpp AliasManager.cpp BuiltInCommands.cpp CommandFactories.cpp ExternalCommands.cpp JobList.cpp  FDManager.cpp SmallShell.cpp SpecialCommands.cpp Temp_Restore.cpp
 OBJS=$(subst .cpp,.o,$(SRCS))
-HDRS := Commands.h signals.h
+HDRS := Commands.h signals.h AliasManager.h BuiltInCommands.h CommandFactories.h ExternalCommands.h JobList.h  FDManager.h SmallShell.h SpecialCommands.h Temp_Restore.h SmashUtil.h SmallShellHeaders.h
 TESTS_INPUTS := $(wildcard test_input*.txt)
 TESTS_OUTPUTS := $(subst input,output,$(TESTS_INPUTS))
 SMASH_BIN := smash

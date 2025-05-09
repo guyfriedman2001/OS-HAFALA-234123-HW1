@@ -137,6 +137,7 @@ private:
     bool invalid_syntax;
     bool job_doesnt_exist;
     bool jobs_empty;
+    
 
     int jobID;
 
@@ -182,6 +183,8 @@ class KillCommand : public BuiltInCommand { // AKA "kill"
     // TODO: Add your data members
     int signalToSend;
     int idToSendTo;
+    int numOfArgs;
+    JobsList::JobEntry* job;
     const static char* INVALID_ARGUMENTS;
     const static char* JOB_DOESNT_EXIST_1;
     const static char* JOB_DOESNT_EXIST_2;
