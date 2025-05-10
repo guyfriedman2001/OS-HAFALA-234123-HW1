@@ -98,10 +98,12 @@ public:
     }
 
     void execute() override;
-    bool directoryExists(const string& path);
+    bool isDirectory(const string& path);
+    bool isFile(const string& path);
     int calculateDiskUsage(const string& path);
     string getCurrentDirectory();
     int getFileSize(const string& path);
+    argv getDirectoryEntries(const string& dirPath);
 };
 
 class WhoAmICommand : public SpecialCommand {

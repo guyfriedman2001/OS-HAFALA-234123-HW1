@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
         smash.executeCommand(cmd_line.c_str());
         //cout << endl;
     }
+
     return 0;
 }
 

@@ -184,6 +184,7 @@ class KillCommand : public BuiltInCommand { // AKA "kill"
     int signalToSend;
     int idToSendTo;
     int numOfArgs;
+    bool invalidArgs;
     JobsList::JobEntry* job;
     const static char* INVALID_ARGUMENTS;
     const static char* JOB_DOESNT_EXIST_1;

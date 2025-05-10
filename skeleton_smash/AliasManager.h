@@ -19,6 +19,7 @@ public:
     bool doesExist(const string& newAliasName) const;
     bool isSyntaxValid(const string& newAliasName) const;
     void printAll() const;
+    argv tokenizeWithSpecials(const string& token);
 };
 
 

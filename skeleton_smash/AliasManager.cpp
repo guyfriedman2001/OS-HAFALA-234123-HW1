@@ -66,7 +66,7 @@ void AliasManager::printAll() const
 
 argv AliasManager::uncoverAlias(const argv& original)
 {
-  argv uncoveredArgs;
+  /*argv uncoveredArgs;
 
   if (original[0] == "unalias" || original[0] == "alias")
   {
@@ -88,5 +88,61 @@ argv AliasManager::uncoverAlias(const argv& original)
       uncoveredArgs.push_back(original[i]);
     }
   }
+  return uncoveredArgs;*/
+
+  argv uncoveredArgs;
+
+  if (original.empty() || original[0] == "unalias" || original[0] == "alias") {
+    return original;
+  }
+
+  for (const string& arg : original) {
+    if (aliases.find(arg) != aliases.end()) {
+      istringstream iss(aliases[arg]);
+      string word;
+      while (iss >> word) {
+        argv tokens = tokenizeWithSpecials(word);
+        uncoveredArgs.insert(uncoveredArgs.end(), tokens.begin(), tokens.end());
+      }
+    } else {
+      argv tokens = tokenizeWithSpecials(arg);
+      uncoveredArgs.insert(uncoveredArgs.end(), tokens.begin(), tokens.end());
+    }
+  }
+
   return uncoveredArgs;
+}
+
+argv AliasManager::tokenizeWithSpecials(const string& token) {
+  argv result;
+  string current;
+
+  for (size_t i = 0; i < token.size(); ++i) {
+    char c = token[i];
+
+    if ((c == '>' || c == '<') && i + 1 < token.size() && token[i + 1] == c) {
+      if (!current.empty()) {
+        result.push_back(current);
+        current.clear();
+      }
+      result.push_back(string(2, c)); 
+      ++i; 
+    }
+    else if (c == '>' || c == '<' || c == '|' || c == '&') {
+      if (!current.empty()) {
+        result.push_back(current);
+        current.clear();
+      }
+      result.push_back(string(1, c));
+    }
+    else {
+      current += c;
+    }
+  }
+
+  if (!current.empty()) {
+    result.push_back(current);
+  }
+
+  return result;
 }

@@ -129,7 +129,7 @@ void ChangeDirCommand::execute()
   bool succses = SHELL_INSTANCE.changeShellDirectory(this->next_path);
   if (succses)
   { // print updated path
-    SHELL_INSTANCE.print_current_path();
+    //SHELL_INSTANCE.print_current_path();
   }
   else
   {
@@ -150,13 +150,7 @@ JobsCommand::JobsCommand(const argv &args, const char *cmd_line, const char *unu
 
 void JobsCommand::execute()
 {
-  //SHELL_INSTANCE.getJobsList().removeFinishedJobs();
-  if (SHELL_INSTANCE.getJobsList().numberOfJobs() == 0)
-  {
-    cerr << "smash error: jobs: jobs list is empty" << endl;
-  } else {
-    SHELL_INSTANCE.getJobsList().printJobsListWithID();
-  }
+  SHELL_INSTANCE.getJobsList().printJobsListWithID();
 }
 
 const char *ForegroundCommand::INVALID_SYNTAX_MESSAGE = "smash error: fg: invalid arguments";
@@ -281,16 +275,37 @@ const char* KillCommand::JOB_DOESNT_EXIST_2 = " does not exist";
 KillCommand::KillCommand(const argv& args, const char *cmd_line, const char *unused_in_builtin)
 {
   numOfArgs = args.size();
-  string temp = args[1];
-  temp.erase(0, 1);
-  signalToSend = stoi(temp);
-  idToSendTo = stoi(args[2]);
+  if(numOfArgs < 3 || numOfArgs > 3)
+  {
+    invalidArgs = true;
+  }
+  else
+  {
+    invalidArgs = false;
+  try {
+    string temp = args[1];
+    if (temp[0] != '-') {
+      invalidArgs = true;
+    }
+    if (!invalidArgs)
+    {
+      temp.erase(0, 1);
+      signalToSend = stoi(temp);
+      idToSendTo = stoi(args[2]);
+    } else {
+      signalToSend = 0;
+      idToSendTo = 0;
+    }
+  } catch (const std::exception& e) {
+    invalidArgs = true;
+  }
   job = SHELL_INSTANCE.getJobById(idToSendTo);
+  }
 }
 
 void KillCommand::execute()
 {
-  if (numOfArgs > 3)
+  if (numOfArgs > 3 || invalidArgs)
   {
     cerr << this->INVALID_ARGUMENTS << endl;
     return;

@@ -65,7 +65,7 @@ typedef std::vector<std::string> argv;
 typedef int open_flag;
 typedef int fd_location;
 typedef std::shared_ptr<Command> cmdp;
-typedef int BIBE;
+typedef int PIPE;
 
 //#define NDEBUG
 
@@ -192,9 +192,9 @@ do {                                                     \
 #define RWXR__R__ (0744)
 
 //pipe definitions for easier and more readable pipe handling
-#define BIBE_SIZE (2)
-#define BIBE_READ (0)
-#define BIBE_WRITE (1)
+#define PIPE_SIZE (2)
+#define PIPE_READ (0)
+#define PIPE_WRITE (1)
 
 //wait flags
 #define Block_until_the_child_terminates 0

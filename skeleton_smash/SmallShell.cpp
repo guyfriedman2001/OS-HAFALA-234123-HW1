@@ -143,7 +143,7 @@ int SmallShell::kill_process(pid_t pid, int sig_num)
 
 void SmallShell::printPrompt()
 {
-  printf("%s%s", this->getPrompt().c_str(), this->getEndStr().c_str());
+    printf("%s%s", this->getPrompt().c_str(), this->getEndStr().c_str());
 }
 
 void fillBufferWithArgs(char* buffer, const std::vector<std::string>& args) {
@@ -189,7 +189,11 @@ Command *SmallShell::CreateCommand(const char *cmd_line_to_store)
 
 
   m_fdmanager.applyRedirection(afterAliases, args, remaining_args);
-
+  if (remaining_args.empty()) {
+    // No remaining arguments after redirection, return nullptr
+    return nullptr;
+  }
+  
 
   if (returnCommand == nullptr)
   { // try and create a BuiltInCommand command
@@ -267,9 +271,9 @@ void SmallShell::executeCommand(const char *cmd_line)
 {
   if (!isEmptyCommand(cmd_line)) {
     Command* cmd = this->CreateCommand(cmd_line);
-
-    cmd->execute();
-
+    if (cmd != nullptr) {
+      cmd->execute();
+    }
     m_fdmanager.undoRedirection();
   } else {
     EmptyCommand cmd;

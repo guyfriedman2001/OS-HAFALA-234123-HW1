@@ -8,6 +8,10 @@
 
 Command *BuiltInCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
+  if(args.empty())
+  {
+    return nullptr;
+  }
   string &command = args[0];
   if (STRINGS_EQUAL(command, "chprompt"))
   {
@@ -128,6 +132,10 @@ void runExternalCommand(const char* cmd_line) {
 
 Command *SpecialCommandFactory::factoryHelper(argv args, const char *cmd_line_after_aliases, const char *cmd_line_before_aliases)
 {
+  if(args.empty())
+  {
+    return nullptr;
+  }
   string &command = args[0];
   if (STRINGS_EQUAL(command, "du"))
   {

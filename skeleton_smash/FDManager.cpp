@@ -131,26 +131,26 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
   SmallShell &SHELL_INSTANCE = SmallShell::getInstance();
 
   //start by making a pipe
-  BIBE my_pipe[BIBE_SIZE];
+  PIPE my_pipe[PIPE_SIZE];
   int pipe_status = pipe(my_pipe);
   TRY_SYS2(pipe_status, "pipe");
   if (SYSTEM_CALL_FAILED(pipe_status)) {return;}
 
   pid_t first_born = fork();
   TRY_SYS2(first_born,"fork");
-  if (SYSTEM_CALL_FAILED(first_born)) {TRY_SYS2(close(my_pipe[BIBE_READ]), "close");TRY_SYS2(close(my_pipe[BIBE_WRITE]), "close");return;}
+  if (SYSTEM_CALL_FAILED(first_born)) {TRY_SYS2(close(my_pipe[PIPE_READ]), "close");TRY_SYS2(close(my_pipe[PIPE_WRITE]), "close");return;}
 
   if (first_born != 0) { //do daddys work
 
-    //close unused bibe end
-    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+    //close unused PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_READ]),"close");
 
     do {  //now im working as the first process (daddy), this part will continue to later use @left_args
       if (isCerrPipe) {
-        m_extern_std_error = my_pipe[BIBE_WRITE];
+        m_extern_std_error = my_pipe[PIPE_WRITE];
         switch_two_fd_entries(m_current_std_error,m_extern_std_error);
       } else {
-        m_current_std_out = my_pipe[BIBE_WRITE];
+        m_current_std_out = my_pipe[PIPE_WRITE];
         switch_two_fd_entries(m_current_std_out,m_extern_std_out);
       }
 
@@ -159,12 +159,12 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
   } else { //do kids work
     TRY_SYS2(setpgrp(), "setpgrp");
 
-    //close unused bibe end
-    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+    //close unused PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_WRITE]),"close");
 
 
     //change input to be the pipe
-    m_extern_std_in = my_pipe[BIBE_READ];
+    m_extern_std_in = my_pipe[PIPE_READ];
     switch_two_fd_entries(m_current_std_in,m_extern_std_in);
 
     //use existing smash logic for the rest of the process
@@ -185,7 +185,7 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
 
   //now im working as the first born (ya'ani ben bechor), this part will use @left_args
   //start by making a pipe
-  BIBE my_pipe[BIBE_SIZE];
+  PIPE my_pipe[PIPE_SIZE];
   TRY_SYS2(pipe(my_pipe), "pipe");
 
   //now after i made my pipe, i want to make myself a son to read my yapping
@@ -195,17 +195,17 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
   if (second_born != 0) //todo: decide if i want to make a 'void SmallShell::executeCommand(const argv& args)' wrapper for 'void SmallShell::executeCommand(const char *cmd_line)', or it may cause broblems? YES, YHIHE BESEDER
   { //meaning i am the firstborn
 
-    //close unused bibe end
-    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+    //close unused PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_READ]),"close");
 
-    //use given bool to decide if i am changing my cout or cerr into the bibe
-    fd_location bibe_outbut_target = ((isCerrPipe) ? STDERR_FILE_NUM : STDOUT_FILE_NUM);
+    //use given bool to decide if i am changing my cout or cerr into the PIPE
+    fd_location PIPE_outbut_target = ((isCerrPipe) ? STDERR_FILE_NUM : STDOUT_FILE_NUM);
 
-    //migrate used bibe end to stdout/stderr depending on given bool
-    TRY_SYS2(dup2(my_pipe[BIBE_READ],bibe_outbut_target),"dup2");
+    //migrate used PIPE end to stdout/stderr depending on given bool
+    TRY_SYS2(dup2(my_pipe[PIPE_READ],PIPE_outbut_target),"dup2");
 
-    //close redundant bibe end
-    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+    //close redundant PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_WRITE]),"close");
 
     //use existing smash logic for the rest of the process
     SHELL_INSTANCE.executeCommand(left_args);
@@ -215,14 +215,14 @@ void FdManager::create_pipe(const argv& args, argv& left_args, argv& right_args,
 
   } else { //meaning i am the second born (yaani neched), this part would take @right_args
 
-    //close unused bibe end
-    TRY_SYS2(close(my_pipe[BIBE_WRITE]),"close");
+    //close unused PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_WRITE]),"close");
 
-    //migrate used bibe end to std in
-    TRY_SYS2(dup2(my_pipe[BIBE_READ],STDIN_FILE_NUM),"dup2");
+    //migrate used PIPE end to std in
+    TRY_SYS2(dup2(my_pipe[PIPE_READ],STDIN_FILE_NUM),"dup2");
 
-    //closed redundant bibe end
-    TRY_SYS2(close(my_pipe[BIBE_READ]),"close");
+    //closed redundant PIPE end
+    TRY_SYS2(close(my_pipe[PIPE_READ]),"close");
 
     //use existing smash logic for the rest of the process
     SHELL_INSTANCE.executeCommand(right_args);
@@ -411,7 +411,9 @@ void FdManager::applyRedirection(const char *cmd_line, const argv &args, argv &r
     //get next output channel
     m_extern_std_out = open(right_arguments[0].c_str(), flag, OPEN_IN_GOD_MODE);
     TRY_SYS2(m_extern_std_out,"open");
-    if(SYSTEM_CALL_FAILED(m_extern_std_out)){return;}
+    if(SYSTEM_CALL_FAILED(m_extern_std_out)){
+      return;
+    }
 
     //apply output channel switch change
     switch_two_fd_entries(m_current_std_out,m_extern_std_out);

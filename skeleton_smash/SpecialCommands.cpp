@@ -400,63 +400,78 @@ void DiskUsageCommand::execute()
     return;
   } else if (!pathGiven)
   {
-    cout << this->TOTAL_DISK_USAGE << ceil((double)calculateDiskUsage(getCurrentDirectory()) / 1024) << " KB" << endl;
-  } else if (directoryExists(path))
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(getCurrentDirectory()) << " KB" << endl;
+  } else if (isDirectory(path))
   {
-    cout << this->TOTAL_DISK_USAGE << ceil((double)calculateDiskUsage(path) / 1024) << " KB" << endl;
+    cout << this->TOTAL_DISK_USAGE << calculateDiskUsage(path) << " KB" << endl;
   } else {
     cerr << this->DIRECTORY_DOESNT_EXIST_1 << path << this->DIRECTORY_DOESNT_EXIST_2 << endl;
-  }
-  
-    
-  
+  } 
 }
 
-bool DiskUsageCommand::directoryExists(const string &path)
+bool DiskUsageCommand::isDirectory(const string &path)
 {
-    int fd; 
-    TRY_SYS3(fd, open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
-    if (fd == -1) {
-        return false;  
+    struct stat st;
+    if (stat(path.c_str(), &st) == -1) {
+        return false;
     }
-    TRY_SYS3(fd,close(fd),"close");    
-    return true;     
+    return S_ISDIR(st.st_mode);   
+}
+
+bool DiskUsageCommand::isFile(const string& path) {
+    struct stat st;
+    if (stat(path.c_str(), &st) == -1) {
+        return false;
+    }
+    return S_ISREG(st.st_mode);
 }
 
 int DiskUsageCommand::calculateDiskUsage(const string &path)
 {
-   int totalSize = getFileSize(path);  
-
-    int fd; 
-    TRY_SYS3(fd, open(path.c_str(), O_RDONLY | O_DIRECTORY), "open");
-
-    char buffer[4000] = {0};
-    struct linux_dirent64* entry;
-    int bytesRead;
-    TRY_SYS3(bytesRead, syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
-    while (bytesRead > 0) {
-        int offset = 0;
-        while (offset < bytesRead) {
-            entry = (struct linux_dirent64*)(buffer + offset);  
-            string itemName = entry->d_name;
-            if (itemName == "." || itemName == "..") {
-                offset += entry->d_reclen;
-                continue;
-            }
-            string fullPath = path + "/" + itemName;
-            if (directoryExists(fullPath)) {
-                totalSize += calculateDiskUsage(fullPath); 
-            } else {
-                totalSize += getFileSize(fullPath);
-            }
-            offset += entry->d_reclen;
-        }
-        TRY_SYS3(bytesRead, syscall(SYS_getdents64, fd, buffer, sizeof(buffer)), "getdents64");
+     if (isFile(path)) {
+        return getFileSize(path);
     }
 
-    TRY_SYS3(fd,close(fd),"close");
+    if (!isDirectory(path)) {
+        return 0;
+    }
+    int totalSize = getFileSize(path);  
+    argv entries = getDirectoryEntries(path);
+    for (const string& item : entries) {
+        string fullPath = path + "/" + item;
+        totalSize += calculateDiskUsage(fullPath); 
+    }
     return totalSize;
 }
+
+argv DiskUsageCommand::getDirectoryEntries(const string& dirPath) {
+    argv entries;
+
+    int fd;
+    TRY_SYS3(fd, open(dirPath.c_str(), O_RDONLY | O_DIRECTORY), "open");
+
+    char buffer[4096];
+    int bytesRead;
+
+    while ((bytesRead = syscall(SYS_getdents64, fd, buffer, sizeof(buffer))) > 0) {
+        int offset = 0;
+        while (offset < bytesRead) {
+            struct linux_dirent64 *entry = (struct linux_dirent64 *)(buffer + offset);
+            string itemName = entry->d_name;
+
+            if (itemName != "." && itemName != "..") {
+                entries.push_back(itemName);
+            }
+
+            offset += entry->d_reclen;
+        }
+    }
+
+    TRY_SYS3(fd, close(fd), "close");
+
+    return entries;
+}
+
 
 string DiskUsageCommand::getCurrentDirectory()
 {
@@ -468,7 +483,7 @@ int DiskUsageCommand::getFileSize(const string& path)
 {
     struct stat st;
     if (lstat(path.c_str(), &st) == 0) {
-        return st.st_blocks * 512;
+        return (st.st_size + 1023) / 1024;
     }
     return 0;
 }
@@ -485,7 +500,7 @@ void WhoAmICommand::execute()
   cout << username << homeDirectory << endl;
 }
 
-int WhoAmICommand::findUID() //TODO add TRY_SYS2 where needed 
+int WhoAmICommand::findUID() 
 {
     
     int fd;
@@ -517,7 +532,7 @@ string WhoAmICommand::findHomeDirectory(int uid)
     return getFieldByUid(uid, 5);
 }
 
-string WhoAmICommand::findUsername(int uid) //TODO add TRY_SYS2 where needed 
+string WhoAmICommand::findUsername(int uid) 
 {
     return getFieldByUid(uid, 0);
 }
