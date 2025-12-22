@@ -1,0 +1,4 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=-O0 -G "CodeBlocks - Unix Makefiles" /tmp/tmp.TYjBIARtOH
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /tmp/tmp.TYjBIARtOH/cmake-build-hafala2blyat_local_gdb

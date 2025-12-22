@@ -1,0 +1,3 @@
+/home/student/Desktop/234123_HW1/skeleton_smash/cmake-build-test_local/CMakeFiles/skeleton_smash.dir
+/home/student/Desktop/234123_HW1/skeleton_smash/cmake-build-test_local/CMakeFiles/edit_cache.dir
+/home/student/Desktop/234123_HW1/skeleton_smash/cmake-build-test_local/CMakeFiles/rebuild_cache.dir
