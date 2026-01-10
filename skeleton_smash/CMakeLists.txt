@@ -11,7 +11,6 @@ add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp
         SmallShellHeaders.h
         ExternalCommands.h
         ExternalCommands.cpp
-        ComplexExternalCommands.cpp
         SpecialCommands.h
         CommandFactories.h
         CommandFactories.cpp
@@ -19,4 +18,6 @@ add_executable(skeleton_smash smash.cpp Commands.cpp signals.cpp
         JobList.cpp
         AliasManager.cpp
         SmallShell.h
-        SmallShell.cpp)
+        SmallShell.cpp
+        SpecialCommands.cpp
+        SmashUtil.h)
