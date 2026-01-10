@@ -225,30 +225,6 @@ Commands.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/Commands.cpp.s
 .PHONY : Commands.cpp.s
 
-ComplexExternalCommands.o: ComplexExternalCommands.cpp.o
-.PHONY : ComplexExternalCommands.o
-
-# target to build an object file
-ComplexExternalCommands.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.o
-.PHONY : ComplexExternalCommands.cpp.o
-
-ComplexExternalCommands.i: ComplexExternalCommands.cpp.i
-.PHONY : ComplexExternalCommands.i
-
-# target to preprocess a source file
-ComplexExternalCommands.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.i
-.PHONY : ComplexExternalCommands.cpp.i
-
-ComplexExternalCommands.s: ComplexExternalCommands.cpp.s
-.PHONY : ComplexExternalCommands.s
-
-# target to generate assembly for a file
-ComplexExternalCommands.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/ComplexExternalCommands.cpp.s
-.PHONY : ComplexExternalCommands.cpp.s
-
 ExternalCommands.o: ExternalCommands.cpp.o
 .PHONY : ExternalCommands.o
 
@@ -320,6 +296,30 @@ SmallShell.s: SmallShell.cpp.s
 SmallShell.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SmallShell.cpp.s
 .PHONY : SmallShell.cpp.s
+
+SpecialCommands.o: SpecialCommands.cpp.o
+.PHONY : SpecialCommands.o
+
+# target to build an object file
+SpecialCommands.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.o
+.PHONY : SpecialCommands.cpp.o
+
+SpecialCommands.i: SpecialCommands.cpp.i
+.PHONY : SpecialCommands.i
+
+# target to preprocess a source file
+SpecialCommands.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.i
+.PHONY : SpecialCommands.cpp.i
+
+SpecialCommands.s: SpecialCommands.cpp.s
+.PHONY : SpecialCommands.s
+
+# target to generate assembly for a file
+SpecialCommands.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/skeleton_smash.dir/build.make CMakeFiles/skeleton_smash.dir/SpecialCommands.cpp.s
+.PHONY : SpecialCommands.cpp.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -414,9 +414,6 @@ help:
 	@echo "... Commands.o"
 	@echo "... Commands.i"
 	@echo "... Commands.s"
-	@echo "... ComplexExternalCommands.o"
-	@echo "... ComplexExternalCommands.i"
-	@echo "... ComplexExternalCommands.s"
 	@echo "... ExternalCommands.o"
 	@echo "... ExternalCommands.i"
 	@echo "... ExternalCommands.s"
@@ -426,6 +423,9 @@ help:
 	@echo "... SmallShell.o"
 	@echo "... SmallShell.i"
 	@echo "... SmallShell.s"
+	@echo "... SpecialCommands.o"
+	@echo "... SpecialCommands.i"
+	@echo "... SpecialCommands.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
